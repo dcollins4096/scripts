@@ -1,0 +1,17 @@
+#!/bin/tcsh
+set prefix = oot_high
+foreach i (`nums 0 7 -np 1`)
+    set outfile = $prefix.$i
+    #set outfile = oot.all
+    echo $outfile
+    if( -e $outfile ) rm $outfile
+    # The whole high line
+    #sed -n "s:.*.proc    "$i" mem-high\ *\([[:digit:]]*\) .*:&:p" dump > $outfile
+
+    # All high nubmers
+     sed -n "s:.*.proc    "$i" mem-high\ *\([[:digit:]]*\) .*:\1:p" dump > $outfile
+
+    #Only timestep numbers
+    #sed -n "s:.*EnterTimestepLoop..proc    "$i" mem-high\ *\([[:digit:]]*\) .*:\1:p" dump > $outfile
+end
+#end

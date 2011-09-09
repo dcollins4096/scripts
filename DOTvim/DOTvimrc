@@ -1,0 +1,67 @@
+map! :p <ESC>hp
+map ,j V}kJA.<ESC>x
+map ,d "yp"zp
+map <C-k> d$
+map ,h <Esc>:nohl<CR>   
+map! :s <ESC>
+map! :A <ESC>A
+map! :I <ESC>I
+map! :w <ESC>:w<CR>
+map! :J v}JA.<ESC>d
+map ,u 04d<ESC>
+map ,i mz0i<TAB><ESC>'z
+map ,h <Esc>:nohl<CR>
+map ,p :set paste<CR>i
+map ,n :set nopaste<CR>
+map ,o o<Esc>
+set noerrorbells
+set visualbell
+set t_vb=
+set wildmode=longest,list,full
+set wildmenu
+map ^P :w!<CR>:!aspell check %<CR>:e! %<CR>
+map ^Pt :w!<CR>:!aspell check -t %<CR>:e! %<CR>
+nmap <Space> i_<Esc>r
+set diffopt+=iwhite
+""This pair ignores case in searches that are all lowercase
+set ignorecase
+set smartcase
+syntax on
+"" python style
+autocmd BufRead *.py set shiftwidth=4
+autocmd BufRead *.py set expandtab
+autocmd BufRead *.py set softtabstop=4
+autocmd BufRead *.py set autoindent
+autocmd BufRead *.py set tabstop=4
+filetype plugin indent on
+autocmd BufRead *.py set smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class 
+
+
+"" C style
+
+set shiftwidth=2
+set expandtab
+set softtabstop=2
+set autoindent
+set tabstop=2
+
+autocmd BufRead *.html set shiftwidth=2
+autocmd BufRead *.html set expandtab
+autocmd BufRead *.html set softtabstop=2
+autocmd BufRead *.html set autoindent
+autocmd BufRead *.html set tabstop=2
+
+au BufNewFile,BufRead *.src set ft=fortran
+au  BufNewFile,BufRead *.src set tw=72
+au  BufNewFile,BufRead *.html set tw=80
+au  BufNewFile,BufRead *.tex set tw=80
+au  BufNewFile,BufRead *.txt set tw=80
+hi Tab ctermbg=white
+match Tab ,\t, 
+
+set laststatus=2
+set statusline=%F%m%r%h%w\ [POS=%04l,%04v][%p%%]\ [LEN=%L] 
+
+
+"" Spellchecking
+""autocmd BufNewFile,BufRead *.html,README, *.tex set spell

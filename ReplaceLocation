@@ -1,0 +1,29 @@
+#!/bin/csh
+#
+#
+#
+
+# This regular expression replaces $Repalce (see note) whith $With in $Files
+
+#takes a bit like this:
+#
+#<tr> <td> <b> Velocity </b> </td><td> [0,0,0] </td></tr> 
+#<tr> <td> <b> Bfield </b> </td><td> [ [0.75, 1.0, 0], [0.75, -1.0, 0.0] ] </td></tr> 
+#<tr> <td> <b> Location of Data </b> <td> SOME LOCATION</td></tr> 
+#
+# and makes this:
+#
+#<tr> <td> <b> Velocity </b> </td><td> [0,0,0] </td></tr> 
+#<tr> <td> <b> Bfield </b> </td><td> [ [0.75, 1.0, 0], [0.75, -1.0, 0.0] ] </td></tr> 
+#<tr> <td> <b> Location of Data </b> <td> AND REPLACES ONLY THIS PART</td></tr> 
+#             ^^ $Replace      ^^        ^^    $With               ^^
+
+set files = bw333300.html
+set With  = "Youre a Dope Head"
+set Replace= "Location"
+
+sed -e 's:\(<b>.*'"$Replace"'.*</b>\).*<td>\(.*\)</td>:\1 <td>'"$With"'</td>:' $files
+#      ^---------^__________^---------------------------------^_______^------^ (note for quotes)
+#         ^^=======================^^      ^^==^^                              (note for parenthesis)
+#       :::                                          :::                   ::: (note for search braces)     
+

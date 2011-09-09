@@ -1,0 +1,4 @@
+#!/bin/tcsh
+
+ls -1 |egrep -v "DD????|src|Meta|data_time|perfdata|clump|core"
+#end

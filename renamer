@@ -1,0 +1,21 @@
+#!/bin/tcsh
+set echo
+set i = 1
+set old_list = (`ls -1d DD* |sort`)
+echo "OLD LIST" $old_list
+foreach old_dir ($old_list)
+cd $old_dir
+set new_num = `printf "%04d" $i`
+set old_num = `echo $old_dir |cut -c 3-`
+echo echo "XXX" $old_num $new_num
+rename $old_num $new_num data$old_num*
+foreach k (data$new_num data$new_num.hierarchy data$new_num.boundary)
+ sed -i "s,data$old_num,data$new_num," $k 
+ sed -i "s,DD$old_num,DD$new_num," $k 
+end
+cd ..
+mv DD$old_num DD$new_num
+@ i += 1
+end
+
+#end

@@ -1,0 +1,32 @@
+#!/bin/tcsh
+
+if( $#argv < 1 && ! -e QT.cfg ) then
+    echo "QTgo filename filelist"
+    echo "     If there's a QT.cfg file, use the local copy."
+    echo "     otherwise, make a default"
+    exit
+endif
+if( $#argv > 1 ) then
+    set filename = $1
+else
+    set filename = `sed -n 's,MOVIE_FILE=\(.*\),\1,p' QT.cfg`
+endif
+
+if ( -e $filename ) then
+    echo $filename exists. Please remove
+    exit
+endif
+set ScriptFile = "QT.cfg"
+set QTDir = ~/Research/Work/qt
+
+if( ! ( -e $ScriptFile ) ) then
+ cat $QTDir/base.cfg > $ScriptFile
+ echo "MOVIE_FILE="$filename >> $ScriptFile
+ set i = 2
+ while( $i<= $#argv )
+     echo $argv[$i]=1 >> $ScriptFile
+     @ i = $i + 1
+ end
+endif
+java -d32 -jar $QTDir/QTHiImageSequencer.jar $ScriptFile
+#end

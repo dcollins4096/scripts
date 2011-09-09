@@ -1,0 +1,172 @@
+#! /bin/csh
+
+#
+# See Message below for usage.
+#
+
+#for the error message
+set Message = 0
+
+#to skip the second iteration
+set SkipSecond = 0
+#
+# Set file names from command line
+# If not given, issue instructions.
+# 
+
+if( $1 != "" ) then
+    if( -e $1 ) then
+	set file1 = $1
+    else
+	echo "NO FILE FOUND CALLED " $1
+	set Message = 1
+    endif
+else
+    set Message = 1
+endif
+
+if( $2 != "" ) then
+    if( -e $2 ) then
+	set file2 = $2
+    else
+	echo "NO FILE FOUND CALLED " $2
+	set Message = 1
+    endif
+
+else
+    set Message = 1
+endif
+
+if( $3 != "" ) then
+    set SkipSecond = 1
+endif
+
+if( $Message == 1 ) then
+    echo "ParamCheck <file1> <file2> <SkipSecond>"
+    echo "     checks diffences between two parameter files."
+    echo "     if SkipSecond == 1 then the second file's parameters aren't looked for in the first"
+    echo "     Doesn't quite work on parameters with more than one element"
+    exit
+endif
+
+echo Comparing $file1 $file2
+echo " "
+
+#
+#set up temp files that will be used for output.
+#
+
+foreach i ( TempPCdiff TempPC1 TempPC2 )
+    if( -e $i ) rm $i
+end
+
+echo Parameters that differ between $file1 $file2 : > TempPCdiff
+echo Parameters that are missing from $file1  > TempPC1
+echo Parameters that are missing from $file2 > TempPC2
+
+#
+# Loop over lines in the first file.  For lines that don't begin with '#', 
+# get the parameter its set to, and look in the other fiel for the same parameter.
+# If they're the same, don't do anything.  If they differ, or one is missing, note
+# the difference in the proper file (defined above)
+#
+
+
+foreach i ( `awk '{print $1}' $file1` ) 
+    #dbg
+    echo $i
+    #/dbg
+	if( `echo $i | cut -c 1` != "#" ) then
+
+	#grep options: -w for "match word", -v "^#" for 'dont match lines that start with #
+
+	#old versions of matches.  not as good, don't match vector parameters.
+	#set param1 = `grep -w $i $file1 | grep -v "^#" | awk '{print $3}'`
+	#set param2 = `grep -w $i $file2 | grep -v "^#" | awk '{print $3}'`
+
+	#new version, matches vector parameters.
+	#             (ignore comments)   (match name)   (get line of values)
+	set param1 = `grep -v "^#"  $file1 | grep -w $i | sed -e "s:\("$i"[[:space:]]*=\)\(.*\):\2:g"`
+	set param2 = `grep -v "^#"  $file2 | grep -w $i | sed -e "s:\("$i"[[:space:]]*=\)\(.*\):\2:g"`
+
+	#remove trailing comments
+	set param1 = `echo $param1 | cut -f -1 -d "//"`
+	set param2 = `echo $param2 | cut -f -1 -d "//"`
+	
+
+	#echo $i " : " $param1 $param2
+	#check for existance:
+	if( "$param1" != "" && "$param2" != "" ) then 
+	    
+	    if( "$param1" != "$param2" ) then
+		    echo "  "  $i  "(" $param1 ")" vs. "(" $param2 ")" >> TempPCdiff
+            endif		   
+
+	else
+	    #if param 1 exists, but 2 doesnt
+	    if( "$param1" != "" ) then
+	       echo "  " $i $param1 >> TempPC2 
+	    endif
+
+	    if( "$param1" == "" && "$param2" == "" ) then
+		echo "What the hell does $i mean?"
+	    endif
+
+    	endif
+	endif #cut lines with leading '#'
+end
+
+if( "$SkipSecond" != 1 ) then
+
+foreach i ( `awk '{print $1}' $file2` ) 
+	
+	if( `echo $i | cut -c 1` != "#" ) then
+
+	#grep options: -w for "match word", -v "^#" for 'dont match lines that start with #
+	set param1 = `grep -w $i $file1 | grep -v "^#" | awk '{print $3}'`
+	set param2 = `grep -w $i $file2 | grep -v "^#" | awk '{print $3}'`
+
+	#echo $i " : " $param1 $param2
+	#check for existance:
+	if( "$param1" == "" ) then
+	    if( "$param2" == "" ) then
+		echo "What the hell does $i mean?"
+	    else
+		echo "  " $i $param2 >> TempPC1
+	    endif
+		
+
+
+	endif
+	endif #skip lines with #
+end # for
+endif # skip second
+
+set Differences = 0
+set Missing1 = 0
+set Missing2 = 0
+
+#
+# print the files, if non-trivial
+#
+
+if( `wc -l TempPCdiff | awk '{print $1}'` != 1 ) then
+  set Differences = 1    
+  cat TempPCdiff
+endif
+
+if( `wc -l TempPC1 | awk '{print $1}'` != 1 ) then
+ cat TempPC1
+endif
+
+if( `wc -l TempPC2 | awk '{print $1}'` != 1 ) then
+  cat TempPC2
+endif
+
+if( $SkipSecond == 1 ) then
+    echo " "
+    echo "Note: Skipped Second File"
+endif
+
+rm TempPCdiff TempPC2 TempPC1
+#end

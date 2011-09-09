@@ -1,0 +1,20 @@
+#!/bin/tcsh
+#set echo
+if( $1 == "" ) then
+    screen -list
+    echo "screenr <session>"
+    echo "attempts to reattach <session>"
+    exit
+endif
+set attach = $1
+set parse = `screen -list | grep -w $attach`
+if ( "$#parse" == 0 ) then
+    screen -list
+    echo "$attach not found"
+else
+    set session = `echo $parse |sed -n 's,\(.*\)\((.*\),\1,p'`
+    WN $attach
+    screen -r -d $session
+    #sed -n "s,^[[:space:]]*\([[:digit:]]\{3\},&,p"
+endif
+#end

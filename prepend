@@ -1,0 +1,32 @@
+#!/bin/csh -f
+
+if( $2 == "" ) then
+    echo " "
+    echo " prepend <head> <tail>"
+    echo " It.. uh... prepends head to tail."
+    echo " <tail> must be a file.  <head> can be a string or a file.
+    exit
+endif
+
+#variables
+set temp = temp
+
+#clean up
+if ( -e $temp ) rm $temp
+
+#If the first argument is a file, use cat.  Otherwise, echo.
+if( -e "$1" ) then
+    cat $1 $2 > $temp
+else
+   echo $1 > $temp
+   cat $2 >> $temp
+
+endif
+
+mv -f temp $2
+
+#clean up
+if ( -e $temp ) rm $temp
+
+
+#

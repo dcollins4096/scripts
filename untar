@@ -1,0 +1,45 @@
+#!/bin/tcsh
+#
+# untar <-d directory> <list>
+#    
+
+set dirs= (".")
+set userlist = ()
+
+while( $#argv > 0)
+    switch( $1 )
+	case "-d":
+	    set dirs = ($dirs $2)
+	    shift
+	    shift
+	    breaksw
+	default:
+	    set userlist = ($userlist $1)
+	    shift
+    endsw
+end
+
+if( $#userlist != 0 ) then
+    set list = ($userlist)
+else
+    set list = "*.tar"
+endif
+
+foreach i ($list)
+    set doIt = true
+    foreach d ($dirs)
+	set this =  $d"/"`basename $i .tar`
+	#echo $this
+	if( -e $this ) then
+	    echo "skipping " $this
+	    set doIt = false
+	else
+	    echo "gonna" $this
+	endif
+    end
+    if ( $doIt == true ) then
+        tar xvf $i 
+    endif
+
+end
+#end

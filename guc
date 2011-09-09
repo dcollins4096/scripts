@@ -1,0 +1,36 @@
+#!/bin/csh -f
+
+if( $1 == "") then
+	echo You have to tell me what to send!
+	echo "all file path names relative to cobalt/scratch/users/dcollins/<blah>"
+    exit
+endif
+
+set LocalDir = `pwd`/
+echo $LocalDir
+set FileHere = $1
+
+set Local = "$LocalDir"$FileHere
+echo $FileHere $Local
+echo All files get put in teragrid/gpfs_scratch1/dcollins
+
+set TotalFileSize = `ls -l $FileHere |awk '{print $5}'`
+
+echo " " $TotalFileSize " " $Local
+
+set CmdLine = ""
+
+globus-url-copy -vb -tcp-bs 16777216 -p 4 file://$Local \
+gsiftp://tg-gridftp.sdsc.teragrid.org:2812/gpfs/ux454321/$FileHere
+
+
+echo $CmdLine
+#$CmdLine
+
+#gsiftp://tg-gridftp.ncsa.teragrid.org//gpfs_scratch1/dcollins/$FileHere
+#gsiftp://tg-gridftp.ncsa.teragrid.org/gpfs-wan/dcollins/$FileHere
+#gsiftp://ds002.sdsc.edu:2812/dsgpfs/ux454321/$FileHere
+#gsiftp://tg-gridftp.ncsa.teragrid.org/gpfs-wan/dcollins/$FileHere
+#gsiftp://ds002.sdsc.edu:2812/dsgpfs/ux454321/$FileHere
+
+#

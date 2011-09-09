@@ -1,0 +1,7 @@
+
+setenv src /Users/dcollins/enzo/mhd_cvs
+
+alias latex /Users/dcollins/Library/TeXShop/bin/latexmk
+set path = (/sw/bin /sw/share /usr/local/bin $path)
+source /Users/dcollins/Scripts/Startup
+

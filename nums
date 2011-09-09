@@ -1,0 +1,107 @@
+#! /usr/bin/env python
+
+Documentation = """
+n2 <nstart> <nend> 
+	
+returns a list of numbers, skipping some, padding with zeros.  By dcollins.
+Options:
+	-ns N: number to skip.  Default is 0.
+	-np N: length of string, default is 4
+	-last: print the last in the array, even if its less than nskip from the
+	      2nd to last. Default: no.
+	-pre <string>: prepends <string> to output
+	-post <string>: appends <string> to output
+Examples:
+	%> n2 0 3
+	0000
+	0001
+	0002
+	0003
+
+	%> n2 0 10 -ns 3	
+	0000
+	0003
+	0006
+	0009
+
+	%> n2 0 10 -ns 3 -np 5 -last -pre data
+	data00000
+	data00003
+	data00006
+	data00009
+	data00010
+
+"""
+
+
+import sys
+
+#
+# Helper functions
+#
+
+#
+# set(Arg,default) searches the comman line for the flag given by Arg,
+# and returns the next command line argument if its found.  
+# If not found, returns default.
+# Assumes it's an integer.  The 'String = 1' argument stops the int cast.
+def set(Arg, default, string = 0):
+
+	ArgValue = default
+#	print sys.argv.count(Arg)
+	if sys.argv.count(Arg) == 1:
+		ArgIndex= sys.argv.index(Arg)
+		if string == 0:
+			ArgValue =  int(sys.argv[ArgIndex+1])
+		else:
+			ArgValue =  sys.argv[ArgIndex+1]
+	return ArgValue	
+
+
+def setK(Arg):
+	KeywordSet = 0
+	if sys.argv.count(Arg) == 1:	
+		KeywordSet = 1
+	return KeywordSet
+
+
+#
+# Main body:
+#
+
+if len(sys.argv) < 2:
+	print Documentation
+else:
+
+	# defaults & parse command line
+	
+	nstart = int(sys.argv[1])
+	nend   = int(sys.argv[2])
+	nskip  = set('-ns', 1)
+	npad = set('-np', 4)
+	pre = set('-pre', '', string = 1)
+	DoLast = setK('-last')
+	post = set('-post', '', string = 1)
+		
+	#
+	# Loop from nstart to nend, return the strings.
+	# If last is set, check that nend wasn't already printed, then print
+	#
+
+	for i in range(nstart,nend+1, nskip):
+		nZeros = npad - len(str(i))
+		Number = pre
+		for j in range(0,nZeros):
+			Number += '0'
+		Number += str(i)
+		Number += post
+		print Number
+	if DoLast == 1:
+		LastPrinted = Number
+		nZeros = npad - len(str(nend))
+		Number = pre
+		for j in range(0,nZeros):
+			Number += '0'
+		Number += str(nend)
+		if Number != LastPrinted:
+			print Number

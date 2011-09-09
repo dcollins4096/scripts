@@ -1,0 +1,3 @@
+#!/bin/tcsh
+cvs diff -wc `cvs update |sed -n 's:^M::p' |grep -v Makefile | grep -v DEPEND` |less
+#end

@@ -1,0 +1,38 @@
+#
+# macros for ia64
+#
+
+ifeq ($(HDF5_INSTALL),$(null))
+#HDF5_INSTALL = /share/home/00649/tg457850/hdf5-1.8.1
+HDF5_INSTALL = /opt/apps/intel10_1/hdf5/1.6.5
+endif
+
+HDF5_INCLUDE = $(HDF5_INSTALL)/include
+
+CPP          = /usr/bin/cpp
+
+DEFINES      = -DRanger
+
+## Fortran compiler
+FC           = ifort
+FC_OPT       = -O3
+
+## C Compiler
+CC           = mpicxx
+CC_OPT       = -O2 
+
+## C++ Compiler
+CCxx         = mpicxx
+CCxx_OPT     = -O2 
+
+## Linker/loader
+LDR          = mpicxx
+LDR_OPT      =
+#LIB          = $(HDF5_INSTALL)/lib/libhdf5.a -L/usr/lib -lz -ljpeg
+LIB          = $(HDF5_INSTALL)/lib/libhdf5.a 
+
+INCLUDE      = -I$(HDF5_INSTALL)/include
+
+#OPTS         = -c -DIA32 ${OPTIONS} ${INCLUDE}
+OPTS         = -c -w ${OPTIONS} ${INCLUDE}
+DEBUG        = -g

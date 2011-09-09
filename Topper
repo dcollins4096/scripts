@@ -1,0 +1,16 @@
+#! /bin/csh
+
+#boy, this is irritating.
+
+set list = "2 3 4 5 6 7 8 9 10 11 12 13 14 15 16"
+if ( -e /home/dcollins/Scripts/TempForTopper2 ) rm /home/dcollins/Scripts/TempForTopper2
+foreach i ($list)
+
+echo "---"  $i "---" >> /home/dcollins/Scripts/TempForTopper2
+touch  /home/dcollins/Scripts/TempForTopper
+ssh node$i
+
+end
+less /home/dcollins/Scripts/TempForTopper2
+
+#turds in heaven

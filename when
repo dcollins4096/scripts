@@ -1,0 +1,27 @@
+#!/bin/tcsh
+
+set counter = 0
+set stop_counter = -100
+set keep_going=1
+set test = 0
+set skip = 20
+while( $keep_going )
+@ test = $counter % $skip
+
+if( "$test" == "0" )then
+ echo waiting for $1
+endif
+
+ if( $1 ) then
+	echo running $2
+	 $2
+	set keep_going = 0
+ endif	
+@ counter = $counter + 1
+if( $counter == $stop_counter ) then
+	set keep_going = 0
+	echo "quiting.  bored."
+endif
+sleep 1
+end
+#end

@@ -1,0 +1,38 @@
+#! /bin/csh
+set FileName = thumbs.html
+set ThumbDir = './thumb/thumb.'
+set nColumn = 1
+#set DestWindow =
+set DestWindow = BIG
+
+echo "<center> Here's some pictures. </center>" > $FileName
+echo '<table border="0" cellspacing="2" cellpadding="0">' >> $FileName
+
+set I = 0
+set W = 0
+
+
+if( $DestWindow != "" ) then 
+    set Dest = 'target = "'$DestWindow'"'
+else
+    set Dest = 
+endif
+echo $Dest
+
+foreach i (`ls *.JPG`)
+ @ W = $I % $nColumn
+
+ if( $W == 0 ) then
+	echo '<tr>' >> $FileName
+ endif
+
+
+ echo '<td><a href="'$i'" '$Dest' ><img src="'$ThumbDir$i'"></a></td>'>>$FileName
+ if( $W == 3 ) then
+	echo '</tr>' >> $FileName
+ endif
+
+ @ I = $I + 1
+chmod a+r $FileName
+end 
+echo '</table>' >> $FileName

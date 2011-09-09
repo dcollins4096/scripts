@@ -1,0 +1,32 @@
+#!/bin/tcsh
+if( $1 != "" ) then
+    set tmp = tmp90210
+    if( -e $tmp ) rm $tmp
+    hsi ls $1 >& $tmp
+    if( $status != 0 ) then
+        cat $tmp
+        echo "Bad directory."
+        exit
+    endif    
+    rm $tmp
+    
+endif
+echo msd
+msd
+echo Kill perf
+rm perf*
+echo Kill back
+rm *~*
+echo Tar parameters
+tar cvf data.tar `steps -`
+echo Tar hierarchy
+tar cvf hierarchy.tar `find . -name "*.hierarchy"`
+echo move tars
+if( ! ( -e  Meta ) ) mkdir Meta
+mv data.tar hierarchy.tar Meta
+echo copy everything to meta
+cp enzo.exe RunTracker.xml Script* randomForcing.out OutputLevelInformation.out GlobalStats.out Meta
+if( $1 != "" ) then
+ archiver $1
+endif
+#end

@@ -1,0 +1,38 @@
+#!/bin/tcsh
+set var = (`date`)
+#Wed Dec  2 14:05:43 PST 2009
+#echo $var[2]
+#$var[2])
+set day = $var[3]
+set year = $var[6]
+switch( $var[2] )
+ case Jan: 
+    set month = 1; breaksw
+ case Feb: 
+    set month = 2; breaksw
+ case Mar: 
+    set month = 3; breaksw
+ case Apr:
+    set month = 4; breaksw
+ case May: 
+    set month = 5; breaksw
+ case Jun: 
+    set month = 6; breaksw
+ case Jul: 
+    set month = 7; breaksw
+ case Aug: 
+    set month = 8; breaksw
+ case Sep: 
+    set month = 9; breaksw
+ case Oct: 
+    set month = 10; breaksw
+ case Nov: 
+    set month = 11; breaksw
+ case Dec: 
+    set month = 12; breaksw
+ default:
+    echo Month $var[2] not found
+    exit
+endsw
+echo '<i>'$month/$day/$year '</i>'
+#end

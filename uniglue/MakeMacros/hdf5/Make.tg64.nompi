@@ -1,0 +1,14 @@
+
+ifeq ($(HDF5_INSTALL),$(null))
+HDF5_INSTALL = $(HOME)/hdf5/5-1.4.3-ia64
+endif
+
+CCxx         = ecc
+CCxx_OPT     = -O3 -DHDF5_BE
+
+LDR          = ecc
+LDR_OPT      =
+
+LIB          = -L$(HDF5_INSTALL)/lib -lhdf5
+
+OPTS         = -c -I$(HDF5_INSTALL)/include

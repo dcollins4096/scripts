@@ -1,0 +1,21 @@
+#!/bin/tcsh
+
+set list = "$argv"
+set png_list = ""
+set pdf_list = ""
+set eps_list = ""
+foreach i  ($list)
+    if( `basename $i .png` != $i ) set png_list = "$png_list $i"
+    if( `basename $i .pdf` != $i ) set pdf_list = "$pdf_list $i"
+    if( `basename $i .eps` != $i ) set eps_list = "$eps_list $i"
+end
+if( "$png_list" != "" ) then
+    $open_png $png_list &
+endif
+if( "$pdf_list" != "" ) then
+    pdf_multiread $pdf_list &
+endif
+if( "$eps_list" != "" ) then
+    view_eps $eps_list &
+endif
+#end

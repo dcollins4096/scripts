@@ -1,0 +1,13 @@
+#!/bin/csh -f
+
+if ( $1 == "" ) then
+ echo " Link (source) (text) (target window, optional.)"
+ echo " returns the proper html tag for source and text"
+ exit
+endif
+
+set Target = ""
+if ( $3 != "" )  set Target = "target =  $3 "
+
+echo '<a href = "' $1 '"' $Target '>' $2 '</a>'
+#

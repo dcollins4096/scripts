@@ -1,0 +1,28 @@
+# .tcshrc
+
+#Set Path:
+
+# User specific aliases and functions
+
+##
+## ssh's:
+
+alias mozilla 'mozilla &'
+alias fire '~/installs/firefox/firefox &'
+alias net7 '/usr/local/netscape/netscape &'
+alias mp3 'mpg123 *'
+alias acro "/usr/local/Acrobat5/bin/acroread \!* &"
+
+
+
+##
+## Stuff.
+
+setenv src "~/MHD/Enzo/InMyCVS/src/"
+setenv llnl "."
+setenv scratch /archive/dcollins
+
+setenv wan "ux454321@dslogin.sdsc.edu:/gpfs-wan/projects/lca/dcollins"
+
+source ~/Scripts/Startup
+set path=($path /home/dcollins/Research/CodeGames/RunTracker ~/bin)

@@ -1,0 +1,7 @@
+#!/bin/tcsh
+if( ! -e OutputLog ) then
+    echo "No Output Log.  Run FakeOutputLog"
+else
+    tail -1 OutputLog |awk '{print $3}'
+endif
+#end

@@ -1,0 +1,29 @@
+# .tcshrc
+
+#Set Path:
+
+#set PATH=($PATH . )
+set path=($path ~/Scripts . )
+setenv LM_LICENSE_FILE '1700@nas-0-0'
+setenv scratch "/mnt/data/users/dcollins"
+setenv src "/home/dcollins/Enzo/mhd_1/amr_mpi/src"
+setenv llnl "/home/dcollins/Enzo/LLNL_cvs/amr_mpi/src"
+setenv mhd "/home/dcollins/Enzo/MHD/Enzo/amr_mpi/src"
+setenv devel "/home/dcollins/Enzo/devel/Enzo/amr_mpi/src"
+setenv wan "ux454321@dspoe.sdsc.edu:/gpfs-wan/projects/lca/dcollins"
+alias mhd "cd $mhd"
+alias devel "cd $devel"
+alias llnl "cd $llnl"
+
+setenv P4_GLOBMEMSIZE 268435456
+alias h5ls /share/apps/hdf5-1.6.5/bin/h5ls
+alias h5dump /share/apps/hdf5-1.6.5/bin/h5dump
+alias h5diff /share/apps/hdf5-1.6.5/bin/h5diff
+
+
+source ~/Scripts/Startup
+setenv G95_UNBUFFERED_ALL TRUE
+
+setenv LD_LIBRARY_PATH "/home/dcollins/CRT:/home/dcollins/gsl/lib:/home/dcollins/MJ/mjlib/trunk"
+alias cleanipcs /opt/mpich/gnu/sbin/cleanipcs
+set path=($path /home/dcollins/Research/CodeGames/RunTracker)

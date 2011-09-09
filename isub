@@ -1,0 +1,24 @@
+#!/bin/tcsh
+
+if( $2 == "" ) then 
+    echo isub "<time> <nodes>"
+    echo launches an interactive job.    
+else
+   
+    set time = $1
+    set total_proc = $2
+    set procs_per_node = 8
+@ nodes = $total_proc / $procs_per_node
+if( $nodes == 0 ) then 
+    set nodes  = 1
+    set ppn = $total_proc
+else
+    set ppn = 8
+endif
+#echo time : $time 
+#echo nodes: $nodes
+#echo ppn  : $ppn
+echo qsub -I -V -l size="$total_proc",walltime="$time"
+#echo qsub -I -V -l walltime="$time",nodes="$nodes":ppn="$ppn"
+endif
+#end

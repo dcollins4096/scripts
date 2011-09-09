@@ -1,0 +1,3 @@
+#!/bin/bash
+hg status |sed -n 's,^M.*/\([^/]*\),\1,p'
+#end

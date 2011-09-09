@@ -1,0 +1,30 @@
+# .tcshrc
+
+#Set Path:
+
+setenv wan /gpfs-wan/projects/lca/dcollins
+set scratch = /gpfs_scratch1/dcollins
+set src = "/home/ac/dcollins/enzo-code/amr_mpi/src"
+alias scratch "cd scratch"
+
+set san = /gpfs_sanscratch/dcollins
+alias san "cd $san"
+unalias cwdcmd
+
+## tg stuff
+
+limit coredumpsize unlimited
+alias dstat "qstat |grep dcollins"
+alias int "echo qsub -I -V -l walltime=00:30:00,nodes=1:ppn=2"
+
+#set NodeFile = "/home/ac/dcollins/NodeFile"
+#if( $?PBS_NODEFILE > 0 ) then
+#    if( -e $NodeFile ) rm $NodeFile
+#    echo $PBS_NODEFILE > $NodeFile
+#else
+#    if( -e $NodeFile ) setenv PBS_NODEFILE `cat $NodeFile`
+#end
+
+
+source ~/Scripts/Startup
+

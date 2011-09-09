@@ -1,0 +1,19 @@
+
+ifeq ($(HDF5_INSTALL),$(null))
+HDF5_INSTALL = /usr/local/apps/hdf5
+#HDF5_INSTALL = /usr/local/apps/hdf5pp
+endif
+ifeq ($(HDF4_INSTALL),$(null))
+HDF4_INSTALL = /usr/local/apps/hdf4
+endif
+
+CCxx         = xlC_r
+CCxx_OPT     = -DHDF5_BE
+
+LDR          = xlC_r
+LDR_OPT      = -bmaxdata:0x80000000 -bmaxstack:0x70000000
+
+LIB          = $(HDF5_INSTALL)/lib/libhdf5.a $(HDF4_INSTALL)/lib/libz.a \
+               -lm
+
+OPTS         = -c -I$(HDF5_INSTALL)/include

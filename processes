@@ -1,0 +1,9 @@
+#!/bin/tcsh
+set iam = `whoami`
+if( $1 == "" ) then
+    ps -u $iam
+    echo `ps -u $iam |awk '{print $1}'`
+else
+    echo `ps -u $iam |grep $1 |awk '{print $1}'`
+endif
+#end

@@ -1,0 +1,37 @@
+#! /bin/csh
+
+#Execute grid-proxy-init!
+
+if( $1 == "" ) then
+    echo "you must give me a filename"
+    echo "filename is assumed to be /gpfs_scratch1/dcollins/<blah>"
+    echo "will put this on tgS/gpfs/ux454321"
+    exit
+endif
+
+#set FILENAME = Drive256_n60n556some.tar 
+set FILENAME = $1
+
+set LocalDir = /gpfs_scratch1/dcollins/
+set RemoteHost = tg-login.sdsc.teragrid.org
+set RemoteDir  = /gpfs/ux454321/
+set RemoteFile = $FILENAME
+set flags = "-big -vb"
+
+set Local = "$LocalDir"$FILENAME
+
+if ( ! -e $Local ) then
+    echo $Local doest exist
+    exit
+endif
+
+echo "filesize " `ls -lh $LocalDir$FILENAME |awk '{print $5}'`
+
+if( -e tgcpStart ) rm tgcpStart
+if( -e tgcpStop ) rm tgcpStop
+date > tgcpStart
+tgcp $flags $Local "$RemoteHost":"$RemoteDir"$RemoteFile
+date > tgcpStop
+more tgcpStart
+more tgcpStop
+#moo

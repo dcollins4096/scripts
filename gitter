@@ -1,0 +1,21 @@
+#!/bin/tcsh
+set echo
+set dest = `pwd`
+set last = /tmp/gitter_last
+cd ~/SFTP_DIR
+if( $1 != 'again' || ! (-e $last)) then 
+    if( $1 == "" ) then
+        set list = *
+    else
+        set list = $1*
+    endif
+    echo $list $dest
+    mv * $dest
+else
+    set list = `cat $last`
+endif
+if( -e $last ) rm $last
+echo $list > $last
+cd -
+OpenStuff $list
+#end

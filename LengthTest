@@ -1,0 +1,21 @@
+#!/bin/csh
+
+if ( $1 == "") then
+
+foreach i (`ls *.f`)
+
+	if(`awk	'length($0) > 72' $i |wc -l ` != 0 ) then
+		echo I hate fortran.  $i has a long line.
+	endif
+
+end
+
+else
+
+awk 'length($0) > 72' $1
+
+#        if(`awk 'length($0) > 72 print ' $1 |wc -l ` != 0 ) then
+#                echo I hate fortran.  $1 has a long line.
+#        endif
+
+endif

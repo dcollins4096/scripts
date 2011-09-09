@@ -1,0 +1,9 @@
+#!/bin/tcsh
+
+if( -e duud) rm duud
+if( -e duud.sort) rm duud.sort
+du -h --max-depth 1 > duud
+
+SortDU duud
+cat duud.sort
+#end

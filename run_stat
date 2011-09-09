@@ -1,0 +1,44 @@
+#!/bin/tcsh
+if( "$1" == "" ) then
+    echo "...> run_stat <job id> "
+    echo "returns Param, start/end ( step, step size, time)"
+else
+
+set file = $1
+#If I just pass a number, assume its on Abe, run qhist first
+if( ! (-e $1) ) then 
+    qhist $1
+    set file = *.e$1
+    if( ! ( -e $file ) )then
+	echo $file " not found"
+	exit
+    endif
+endif
+if( $2 != "n" ) then #it's an OldSchool run
+
+    echo "Stats for " $file
+    grep "Successfully read in parameter file" $file #inital starts
+    grep "Successfully read ParameterFile" $file     #restarts
+    grep TopGrid $file |head -1
+    grep TopGrid $file |tail -2
+    set LastStep = `steps |tail -1`
+    if( $LastStep != "" ) then
+	grep InitialTime $LastStep
+	grep InitialCycle $LastStep    
+    endif
+else #it's a NewSchool run.
+
+    set dbg = 0
+    echo "Stats for " $file
+    grep "Successfully read in parameter file" $file #inital starts
+    grep "Successfully read ParameterFile" $file     #restarts
+    grep STEP_INFO $file |head -1
+    grep STEP_INFO $file |tail -2
+    set LastStep = `steps - |tail -1`
+    if( $LastStep != "" ) then
+	grep InitialTime $LastStep
+	grep InitialCycle $LastStep    
+    endif
+    
+endif
+#end

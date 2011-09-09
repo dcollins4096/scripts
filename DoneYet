@@ -1,0 +1,39 @@
+#!/bin/csh -f
+#doesn't quite work yet, still havne't worked out the integer issue.
+if ($1 == "" || $2 == "") then
+	echo " DoneYet <filesize><filename>"
+	echo " When actual size of filename = filesize, untar filename"
+	exit
+endif
+
+set GoalSize = $1
+set filename = $2
+if( ! ( -e $filename ) ) then
+	echo " Please at least initiate the transfer. $filename doesn't exist at all"
+	exit
+endif		
+
+set ActualSize = `ls -l $filename |awk '{print $5}'`
+echo "Dest Size " $GoalSize " filename "$filename 
+echo "Actu Size " $ActualSize
+
+set ActualSize = 10129113088
+set GoalSize   = 20244582400
+
+if( $ActualSize < $GoalSize ) then
+	echo "less than"
+else
+	echo "greater than"
+endif
+exit
+
+#this is what I want in the end.
+#while( $ActualSize < $GoalSize ) 
+#	set ActualSize = `ls -l $filename |awk '{print $5}'`
+#	echo $ActualSize "<" $GoalSize
+#	echo "bitch"
+#	sleep 3
+#end
+#tar xvf $filename
+
+##end

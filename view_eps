@@ -1,0 +1,85 @@
+#!/bin/tcsh
+#
+# view_eps <list of eps>
+#  
+#  Generates a pdf from a list of eps figures.
+#  This is, of course, stupid, but there isn't a _good_ eps view for OSX that
+#  will view a series of .eps in a single window.  
+#
+#  Current issues:
+#    -  The paper size and layout currently sucks. 
+#    -  Just doing landscape is an improvement over letter/portrait.
+#    -  To fix, I'm going to want to:
+#       - scrub the bounding box from all the eps files (BoundingBox x0 y0 x1 y1)
+#       - sort out the optimal page size to feed to the tex
+#       - feed that with -T to dvips 
+#  Bounding Box notes:
+#
+set echo
+set datetime = `date +"%Y-%m-%d-%H-%M-%S"`
+set datetime = KLUDGE
+set tmp_dir  = /tmp/view_eps_$datetime
+#set tmp_dir = './tex'
+set tmp_pre = "view_eps"$datetime
+set tmp_tex = $tmp_pre.tex
+set figure_list = ($argv)
+
+if( -e $tmp_dir ) rm -rf $tmp_dir
+mkdir $tmp_dir
+set work_dir = `pwd`
+cd $tmp_dir
+touch $tmp_tex
+set log = view_eps_log
+touch $log
+echo $tmp_dir
+eps_figsize.py $work_dir $figure_list
+source view_eps_variables
+# echo $margin 
+# echo $figurewidth 
+# echo $figureheight 
+# echo $paperwidth 
+# echo $paperheight 
+# echo $paperwidthInches 
+# echo $paperheightInches 
+# echo "poop"
+# exit
+#All units in 'big points', 1/72 inch, as per eps bounding box.
+#set margin = 18
+#set figurewidth=756
+#set figureheight=396
+#set paperwidth = 0
+#set paperheight=0
+#set paperwidth = `pycal "$figurewidth + $margin"`
+#set paperheight =  `pycal "$figureheight + 4*$margin"`
+#sset paperwidth=10.5in
+#sset paperheight=5in
+#set paperwidthInches = `pycal "$paperwidth/72."`in
+#set paperheightInches = `pycal "$paperheight/72."`in
+#scho $paperwidth $paperheight $paperwidthInches $paperheightInches
+
+echo "\documentclass[12pt]{article}" >> $tmp_tex
+echo "\usepackage[total={$paperwidth bp, $paperheight bp}, top=$margin bp, left = $margin bp, centering]{geometry}" >> $tmp_tex
+echo "\usepackage{epsfig}" >> $tmp_tex
+echo "\begin{document}" >> $tmp_tex
+foreach file  ($figure_list)
+    set full_file = $work_dir/$file
+    #echo "LoremIpsum Bitches" >> $tmp_tex
+    echo "\begin{figure} \begin{centering}"  >> $tmp_tex
+    echo "\includegraphics[width=10.5in]{$full_file}" >> $tmp_tex 
+    #echo "\caption[ ]{}" >> $tmp_tex
+    echo "\verb=$file=" >> $tmp_tex
+    echo "\end{centering}\end{figure}" >> $tmp_tex
+end
+
+echo "\end{document}" >> $tmp_tex
+ 
+latex $tmp_pre #>>& $log
+if( $status != 0 ) exit
+#dvips -Ppdf -t letter -o $tmp_pre.ps $tmp_pre.dvi>>& $log
+#dvips -Ppdf -t landscape  -o $tmp_pre.ps $tmp_pre.dvi>>& $log
+dvips -Ppdf  -T"$paperwidthInches, $paperheightInches" -o $tmp_pre.ps $tmp_pre.dvi #>>& $log
+if( $status != 0 ) exit
+ps2pdf $tmp_pre.ps $tmp_pre.pdf #>>& $log
+if( $status != 0 ) exit
+open $tmp_pre.pdf
+#end

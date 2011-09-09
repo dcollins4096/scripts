@@ -1,0 +1,90 @@
+#! /bin/csh
+
+#echo wtf
+if( -e tmp1 ) rm tmp1
+if( -e tmp2 ) rm tmp2
+set file1 = dummiesX
+set file2 = dummiesY
+set start = 9
+set stop = 0
+@ stop = $start + 5
+
+
+if( $1 == "" ) then
+    echo " "
+    echo "Compare run <start> <end, f=start+5> <file1> <file2>"
+    echo "    Replace end, file1, or file2 with m to see the "
+    echo "       complete files"
+    echo "    end defaults to start+5"
+    echo "    file1 and file2 default to what's written in this code."
+    echo " "
+else
+
+#
+# Set start and stop indicies
+# First must be set as a number.
+# Second defaults to five more than the first
+#  or by f = start + 5
+# Or the second parameter
+
+ set start = $1
+
+ @ stop = $start + 5
+
+
+ if( $2 != "f" && $2 != "" && $2 != "m" ) then
+    set stop = $2
+ endif
+
+#
+# Set filename 1
+#
+
+if( $3 != "" && $3 != "m") then
+    set file1 = $3
+endif
+
+#
+# Set Filename 2 
+# If desired, you might want to put a different default here.
+#
+
+if( $4 != "" && $4 != "m" ) then
+    set file2 = $4
+endif
+
+echo Compare $file1 and $file2 between $start and $stop
+
+awk '{if(NR >= '$start' && NR <= '$stop') print}' $file1 > tmp1
+awk '{if(NR >= '$start' && NR <= '$stop') print}' $file2 > tmp2
+
+diff tmp1 tmp2
+
+if( $2 == "m" || $3 == "m" || $4 == "m" || $5 == "m" ) then
+    more tmp1 tmp2
+endif
+
+#end the Help Screen
+endif
+
+#endscript
+
+#echo wtf
+##foreach i ( `ls tape*` ) 
+#
+#	if( `diff $i ~/MHD/Ref10/$i.ref10 | wc -l` != 0 ) then
+#		echo Problem with $i 
+#	else
+#		echo $i okay.
+#	endif
+#
+#
+#end
+#echo End
+
+
+
+
+
+
+

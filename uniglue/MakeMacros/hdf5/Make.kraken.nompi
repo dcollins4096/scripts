@@ -1,0 +1,18 @@
+
+ifeq ($(HDF5_INSTALL),$(null))
+HDF5_INSTALL = /sw/xt/pkgs/hdf5/1.6.7/cnl2.0_pgi7.0.7/
+endif
+ifeq ($(HDF4_INSTALL),$(null))
+HDF4_INSTALL = /usr/local/apps/apps64/hdf4
+endif
+
+CCxx         = CC
+CCxx_OPT     = -O3 -DHDF5_BE -w
+
+LDR          = CC
+LDR_OPT      =
+
+LIB          = $(HDF5_INSTALL)/lib/libhdf5.a    -L/sw/xt/pkgs/sprng/2.0b/cnl2.0_pgi7.0.7/lib -lsprng -L/sw/xt/pkgs/szip/2.1/sles9.2_pgi7.0.7/lib -lsz -L/usr/local/lib -lz -L/opt/acml/4.0.1a/pgi64/lib -lacml -lm -L/opt/pgi/7.1.6/linux86-64/7.1/lib -lpgf90 -lpgf90_rpm1 -lpgf902 -lpgf90rtl -lpgftnrtl 
+
+
+OPTS         = -c -I$(HDF5_INSTALL)/include

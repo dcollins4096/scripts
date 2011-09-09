@@ -1,0 +1,7 @@
+#! /bin/csh
+echo "yo"
+set var=0
+echo $var
+@ var = $var + 1
+echo $var
+#lastline

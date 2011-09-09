@@ -1,0 +1,19 @@
+#!/bin/tcsh
+setenv echo
+touch Times
+set all="`steps -` `steps`"
+#set all = ( DD0001 data0002 DD0003 )
+#set counter = `wc -l Times |awk '{print $1}'`
+touch tmp
+set counter = `wc -l tmp |awk '{print $1}'`
+@ counter += 1
+while($counter <= $#all ) 
+set step = $all[$counter]
+
+set other_stuff = `grep InitialTime $step |awk '{print $3}'`
+
+echo $step | sed -n 's,^data\(....\).*,DD\1/data\1 '$other_stuff',p' >> Times
+echo $step | sed -n 's,^DD\(....\).*,DD\1/data\1 '$other_stuff',p'  >> Times
+@ counter += 1
+end
+#end

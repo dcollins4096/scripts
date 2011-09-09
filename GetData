@@ -1,0 +1,9 @@
+#!/bin/tcsh
+
+foreach i (`find . -name "data*"`)
+    echo $i
+    mv $i .
+end
+rmdir `dirlist`
+#end
+

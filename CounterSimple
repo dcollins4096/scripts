@@ -1,0 +1,76 @@
+#!/bin/csh
+
+#A loop over dataIJKL.
+
+#Copy to a new utility, fill with the goodies you want.
+
+#Tunable variables: nstart, nSteps, basename
+
+
+set nstart = 50
+set nSteps = 99
+
+#System setup--
+
+#this must be 0-- if nstart > 0, extra loops are used to set up counters.
+set n = 0
+
+#initial filename: $basename$k$j$i$h
+set basename = "data" 
+set h=0
+set i=0
+set j=0
+set k=0
+
+#
+# User defined Setup
+#
+
+
+#
+# Main Loop
+#
+
+while( $n <= $nSteps )
+if( $n >= $nstart ) then
+
+    set step = $k$j$i$h
+    set Files = "$basename"$step
+    
+    ### Add ddd routine here.
+
+    ###
+    
+    
+#
+# Counter
+#
+
+#This endif is necessary nstart > 0
+endif #n>nstart
+
+
+@ n = $n + 1
+@ h = $h + 1
+
+if( $h >= 10 ) then
+   set h = 0
+   @ i = $i + 1
+   if( $i >= 10 ) then 
+	set i = 0
+	@ j = $j + 1     
+	if( $j >= 10 ) then 
+   	    set j = 0
+	    @ k = $k + 1
+		if( $k >= 10 ) then 
+			echo "too many files"
+
+
+			exit	
+		endif
+	endif
+   endif
+endif
+
+end   #while counter
+#moo

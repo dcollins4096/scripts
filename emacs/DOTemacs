@@ -1,0 +1,34 @@
+;; Red Hat Linux default .emacs initialization file
+
+;; Are we running XEmacs or Emacs?
+(defvar running-xemacs (string-match "XEmacs\\|Lucid" emacs-version))
+
+;; Set up the keyboard so the delete key on both the regular keyboard
+;; and the keypad delete the character under the cursor and to the right
+;; under X, instead of the default, backspace behavior.
+(global-set-key [delete] 'delete-char)
+(global-set-key [kp-delete] 'delete-char)
+
+;; Turn on font-lock mode for Emacs
+(cond ((not running-xemacs)
+	(global-font-lock-mode t)
+))
+
+;; Always end a file with a newline
+
+
+;; Stop at the end of the file, not just add lines
+(setq next-line-add-newlines nil)
+
+(setq load-path (cons "~/emacs" load-path))
+(autoload 'javascript-mode "javascript" nil t)
+(add-to-list 'auto-mode-alist '("\\.js\\'" . javascript-mode))
+
+(define-key global-map "\C-h" 'backward-delete-char)
+(global-set-key [backspace]  'delete-backward-char)
+
+(autoload 'python-mode "python-mode-1.0/python-mode" nil t)
+(add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
+
+(add-to-list 'auto-mode-alist '("\\.src\\'" . fortran-mode))
+

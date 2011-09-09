@@ -1,0 +1,230 @@
+#!/bin/csh -f
+
+#make html pages based on data images.  
+#Do I want just title and caption, or should I give it the full
+#IC description?  IC's are more useful.  
+
+#flow:
+
+#1.) Define html name
+#2.) create page
+#3.) Create prompt file
+#4.) Open editor. 
+#5.) Get user input.
+#3.) write title
+#4.) Write image
+#5.) link film if necessary (add later) 
+#6.) write caption.  
+
+#
+# Setup names, do some error checking.
+#
+
+set ext = .jpg
+
+set ImgName = $1
+
+set Title = "KH without CT"
+set Caption = " Monkies are funny."
+
+# PN  for Promptfile Name
+set PN = PageAdder.txt
+
+set BlankOnly = no
+set BlankName = "InfoSheet.txt"
+set ReadInfo = no
+
+
+#note that $1 is in quotes: otherwise, sending it -blank will cause problems.
+if( "$1" == "" ) then
+ 
+  echo "pa <image name> <info sheet filename>"
+  echo "   makes image pages."
+  echo "   If no infosheet is supplied, user is prompted (opens emacs window)"
+  echo "Options:"
+  echo "   -blank <Sheet Name> generates blank template sheet for repeated use (default sheet name = InfoSheet.txt)"
+  echo "           
+  exit
+
+endif
+
+
+#
+# Set up info sheet name:  If shee name given, read. If -blank is set, use InfoSheet.txt or given name
+#
+
+if( "$1" == "-blank" ) then
+ set BlankOnly = yes
+
+ if( "$2" != "" ) then
+    set PN = $2
+ else
+    set PN = $BlankName
+ endif
+
+else
+
+ set ImgName = $1
+ if( "$2" != "" ) then 
+   set PN = $2
+
+   if ( ! ( -e $PN ) ) then
+    echo "You say you want to read $PN, but its not there.  I'ma make it."
+    touch $PN
+   else
+    set ReadInfo = yes
+   endif
+ endif
+
+endif
+
+
+#
+# Generate notes prompt.
+#
+
+if( $ReadInfo != yes ) then
+
+ if ( -e $PN ) then 
+    echo "Reusing last temp file"
+ else
+  echo "Fill out this form, damnit."  >> $PN
+  echo "Title   : " >> $PN
+  echo "Words   :">> $PN
+  echo "Density :" >> $PN
+  echo "Pressure:" >> $PN
+  echo "Velocity:" >> $PN
+  echo "Bfield  :" >> $PN
+  echo "Time    :">> $PN
+  echo "Position :">> $PN
+  echo "Size    :">> $PN
+  echo "Location:">> $PN
+  echo "Plotted Variable :" >> $PN
+  echo "Range            :" >> $PN
+ endif
+
+endif
+
+#
+# If all you want is a blank info sheet, report and exit.
+#
+
+if( $BlankOnly == yes ) then 
+ echo "Wrote info sheet $PN"
+ exit
+endif
+
+
+#
+# Launch Editor
+#
+
+emacs -nw $PN
+
+#
+# Scrub prompt file for data
+#
+
+
+set Title =  `grep "^Title" $PN | cut -f 2- -d ":"`
+set Words =  `grep "^Words" $PN | cut -f 2- -d ":"`
+set Density = `grep "^Density" $PN | cut -f 2- -d ":"`
+set Pressure = `grep "^Pressure" $PN | cut -f 2- -d ":"`
+set Velocity = `grep "^Velocity" $PN | cut -f 2- -d ":"`
+set Time =   `grep "^Time" $PN | cut -f 2- -d ":"`
+set Bfield = `grep "^Bfield" $PN | cut -f 2- -d ":"`
+set Size = `grep "^Size" $PN | cut -f 2- -d ":"`
+set Location = `grep "^Location" $PN | cut -f 2- -d ":"`
+
+set Position = `grep "^Position" $PN | cut -f 2- -d ":"`
+set Plotted = `grep "^Plotted" $PN | cut -f 2- -d ":"`
+set Range = `grep "^Range" $PN | cut -f 2- -d ":"`
+
+
+#
+# Make page
+#
+
+set HtmlName = `basename $ImgName $ext`".html"
+
+
+
+
+if ( -e $HtmlName ) then
+	echo " $HtmlName Exists already."
+	echo " I'm going to remove and re-write it."
+ rm $HtmlName
+endif
+
+touch $HtmlName
+
+echo "<html>" >> $HtmlName
+
+#
+# Write a link, incase I want it later.
+#
+
+echo "<!--- In case you want a link:" >> $HtmlName
+echo '<a href = "' $HtmlName '">'     >> $HtmlName
+echo '<img src= "' $ImgName '" width = 200></a>' >> $HtmlName
+echo "--> " >> $HtmlName
+
+set LocalDir = `pwd`
+set LocalDir = `basename $LocalDir`
+
+
+echo '<a href = "./'$HtmlName '">'     
+echo '<img src= "./'$ImgName '" width = 200></a><br>' 
+
+#
+# on with the page itself"
+#
+
+echo "<center><font size = 4> $Title </center></font> " >> $HtmlName
+
+echo "<center> <img src = $ImgName > </center>" >> $HtmlName
+echo "<center> $Words </center>" >> $HtmlName
+
+#
+# Details of plot
+#
+
+
+echo "<table border = 2>"                                  >> $HtmlName
+echo "<tr> <td colspan = 2> <b> Plot Values</td> </tr>"       >> $HtmlName
+echo "<tr> <td> <b> Time </b> </td><td> $Time </td></tr> " >> $HtmlName
+
+echo "<tr> <td> <b> Position in volume </b> </td><td> $Position </td></tr> " >> $HtmlName
+echo "<tr> <td> <b> Plotted Variable </b> </td><td> $Plotted </td></tr> " >> $HtmlName
+echo "<tr> <td> <b> Range</b> </td><td> $Range </td></tr> " >> $HtmlName
+echo "</table>" >> $HtmlName
+
+
+#
+# Initial Conditions
+#
+
+echo "<table border = 2>"                                  >> $HtmlName
+echo "<tr> <td colspan = 2> <b> Initial Conditions</td> </tr>"       >> $HtmlName
+echo "<tr> <td> <b> Size</b> </td><td> $Size </td></tr> " >> $HtmlName
+
+echo "<tr> <td> <b> Density </b> </td><td> $Density </td></tr> " >> $HtmlName
+echo "<tr> <td> <b> Pressure </b> </td><td> $Pressure </td></tr> " >> $HtmlName
+echo "<tr> <td> <b> Velocity </b> </td><td> $Velocity </td></tr> " >> $HtmlName
+echo "<tr> <td> <b> Bfield </b> </td><td> $Bfield </td></tr> " >> $HtmlName
+echo "<tr> <td> <b> Location of Data </b> </td><td> $Location </td></tr> " >> $HtmlName
+
+
+echo "</table>" >> $HtmlName
+
+echo "</html>" >> $HtmlName
+
+
+chmod a+r $ImgName $HtmlName
+
+#
+# Clean up temp file.  Maybe I don't want to clean up temp file...
+#
+
+#if( -e $PN && $Re ) rm $PN
+#

@@ -1,0 +1,30 @@
+#!/bin/tcsh
+#
+# Merge the branch version into the working version.
+# Alway trunk first.  
+# --brief flag to just list files that have changed.
+
+
+set brief = 'no'
+set file = ''
+set dir1 = "svn://lca2.ucsd.edu/Microscope/trunk"
+set dir2 = "svn://lca2.ucsd.edu/Microscope/branches/dev"
+
+#parse command line.
+foreach arg ($argv)
+ switch ( $arg )
+ case "--brief":
+    set brief = 'yes'
+    break
+ default:
+    set file  = $arg
+    break
+  endsw
+end
+
+echo $dir1
+echo $dir2
+echo $file
+svn merge ${dir1}/$file ${dir2}
+
+#

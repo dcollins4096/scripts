@@ -1,0 +1,6 @@
+#!/bin/tcsh
+rm x
+echo $argv > tmp90210
+screen slist  
+rm tmp90210
+#end

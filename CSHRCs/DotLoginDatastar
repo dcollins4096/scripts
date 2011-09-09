@@ -1,0 +1,58 @@
+#---------------------------------------
+#	~/.login script for NPACI production systems
+#	$Revision: 1.1 $
+#
+#	Send your questions to consult@npaci.edu
+#
+#	This file executes a system-wide .login and terminal config,
+#	then falls through to execute anything you might add in yourself
+#
+	if ( -r $SHELLDIR/LOGIN ) then
+		source $SHELLDIR/LOGIN
+	else
+		echo "Account configuration script LOGIN missing,"
+		echo "please write to consult@npaci.edu."
+	endif
+	if ( -r $SHELLDIR/TERM.INIT ) then
+		source $SHELLDIR/TERM.INIT
+	else
+		echo "Account configuration script TERM.INIT missing,"
+		echo "please write to consult@npaci.edu."
+	endif
+#
+#	Now fall through to execute user's configurations
+#---------------------------------------
+
+#+++++++++++++++++++++++++++++++++++++++ (Environment variables area below here)
+#	This area is for setting environment variables and everything
+#	but terminal setup, which goes below
+
+# setenv PRINTER "xerox"			# Set default printer
+# setenv EXINIT "set autoindent"		# Configure vi, or use ~/.exrc
+
+#+++++++++++++++++++++++++++++++++++++++ (End of environment variables area)
+
+if ( $?ENVIRONMENT ) then			# Stop if executing in NQS
+	if ( "$ENVIRONMENT" == "BATCH" ) then
+		exit 0
+	endif
+endif
+
+#======================================= (Terminal setup area below here)
+#	This area is for terminal setup
+
+# setenv TERM "xterm"				# Always use xterm
+# setenv TERM "vt100"				# Always use vt100
+
+stty erase '^?'				# Set backspace key, good for emacs
+#stty erase '^H'				# Set backspace key (alternate)
+
+# rs						# Automatically resize xterm
+
+#======================================= (End of terminal setup area)
+
+#dcc: what's up with my EDITOR?
+setenv EDITOR "emacs -nw"
+unsetenv LM_LICENSE_FILE
+
+

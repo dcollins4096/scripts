@@ -1,0 +1,31 @@
+#!/bin/tcsh
+
+#Every 30 seconds, query Safari.  
+#If it's running, note in a log file.
+set log = ~//Research/CodeGames/WasteingAway/waste_data
+touch $log
+set debug = False
+if( `ps -A |grep time_waste |grep Scripts |wc -l ` > 1 ) then
+ echo "He says he's already got one."
+ ps -A |grep time_waste
+ exit
+endif
+while(1)
+    if( $debug == True ) echo "check"
+    set Waste = False
+    if( `ps -A |grep "Safari" |grep Applications |wc -l` > 0) then
+	set Waste = True
+	if( $debug == True ) echo "Safari"
+    endif
+    	
+
+    if( -e ~/waste ) then
+	set Waste = True
+	if( $debug == True ) echo "file"
+    endif
+    if( $Waste == True ) then
+	date >> $log
+    endif
+    sleep 30
+end
+#end

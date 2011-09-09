@@ -1,0 +1,6 @@
+#!/bin/tcsh
+set filename = $1
+set texname = $2
+mv ~/yt2.0/$filename .
+newfig $filename |&tee -a $texname
+#end

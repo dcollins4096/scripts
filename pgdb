@@ -1,0 +1,20 @@
+#!/bin/tcsh
+set echo
+set exec = $1
+set Name = dbg
+WN $Name
+set tmp_exec = '/var/tmp/pdbg'
+if( -e $tmp_exec ) rm $tmp_exec
+touch $tmp_exec
+set proclist = `ps ax | grep "??.*enzo.exe" | egrep -v "grep| Z " |awk '{print $1}'`
+echo '#\!/bin/tcsh' >> $tmp_exec
+echo 'set echo' >> $tmp_exec
+echo 'foreach i ('$proclist')'>> $tmp_exec
+echo 'screen  gdb '$exec' $i'>> $tmp_exec
+echo 'end'  >> $tmp_exec
+cat $tmp_exec
+chmod a+x $tmp_exec
+ll $tmp_exec
+screen -S $Name $tmp_exec
+if( -e $tmp_exec ) rm $tmp_exec
+#end

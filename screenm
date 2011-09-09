@@ -1,0 +1,18 @@
+#!/bin/tcsh
+set echo
+set Name = $1
+WN $Name
+shift
+set tmp_exec = '/var/tmp/screenm_tmp'
+if( -e $tmp_exec ) rm $tmp_exec
+touch $tmp_exec
+echo '#\!/bin/tcsh' >> $tmp_exec
+echo 'set echo' >> $tmp_exec
+echo 'foreach i ('$argv')'>> $tmp_exec
+echo 'screen -t  $i '>> $tmp_exec
+echo 'end'  >> $tmp_exec
+chmod a+x $tmp_exec
+ll $tmp_exec
+screen -S $Name $tmp_exec
+if( -e $tmp_exec ) rm $tmp_exec
+#end

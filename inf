@@ -1,0 +1,41 @@
+#! /bin/csh
+
+#munch up start and end times for a sim.
+#make sure you set info file to the proper filename
+
+set InfoFile = "dump"
+
+set counter = 0
+set DumpName = "monkey"
+set StartTime = "0"
+set EndTime = "0"
+
+#find last data dump (from Hierarchy files)
+foreach out (*.hierarchy)
+	set DumpName = `basename $out .hierarchy`
+	#echo $name
+	if ( $counter == 0 ) then
+		set StartTime = `ls -l $out |awk '{print $8}'`
+		set counter = 1
+	endif
+set EndTime = `ls -l $out |awk '{print $8}'`
+
+end
+
+echo Last File $DumpName
+
+set StartCycle = `grep "TopGrid dt" $InfoFile | head -1 |awk '{print $10}'`
+
+set SimStart = `grep "TopGrid dt" $InfoFile | head -1 |awk '{print $7}'`
+set StartDT = `grep "TopGrid dt" $InfoFile | head -1 |awk '{print $4}'`
+
+set EndDT = `grep "TopGrid dt" $InfoFile | tail -1  |awk '{print $4}'`
+set EndCycle = `head -1 $DumpName | awk '{print $3}'`
+set SimEnd  = `head -2 $DumpName |tail -1 |awk '{print $3}'`
+
+
+echo "Wall Start" $StartTime " end " $EndTime
+echo "Sim Start " $SimStart " end " $SimEnd
+echo "DT start " $StartDT " end " $EndDT
+echo "Cycle Start " $StartCycle " end " $EndCycle
+#end script

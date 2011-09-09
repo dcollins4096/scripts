@@ -1,0 +1,34 @@
+#!/bin/tcsh
+
+#
+# GetTimes2 <final>
+# runs from 0 to <final> and gets the time in the format 
+#   DD????/data???? Time
+#
+if( $1 == "" ) then
+    echo "GetTimes2 <final>"
+endif
+
+set final = $1
+if(  -e Times ) then
+    set last = `tail -1 Times |cut -c 3-6`
+    set start = `printf "%d" $last`
+else
+    touch Times
+    set start = 0
+endif
+
+foreach i (`nums $start $final`)
+    if( -e data$i ) then
+	set filename = data$i
+    else if( -e DD$i/data$i ) then
+	set filename = DD$i/data$i
+    else
+	echo "Not Found" $i
+	continue
+    endif
+    set this_time = `grep InitialTime $filename | awk '{print $3}'`
+    echo DD$i/data$i $this_time >> Times
+    echo DD$i/data$i $this_time 
+end
+#end

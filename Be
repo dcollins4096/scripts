@@ -1,0 +1,313 @@
+#!/bin/csh -f
+
+#
+# Makes a webpage that reflects the contents of the current directory.
+# (Very simple webpages)
+# Does it recursively, so directories within directories have the same thing done.
+# Output will be an html file with the same name as the current working directory (+.html)
+# Format of that html file is:
+#
+# It's intent is to keep the file structure of my research log consistent.  We'll see how well it works.
+# dcc 02/23/06 3:30 pm.
+# San Diego, CA.  Chilly with clear skies.
+# Just ate some grapes.
+
+# <link to parent dir.  Same as this file>
+# <list of links to sub directories. Same as this file>
+# <list of links to files.  Open in window to the right.>
+
+# Directories that contain a file called 'index.html' are treated like html files. 
+# Directories in said file will not be recuresed into. 
+
+# 04/10/06: added exclusion
+# the file Exclude.Be will contain a list of files to be ignored.
+
+# 09/10/07: re-ordered pages, StuffYouWant, and dirs. 
+
+# Flow for this code:
+# 1.) Create destination file, set up working variables.
+# 2.) Create link for Parent Dir
+# 3.) Get list of directories
+# 4.) Check for index.html.  Set up "Stuff You Want" links.
+# 5.) Create links for Sub directories.
+# 6.) Create links for html.
+# 7.) Recurse into subdirectories, call this routine again.  
+#     (repeat for new directory)
+
+#
+# Lets go.
+#
+
+
+# clean up temp files. 
+touch turd~
+rm *~
+pwd
+
+#Set up the driving routines.  
+#Link returns a html link tag.  Takes 3 arguments: source, text, target.  Target is optional.
+#MeetYourMaker should reflect this routine, wherever it is.
+
+set WhereItsAt = "/Users/davidcollins/Scripts"
+set Link = $WhereItsAt/Link
+set MeetYourMaker = $WhereItsAt/Be
+
+
+#
+# Generate destination file.
+#
+
+
+#Clean, create the destination file.
+set ThisDir = `pwd`
+set ThisFileName = `basename $ThisDir`.html
+
+#echo $ThisFileName
+
+#
+# Paused "AddTo" program.  Un comment the AddTo line, remove the rm $ThisFileName,
+# you were about to do the directories.
+
+set  AddTo = 'no'
+if ( -e $ThisFileName ) then 
+#    set AddTo = 'yes'
+    rm $ThisFileName
+else
+    touch $ThisFileName
+    chmod a+r $ThisFileName
+endif
+
+#
+# Generate Parent Dir tag.
+#
+
+
+cd ..
+
+set ParentDir = `pwd`
+set ParentFile = `basename $ParentDir`
+set ParentHTML = "../"$ParentFile".html"
+set ParentText = "Up One Dir"
+#echo $ParentHTML
+
+#go back to 'current'
+cd $ThisDir
+
+#Make link to parent direcory
+set LinkToAdd = `$Link $ParentHTML "$ParentText"` 
+
+if( $AddTo == 'yes' ) then
+    #watch these quotes: single to escape command line, double to escape sed.
+    sed  -i -e '1s:.*:'"$LinkToAdd": $ThisFileName
+else 
+    echo $LinkToAdd >> $ThisFileName
+endif
+
+#Write name of Current Directory. 
+
+set LinkToAdd =  " <br><br><font size = 4> `basename $ThisDir` </font><br> " 
+
+if( $AddTo == 'yes') then
+    sed  -i -e '2s:.*:'"$LinkToAdd": $ThisFileName
+else
+    echo "<br><br><font size = 4>" `basename $ThisDir` "</font><br>" >> $ThisFileName
+endif
+
+
+
+#
+# foreach directory in file, make a link.  Probably wants something fancier in the future.
+# Also set up 'exclusion' list.
+#
+
+#get list of directories.
+set dirlistFull = `ls -l | grep "^d" | awk '{print $9}'`
+
+#
+# From dirlistFull, remove all directories in Exclude.Be (if such a
+# file exists).  
+#
+
+set dirlist = ""
+
+
+# remove from dirlist based on existance in Exclude.Be or $ThisFile
+
+if( -e Exclude.Be ) then
+    foreach dir ( $dirlistFull )
+	set Excluded = `grep -w $dir Exclude.Be | wc -l`
+	if( $AddTo == 'yes' ) then
+	    @ Excluded = $Excluded + `grep $dir".html" $ThisFileName | wc -l`
+	endif
+	if ( $Excluded == '0' ) set dirlist = "$dirlist $dir"
+    end
+
+else
+    set dirlist = "$dirlistFull"
+endif
+
+
+#For directories containing a file called 'index.html', make them look
+#like files  (open index.html in RHS.)
+#To do so, Set up 'keep list', the list
+set RecurseList = ""
+set HasIndex = ""
+
+#
+# set up list of index files first.  These are the most important
+# things.  Make a list (HasIndex) of directories that have index.html files.
+#
+
+foreach d ($dirlist)
+ if( -e $d/index.html ) then
+    set HasIndex = "$HasIndex $d"
+ endif
+end
+
+# set title for the index section (or, check that it's there.)
+#                                 (This removal is more complicated because it might not be there.)
+
+#if ("$HasIndex" != "")  then
+#    if( $AddTo == 'yes' ) then
+#	gsed -i -e '/Stuff You Want/d' $ThisFileName
+#	gsed -i -e '3i\<br><br> Stuff You Want <br><br>' $ThisFileName	
+#    else
+#	echo "<br><br> Stuff You Want <br><br> " >> $ThisFileName
+#    endif
+#endif
+
+# moved  the rest of HasIndex stuff below
+
+
+#
+# Stopped the "existing file" program here. need to get some research done.
+#
+
+#if there are directories, print a header for 'directories,' then
+#print the directories.
+
+if ( "$dirlist" != "" ) then
+ echo "<br><br> Dirs <br><br> " >> $ThisFileName
+endif
+
+foreach d ($dirlist)
+    
+    set skip = 0
+    foreach h ($HasIndex )
+	if( $d == $h ) set skip = 1
+    end
+    if( $skip == 0 ) then
+	set dirhtml = "./$d/$d.html"
+	$Link $dirhtml $d >> $ThisFileName
+	echo "<br>" >> $ThisFileName
+	set RecurseList = "$RecurseList $d"
+	#echo "Recurse List " $RecurseList
+    endif
+end
+
+
+
+
+
+# I used to exclude recursion if there was an 'index' file.
+# Stopped doing it, but this is the code I used to use.  Saved for posterity.
+
+#foreach d ($dirlist)
+# if( -e $d/index.html ) then
+#    set HasIndex = "$HasIndex $d"
+#    #echo "Has Index " $HasIndex
+# else
+#  set dirhtml = "./$d/$d.html"
+#  $Link $dirhtml $d >> $ThisFileName
+#  echo "<br>" >> $ThisFileName
+#  set RecurseList = "$RecurseList $d"
+#  #echo "Recurse List " $RecurseList
+# endif
+#end
+
+#
+#for each html file, add a link.  Skip the page I'm making now, and
+#anything in Exlcude.Be
+#
+
+set filelistFull = `ls *.html *.php`
+
+#
+# Create working filelist from filelistFull w/ files in Exclude.Be excluded.
+#
+
+set filelist = ""
+
+if( -e Exclude.Be ) then
+    foreach file ( $filelistFull ) 
+	set Exclude = `grep $file Exclude.Be | wc -l`
+	if( $Exclude == '0' ) set filelist = "$filelist $file"
+    end
+else
+
+    set filelist = "$filelistFull"
+
+endif
+
+
+
+#
+# 08/07/06: now I want to exclude X.html that have associated X.jpg.
+#
+
+
+set filelistFull = "$filelist"
+set filelist = ""
+foreach f ($filelistFull)
+    set base = `basename $f .html`
+    if( !( -e "$base"."jpg" ) ) then
+	set filelist = "$filelist $f"
+    endif
+end
+
+
+
+if ( ("$filelist" != $ThisFileName)  ) echo "<br><br> Pages <br><br> " >> $ThisFileName
+
+foreach f ($HasIndex)
+	if ( $f != $ThisFileName ) then
+	 set phtml = "."/$f/index.html
+ 	 set word = $f
+	 #echo $phtml
+	 set LinkToAdd = `$Link $phtml $word BIG`
+	 set LinkToAdd = "$LinkToAdd <font size = "-1"> `$Link "./$f/$f.html" '(d)'` </font>"
+	 #check for existance in existing file.  
+	 if( $AddTo == 'yes') then
+	    if( `grep "$LinkToAdd" $ThisFileName |wc -l` == '0' ) \
+	      gsed -i -e "/<br><br> Dirs <br><br>/i\$LinkToAdd <br>" $ThisFileName
+	 else
+	    echo $LinkToAdd >> $ThisFileName
+	    echo "<br>" >> $ThisFileName
+	 endif
+	endif
+
+end
+
+foreach f ($filelist)
+	if ( $f != $ThisFileName ) then
+	 set phtml = "."/$f
+ 	 set word = `basename $f .html`
+	 #echo $phtml
+	 $Link $phtml $word BIG >> $ThisFileName
+	 echo "<br>" >> $ThisFileName
+	endif
+
+end
+
+#
+# Recursively call.  (this should be interesting, god I hope this works.)
+#
+
+foreach d ($RecurseList)
+ cd $d
+ $MeetYourMaker
+ cd ..
+end
+
+
+#Make it recursive.

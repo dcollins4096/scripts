@@ -1,0 +1,19 @@
+#!/bin/csh
+
+#make extractions of all the cubes in a directory.
+
+set enzo = enzo.exe
+set level = 0 #0 for root
+set Left = "0 0 0.5"
+set Right = "1 1 0.50390625"
+
+foreach dump (*.hierarchy)
+
+set name = `basename $dump .hierarchy`
+echo Extracting $name
+mpirun -np 1 $enzo -x -l $level -b $Left -f $Right $name
+mv amr_extract0000 $name.gridX
+
+end
+
+#end shell

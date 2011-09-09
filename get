@@ -1,0 +1,10 @@
+#!/bin/tcsh
+set startdir = `pwd`
+cd ~/yt2.0
+set png_list = `find . -name "*png"`
+set eps_list = `find . -name "*eps"`
+set pdf_list = `find . -name "*pdf"`
+cp $png_list $eps_list $pdf_list $startdir
+cd $startdir
+if ( $1 == 0 ) OpenStuff $png_list $eps_list $pdf_list
+#end

@@ -1,0 +1,15 @@
+#!/bin/tcsh -f
+( /usr/bin/tty ) > /dev/null
+ if ( $status == 0 ) then
+set path=(~/Scripts $path)
+setenv src  /nics/b/home/collins/Enzo/mhd_cvs
+setenv scratch /lustre/scratch/collins
+module load subversion/1.4.6
+
+unalias cwdcmd 
+#used to be aliased to (echo -n "\033]2;$USER on ${HOST}: $cwd\007\033]1;$HOST\007" > /dev/$tty)
+source ~/Scripts/Startup
+ endif
+
+
+

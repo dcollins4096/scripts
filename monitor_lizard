@@ -1,0 +1,30 @@
+#!/bin/tcsh
+while( 1 )
+echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+if( $1 != "-" ) then
+    set search_for = "*.hierarchy"
+else
+    set search_for = "DD*"
+endif
+dstat |grep dcollins
+if( ($1 == "" ) || ($1 == "-" && $2 == "" ) ) then
+ ls -ltd $search_for |head -2
+ echo Now : `date  | awk '{print $4}'` 
+ echo Last: `la -ltd $search_for |head -1 | awk '{print $8}'`
+else
+ foreach i ( $argv )
+  if( $i != "-" ) then
+#option one, doesn't do much when there's an hour between dumps.    
+#    ls -ltd $i/$search_for |head -2
+#    echo -----
+    ls -l $i/GlobalStats.out
+    tail -1 $i/GlobalStats.out |awk '{print $1 " " $2 " mach " $4 " alfv " $16}'
+  endif
+ end
+endif
+
+
+echo ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+sleep 600
+end
+#end

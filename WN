@@ -1,0 +1,5 @@
+#! /bin/csh -f
+
+printf "\033]0;$1\007"
+echo $1
+echo Done

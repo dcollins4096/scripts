@@ -1,0 +1,21 @@
+#!/bin/tcsh
+switch( $machine )
+    case "lca2.ucsd.edu":
+        set open_png = feh
+        set open_pdf = acroread
+        breaksw
+    case "MAC":
+        set open_png = open
+        set open_pdf = open
+        breaksw
+
+endsw
+if( $#argv > 1 ) then
+ set tmpout = 'multiread.pdf'
+ if ( -e $tmpout ) rm $tmpout
+ pdfsew.py -n $tmpout $argv
+ $open_pdf $tmpout &
+else
+ $open_pdf $1 &
+endif
+#end

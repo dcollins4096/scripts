@@ -1,0 +1,14 @@
+#!/bin/tcsh
+#Make a multi-column, unsorted file one column, sorted.
+#for /bin/ls -U
+if( $1 == "" ) then
+    echo "OneColSort <file>"
+endif
+if( -e tmp90210 ) rm tmp90120
+touch tmp90210
+foreach i (`cat $1`)
+    echo $i >> tmp90210
+end
+sort tmp90210 
+rm tmp90210
+#end

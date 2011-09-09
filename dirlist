@@ -1,0 +1,15 @@
+#!/bin/tcsh -f
+
+
+#
+# Take each directory.  If it's a directory (not regular file), return its name.
+#
+
+if( `ls |wc -l` != 0 ) then
+foreach i (*)
+	if( !( -f "$i") ) then
+		echo $i
+	endif
+end
+endif
+#

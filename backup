@@ -1,0 +1,34 @@
+#! /bin/csh
+#echo Start
+set Total = 0
+set BD = BackDir
+#ls *~
+if( ! -e $BD ) then
+	mkdir $BD
+endif
+foreach i (`ls *~ *\#*`)
+#    echo ============== Backing up $i
+
+#Count the number of backups for this file
+    set Total = `ls $BD/$i* | wc -l`
+#    echo There are $Total
+
+#Compare this backup to the last one in the directory.
+#If different, copy this backup to the Backup Directory,
+#increasing the number suffix.
+#If there's no change, remove it.
+    if( $Total == 0 ) then
+	@ Total = $Total + 1
+        echo Moving  $i
+        mv $i $BD/$i"."$Total
+    else
+        if( `diff $i $BD/$i"."$Total |wc -l` != 0 ) then
+            @ Total = $Total + 1
+            echo Moving  $i
+            mv $i $BD/$i"."$Total
+        else
+            echo removing $i  Backup exists.
+            rm $i
+        endif
+   endif
+end

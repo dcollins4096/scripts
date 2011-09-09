@@ -1,0 +1,56 @@
+#!/bin/tcsh
+
+if( $#argv < 2 ) then
+    echo "unarch dirname file_list"
+    echo "unarchives files in file_list from directory dirname"
+    echo "file_list = all grabs everything from the directory"
+    exit
+endif
+
+set counter = 2
+set n_elements = $#argv 
+set dir = $argv[1]
+
+touch monitor_down
+touch monitor_log_down
+
+set directory_list = ""
+if( $2 != all ) then 
+    set counter = 2
+    while($counter <= $#argv ) 
+	set directory_list = "$directory_list  $argv[$counter]"
+	@ counter = $counter + 1
+    end
+else
+    set tmpfile = monitor_hsi_file_list
+    if( -e $tmpfile) rm $tmpfile
+    hsi "ls $dir/*.tar" |& grep .tar > $tmpfile
+    set directory_list = (`cat $tmpfile`)
+endif
+
+
+foreach file ($directory_list)
+    echo "getting $dir/$file"
+    if( `grep "$dir/$file" monitor_down |wc -l` == 0 ) then
+
+	if( `which mssftp |cut -c 1 ` == "/" ) then 
+	    msscmd "tar xvf $dir/$file" |& tee monitor_log_down
+	else 
+	    if ( `which hsi | cut -c 1 ` == "/" ) then	    
+	    echo htar
+		htar xvf $dir/$file |& tee monitor_log_down
+	    endif
+	endif
+	if( $status == 0 ) then
+	    echo $dir/$file >> monitor_down
+	else
+		echo $dir/$file PROBLEM |&tee monitor_log_down
+	endif
+    else
+	echo "Already have " $dir/$file " skipping"
+    endif
+end
+
+
+#end
+

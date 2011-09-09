@@ -1,0 +1,19 @@
+#!/bin/tcsh
+#Shuffles data into articulated subdirectories.
+set all = False
+if( $1 == "all") set all = True
+set counter = -1
+foreach i (`steps |sort -r`)
+ set num = `echo $i | cut -c 5-`
+if( $all == True || $1 == '0' || $num != "0000" ) then 
+@ counter = $counter + 1
+if( $counter == 0 && $all == False) then
+ continue
+endif
+ echo $num   
+ mkdir DD$num
+ mv data$num* DD$num
+
+endif
+end
+#end

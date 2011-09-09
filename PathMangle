@@ -1,0 +1,38 @@
+#!/bin/tcsh
+
+set dir1 = $1
+set dir2 = $2
+
+if( $1 != "guess") then 
+ if( $2 == "" ) then
+     echo "PathMangle name1 name2"
+     echo "Looks for files containing name1.  Replaces name1 with name2."
+     echo "name1 = guess looks for GlobalDir in dataXXXX, replaces GlobalDir w/ .."
+     exit
+ endif
+else
+    if( $2 == "" ) then
+	set file = `steps`
+	if( $#file != 1 ) then
+	    echo "I don't know what file to use.  Not smart enough to guess."
+	    echo "$file"
+	    exit
+	endif
+    else
+	set file = $2
+    endif
+    set dir1 = `grep GlobalDir  $file | awk '{print $3}'`
+    cd ..
+    set dir2 = `pwd`
+    cd -
+endif
+replacing $dir1 
+with $dir2
+echo Replacing instances:
+grep  $dir1 *
+foreach i (`grep -l $dir1 *`)
+    sed -e "s:"$dir1":"$dir2":g" $i > tmp2321276
+    mv tmp2321276 $i
+end
+
+#end

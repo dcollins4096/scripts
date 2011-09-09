@@ -1,0 +1,67 @@
+#!/bin/tcsh
+if( $1 == "" ) then
+    echo "archiver  <destination directory> <dirlist>"
+    echo "tars all directories, puts in the archive, leaves a note in the file called monitor when finished"
+    echo "The directories Archived and Skip are not archived"
+    echo "dirlist is optional, defaults to all dirs"
+else
+set ArchName = Archived
+set DestName = $1
+set SkipName = Skip
+if( ! ( -e $ArchName ) ) then 
+    mkdir $ArchName
+endif
+if( $#argv > 1 ) then 
+    set directory_list = ""
+    set counter = 2
+    while($counter <= $#argv ) 
+	set directory_list = "$directory_list  $argv[$counter]"
+	@ counter = $counter + 1
+    end
+else
+    set directory_list = `dirlist`
+endif
+
+foreach i ($directory_list)
+
+    set ArchThisSet = True
+    if( ($i == $ArchName) || ($i == $SkipName) ) then
+	set ArchThisSet = False
+    endif
+
+    if( -e monitor ) then
+	if( `grep $i monitor |wc -l` != 0) then
+	    set ArchThisSet = False
+	endif
+    else
+	touch monitor
+    endif
+    if( ! -e monitor_log ) touch monitor_log
+    if( $i == Meta || $i == PreviousRunTracker ) then
+	set ArchThisSet = True
+    endif
+    echo $DestName >> monitor
+    date >> monitor
+    if( $ArchThisSet == True) then	    
+	echo "tar and feather" $i
+	if( `which mssftp |cut -c 1 ` == "/" ) then 
+	    echo    msscmd "tar cvf $DestName/$i.tar $i"
+	    msscmd "tar cvf $DestName/$i.tar $i"
+	else if ( `which hsi | cut -c 1 ` == "/" ) then
+	    echo "htar cvf $DestName/$i.tar $i"
+	    htar cvf $DestName/$i.tar $i |& tee -a monitor_log
+	else
+	    echo "Archive Command not found."
+	    exit -1
+	endif
+	if( $status == 0) then
+	    echo $i >> monitor
+	else
+	    echo $i PROBLEM!!!!
+	endif
+    else
+	echo skip $i
+    endif
+end
+
+#end

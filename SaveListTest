@@ -1,0 +1,20 @@
+#!/bin/tcsh
+
+set SaveList = "data0000 data0003"
+
+foreach i (data*)
+	set saveThis = 0
+	foreach save ($SaveList)	
+		if( $i =~ "$save"* ) then
+		    echo "save " $i
+		    set saveThis = 1
+		endif
+	end
+	if( $saveThis == 0 ) then
+	    rm $i
+	    echo "kill " $i
+	endif
+
+end
+
+#end script

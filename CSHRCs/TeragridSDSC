@@ -1,0 +1,17 @@
+# .tcshrc
+
+#Set Path:
+
+#set PATH=($PATH . )
+#set path=(/usr/local/apps/python-2.4.3 $path ~/Scripts . )
+set path=(/gpfs-wan/projects/cadac/software/Python-2.5.1-ia64/bin $path ~/Scripts . )
+setenv LD_LIBRARY_PATH "/gpfs-wan/projects/cadac/software/Python-2.5.1-ia64/lib:$LD_LIBRARY_PATH"
+unalias cwdcmd
+unalias d
+setenv scratch "/gpfs/ux454321/"
+setenv src "/users/ux454321/jb-cvs/amr_mpi/mhd"
+setenv wan "/gpfs-wan/projects/lca/dcollins"
+#ln -s /usr/local/apps/python-2.4.3/bin/python ~/Scripts/python24
+source ~/Scripts/Startup
+
+set path=($path ~/Research/CodeGames/RunTracker/)

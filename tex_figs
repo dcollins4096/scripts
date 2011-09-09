@@ -1,0 +1,71 @@
+#!/usr/bin/env python
+
+
+import sys
+import re
+def grab_figures(filename):
+    file = open(filename,'r')
+
+    re_eps = re.compile(r'^[^%].*{(.*\.(eps)).*}')
+    re_pdf = re.compile(r'^[^%].*{(.*\.(pdf)).*}')
+    re_png = re.compile(r'^[^%].*{(.*\.(png)).*}')
+    figs = []
+    for line in file:
+        for reg in [re_eps,re_pdf,re_png]:
+            match = reg.match(line)
+            if match != None:
+                figs.append(match.group(1))
+                #figs.append(match.group(1))
+                
+
+    file.close()
+    return figs
+def grab_files(filename):
+    file = open(filename,'r')
+    #egrep "\\include|\\input" ms.tex | sed -n "s:^[^%].*{\(.*\)}.*:\1.tex:p"
+    inc = re.compile(r'\\include')
+    inp = re.compile(r'\\input')
+    texre = re.compile(r'^[^%].*{(.*)}')
+    filenames = ['ms.tex']
+    for line in file:
+        texfile = None
+        for incinp in [inc,inp]:
+            match = incinp.match(line)
+            if match != None:
+                texfile = texre.match(line)
+        if texfile != None:
+            filenames.append( texfile.group(1)+".tex")
+    file.close()
+    return filenames
+if __name__ == '__main__':
+
+    from optparse import OptionParser
+    parser = OptionParser()
+    parser.add_option("-i", "--files", dest="files",
+                                        help="Get all .tex files from ms.tex",
+                                        action = "store_true", default = False)
+    parser.add_option("-g", "--figs", dest="figs",
+                                        help="Return figs from tex files",
+                                        action = "store_true", default = False)
+    (options, args) = parser.parse_args()
+
+    if options.files:
+        files = grab_files('ms.tex')
+        for file in files:
+            print file
+    if options.figs:
+        files = grab_files('ms.tex')
+        figures = []
+        for file in files:
+            figures += grab_figures(file)
+        for figure in figures:
+            print figure
+    if len(args) != 0:
+        figures = []
+        for file in args:
+            figures += grab_figures(file)
+        for figure in figures:
+            print figure
+
+
+#end

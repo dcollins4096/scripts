@@ -1,0 +1,141 @@
+
+
+
+
+#	~/.cshrc script for NPACI production systems
+#	$Revision: 1.1 $
+#
+#	Send your questions to consult@npaci.edu
+#
+#	This file executes a system-wide .cshrc, then falls
+#	through to execute anything you might add in yourself
+#
+	setenv SHELLDIR "/usr/local/paci/shellrc/bin"
+	if ( -r $SHELLDIR/CSHRC ) then
+		source $SHELLDIR/CSHRC
+	else
+		echo "Account configuration script CSHRC missing,"
+		echo "please write to consult@npaci.edu."
+	endif
+#
+#	Now fall through to execute user's configurations
+#---------------------------------------
+
+#+++++++++++++++++++++++++++++++++++++++ (Non-interactive area below here)
+#	This area is for non-interactive configuration commands, such as
+#	appending to path and setting umask
+
+set path = (/usr/local/apps/python_2.4.2/bin /usr/local/apps/srb/SRB.v.3.3.1  $path)		# Append a command search path
+# umask 027					# Allow group to read new files
+# umask 022					# Allow all to read new files
+
+#+++++++++++++++++++++++++++++++++++++++ (End of non-interactive area)
+
+if ( ! $?prompt ) exit 0			# Stop if executing in a script
+
+#======================================= (Interactive area below here)
+#	This area is for interactive configuration commands, such as
+#	aliases and configuring shell command history
+
+# alias ls "ls -CF"				# Favorite options of ls
+# alias cd 'cd \!* ; set prompt="$cwd % "'	# Prompt with current directory
+# set history = 100				# Remember last 100 commands
+
+# alias a 'alias'				# Abbreviate alias command
+# alias h 'history'				# Abbreviate history command
+# alias lo 'exit'				# Abbreviate logout command
+# alias log 'exit'				# Abbreviate logout command
+# alias ll 'ls -l'				# Long output form of ls
+
+# The following two commands get f90 to automatically locate some libraries
+# setenv LIBPATH '/usr/local/lib:/usr/local/explib:.'
+# alias f90 'f90 -L $LIBPATH'			# Request use of LIBPATH
+
+#alias python '/usr/local/apps/python_2.4.2/bin/python'
+alias scratch 'cd /dsgpfs/ux454321'
+alias h5ls '/users02/ucsd/ux453739/hdf5-64/bin/h5ls'
+alias h5dump '/users02/ucsd/ux453739/hdf5-64/bin/h5dump'
+
+alias showq 'showq | more'
+alias showu 'showq | grep $USER'
+alias showh 'showq | grep harkness'
+alias showp 'showq | grep ux453088'
+alias showa 'showq | grep ux453407'
+
+alias lld 'llq -u ux454321'
+alias bbs '~ux453739/bin/bbs.bat'
+
+alias inq 'llq -l -u $USER | grep -E "Status|Executable|Job Step Id"'
+
+alias bob ' nohup find . -type f -print | xargs touch '
+
+set tv4 = /usr/local/apps/totalview/tv6.4/toolworks/totalview.6.4.0-0/bin
+set tv5 = /usr/local/apps/totalview/tv6.5/toolworks/totalview.6.5.0-2/bin
+
+alias totalview /usr/local/apps/totalview/tv7.0/totalview.7.0.1-0/toolworks/totalview.7.0.1-0/bin//totalview
+
+source ~/idl_setup_6.4
+
+alias levelstats ~ux453739/bin/levelstats
+setenv OBJECT_MODE 64
+setenv GPFS /dsgpfs2/ux454321
+
+setenv NLSPATH /usr/lib/nls/msg/%L/%N:/usr/lib/nls/msg/%L/%N.cat
+
+alias sc "scp ~/public_html/ToScreen.jpg dcollins@cosmos.ucsd.edu:public_html"
+#alias sc 'scp \!* dcollins@cosmos.ucsd.edu:Visualise'
+
+
+alias srccvs 'cd ~/Analysis/amr_mpi/src'
+alias srcvm1 'cd ~/VM1/amr_mpi/src/'
+
+
+
+#set Vars=" poe executable  your_job  args   -nodes n -tasks_per_node m    -rmpool 1 -euilib us -euidevice sn_single"
+
+set Vars="-rmpool 1 -euilib us -euidevice sn_single"
+##if ( `uname -a | awk '{print $2}'` == "ds100" ) then
+#    setenv DISAPLAY enpc.ucsd.edu:0.0
+#    printf "\033]2;Interactive\007"
+#endif
+
+alias tar '/usr/local/apps/tar/bin/tar \!*'
+unalias cp
+unalias mv
+unalias rm
+setenv scratch "/gpfs/ux454321/"
+setenv mhd "~/Enzo/MHD/Enzo/amr_mpi/src"
+setenv src  "~/Enzo/mhd_1/amr_mpi/src"
+setenv llnl "~/Enzo/LLNL_cvs/amr_mpi/src"
+setenv devel "~/Enzo/devel/Enzo/amr_mpi/src"
+setenv wan "/gpfs-wan/projects/lca/dcollins"
+
+#temporary
+setenv src2 "/users/ucsd/ux454321/jb-cvs-enzo/amr_mpi/srcDev"
+alias src2  cd $src2
+#/temporary
+#setenv src "/users/ucsd/ux454321/jb-cvs-enzo/amr_mpi/src"
+setenv HDF5_INSTALL /users00/ucsd/ux453739/hdf5-64
+setenv HDF4_INSTALL /usr/local/apps64/hdf4/
+
+source ~/Scripts/Startup
+
+set path = ($path /users/ucsd/ux454321/Research/CodeGames/RunTracker)		# Append a command search path
+
+setenv WORK /rmount/work/ux454321
+alias work "cd $WORK"
+
+set path = (/usr/local/apps/python_2.4.2_64/bin $path)
+setenv PYTHONPATH /users/stanford/mturk/local/lib/python2.4/site-packages/
+setenv LD_LIBRARY_PATH /users/stanford/mturk/local/lib/:$LD_LIBRARY_PATH
+#unsetenv LM_LICENSE_FILE
+
+setenv strunk ~/Microscope/trunk
+setenv sbranch ~/Microscope/branches/dev
+alias strunk "cd $strunk"
+alias sbranch "cd $sbranch"
+
+alias ls "/opt/freeware/bin/ls \!*"
+alias du "/opt/freeware/bin/du \!*"
+#======================================= (End of interactive area)
+alias gnuplot /usr/local/apps/gnuplot-4.0.0/bin/gnuplot

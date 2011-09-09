@@ -1,0 +1,38 @@
+#!/bin/tcsh
+#
+# Remove the extraneous lines from the hierarchy
+# Accepts a hierarchy name.
+# if none given, looks for the first one.
+# If none found, or if -h given, spits help.
+#
+
+set filename = "SpitHelp"
+if( $1 != "-h" )  then
+    if( $1 == "" ) then
+	set test_file = `ls -1 *.hierarchy |head -1`
+	if( "$test_file"  != "" ) set filename = $test_file
+    else
+	if( -e "$1" ) then
+	    set filename = $1
+	else
+	    echo "file " $1 not found.
+	endif
+    endif
+endif
+
+if( $filename == "SpitHelp" )then
+    echo "%> unpoo filename"
+    echo "   Removes the poo lines from the hierarchy files."
+    echo "   If filename not given, looks for the first one."
+else
+    echo $filename
+    set backup = "$filename".OLD
+    set tmp = tmp.90210
+    mv $filename $backup
+    grep -v poo $backup > $tmp
+    mv $tmp $filename
+    echo "Remove poo from " $filename
+    echo "Saved backup as " $backup
+endif    
+
+#end

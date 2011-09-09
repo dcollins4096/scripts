@@ -1,0 +1,18 @@
+#!/bin/tcsh
+if($#argv == 0) then
+    echo "newfig <file list>"
+    echo "makes one tex fig for all files in file list"
+    exit
+endif
+
+echo "\begin{figure} \begin{center}"
+foreach i ($argv)
+    #set dirname = `basename $cwd`
+    set dirname = `whatdir`
+    set fig = $dirname/$i
+    echo "\includegraphics[width=\hw\textwidth]{$fig}"
+end
+echo "\caption[ ]{ }"
+echo "\label{} \end{center} \end{figure}"
+
+#end

@@ -1,0 +1,27 @@
+#!/bin/csh 
+
+
+
+set dufile = d1
+set outfile = d2
+if( $1 != "" ) set dufile = $1
+if( $1 == "" ) then
+    echo "SortDU <in> <out>"
+    echo "sorts the output of 'du -h'"
+    echo "<out> defaults to in.sort"
+    exit
+endif
+
+if ( "$2" == "") set outfile = $dufile".sort"
+if ( "$2" != "") set outfile = $2
+if( -e $outfile ) rm $outfile
+touch $outfile
+#pull out B,Kb,Mb,Gb
+foreach i (B K M G T)
+	grep "^.\{1,4\}$i" $dufile | sort -n >> $outfile
+end
+
+
+
+
+#

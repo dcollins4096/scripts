@@ -1,0 +1,16 @@
+#!/bin/tcsh
+
+#makes directories several deep.
+set dname = "$1"
+set BaseBase = `dirname "$1"`
+
+
+
+if( ! ( -e "$BaseBase" ) ) then
+	echo "also making $BaseBase"
+	md2 "$BaseBase"
+endif
+
+if( ! ( -e "$1" ) ) mkdir "$1"
+
+#fuck

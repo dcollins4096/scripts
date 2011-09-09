@@ -1,0 +1,278 @@
+#!/bin/ksh
+
+# 25 July 2008
+
+# Select the location where you are running this script
+# A="gsiftp://hpss.sdsc.edu:2811"
+# A="gsiftp://ds-gridftp.sdsc.edu:2811"
+# A="gsiftp://tg-gridftp.sdsc.teragrid.org:2811"
+# A="gsiftp://gridftp-abe.ncsa.teragrid.org:2811"
+# A="gsiftp://gridftp-co.ncsa.teragrid.org:2811"
+# A="gsiftp://tg-gridftp.ncsa.teragrid.org:2811"
+# A="gsiftp://gridftp1.nics.teragrid.org:2811"
+ A="gsiftp://gridftp1.ranger.tacc.utexas.edu:2811"
+# A="gsiftp://tg-gridftp.lonestar.tacc.teragrid.org:2811"
+#A="gsiftp://gridftp1.nics.teragrid.org:2811"
+#A="gsiftp://ds-gridftp.sdsc.edu:2811"
+B=`pwd`"/"
+C=`basename ${2}`
+Y=${2}
+Z=
+
+GUC="globus-url-copy"
+
+case $1 in
+
+# Copy to SDSC HPSS
+
+       ds-hpss )
+       X="gsiftp://hpss.sdsc.edu:2811/users/sdsc/harkness/"
+       BS="1048576"
+       SBS="268787456"
+       STR="-stripe"
+       PRO="8"
+       echo "Copy "${A}${B}${C}
+       echo "To   "${X}${Y}${Z}
+       $GUC -vb $STR -p $PRO -sbs $SBS -tcp-bs $BS ${A}${B}${C} ${X}${Y}${Z}
+       ;;
+
+# Copy to SDSC Datastar
+
+       ds-work )
+       X="gsiftp://ds-gridftp.sdsc.edu:2811/dsgpfs/harkness/"
+       BS="1048576"
+       SBS="268787456"
+       STR="-stripe"
+       PRO="12"
+       echo "Copy "${A}${B}${C}
+       echo "To   "${X}${Y}${Z}
+       $GUC -vb $STR -p $PRO -sbs $SBS -tcp-bs $BS ${A}${B}${C} ${X}${Y}${Z}
+       ;;
+
+       ds-sac )
+       X="gsiftp://ds-gridftp.sdsc.edu:2811/dsgpfs/projects/SAC/harkness/"
+       BS="1048576"
+       SBS="268787456"
+       STR="-stripe"
+       PRO="12"
+       echo "Copy "${A}${B}${C}
+       echo "To   "${X}${Y}${Z}
+       $GUC -vb $STR -p $PRO -sbs $SBS -tcp-bs $BS ${A}${B}${C} ${X}${Y}${Z}
+       ;;
+
+
+       ds-enzo )
+       X="gsiftp://ds-gridftp.sdsc.edu:2811/dsgpfs/projects/enzo/harkness/"
+       BS="1048576"
+       SBS="268787456"
+       STR="-stripe"
+       PRO="12"
+       echo "Copy "${A}${B}${C}
+       echo "To   "${X}${Y}${Z}
+       $GUC -vb $STR -p $PRO -sbs $SBS -tcp-bs $BS ${A}${B}${C} ${X}${Y}${Z}
+       ;;
+
+# Copy to SDSC Teragrid
+
+       tg-work )
+       X="gsiftp://tg-gridftp.sdsc.teragrid.org:2811/gpfs/ux454321/"
+       BS="1048576"
+       SBS="268787456"
+       STR="-stripe"
+       PRO="12"
+       echo "Copy "${A}${B}${C}
+       echo "To   "${X}${Y}${Z}
+       echo "Full Line: " $GUC -vb $STR -p $PRO -sbs $SBS -tcp-bs $BS ${A}${B}${C} ${X}${Y}${Z}
+       $GUC -vb $STR -p $PRO -sbs $SBS -tcp-bs $BS ${A}${B}${C} ${X}${Y}${Z}
+       ;;
+
+       tg-sac )
+       X="gsiftp://tg-gridftp.sdsc.teragrid.org:2811/gpfs/projects/SAC/harkness/"
+       BS="1048576"
+       SBS="268787456"
+       STR="-stripe"
+       PRO="12"
+       echo "Copy "${A}${B}${C}
+       echo "To   "${X}${Y}${Z}
+       $GUC -vb $STR -p $PRO -sbs $SBS -tcp-bs $BS ${A}${B}${C} ${X}${Y}${Z}
+       ;;
+
+       tg-enzo )
+       X="gsiftp://tg-gridftp.sdsc.teragrid.org:2811/gpfs/projects/enzo/harkness/"
+       BS="1048576"
+       SBS="268787456"
+       STR="-stripe"
+       PRO="12"
+       echo "Copy "${A}${B}${C}
+       echo "To   "${X}${Y}${Z}
+       $GUC -vb $STR -p $PRO -sbs $SBS -tcp-bs $BS ${A}${B}${C} ${X}${Y}${Z}
+       ;;
+
+# Copy to SDSC BlueGene
+
+       bg-work )
+       X="gsiftp://bg-gridftp.sdsc.edu:2811/bggpfs/harkness/"
+       BS="1048576"
+       SBS="268787456"
+       STR="-stripe"
+       PRO="12"
+       echo "Copy "${A}${B}${C}
+       echo "To   "${X}${Y}${Z}
+       $GUC -vb $STR -p $PRO -sbs $SBS -tcp-bs $BS ${A}${B}${C} ${X}${Y}${Z}
+       ;;
+
+       bg-sac )
+       X="gsiftp://bg-gridftp.sdsc.edu:2811/bggpfs/projects/SAC/harkness/"
+       BS="1048576"
+       SBS="268787456"
+       STR="-stripe"
+       PRO="12"
+       echo "Copy "${A}${B}${C}
+       echo "To   "${X}${Y}${Z}
+       $GUC -vb $STR -p $PRO -sbs $SBS -tcp-bs $BS ${A}${B}${C} ${X}${Y}${Z}
+       ;;
+
+# Copy to NCSA Mercury
+
+       hg-work )
+       X="gsiftp://tg-gridftp.ncsa.teragrid.org:2811/gpfs_scratch1/harkness/"
+       BS="1048576"
+       SBS="268787456"
+       STR="-stripe"
+       PRO="12"
+       echo "Copy "${A}${B}${C}
+       echo "To   "${X}${Y}${Z}
+       $GUC -vb $STR -p $PRO -sbs $SBS -tcp-bs $BS ${A}${B}${C} ${X}${Y}${Z}
+       ;;
+
+# Copy to NCSA Cobalt
+
+       co-work )
+       X="gsiftp://gridftp-co.ncsa.teragrid.org:2811/scratch/users/harkness/"
+       BS="1048576"
+       SBS="268787456"
+       STR="-stripe"
+       PRO="12"
+       echo "Copy "${A}${B}${C}
+       echo "To   "${X}${Y}${Z}
+       $GUC -vb $STR -p $PRO -sbs $SBS -tcp-bs $BS ${A}${B}${C} ${X}${Y}${Z}
+       ;;
+
+# Copy to NCSA Abe
+
+       abe-work )
+       X="gsiftp://gridftp-abe.ncsa.teragrid.org:2811/cfs/scratch/users/harkness/"
+       BS="1048576"
+       SBS="268787456"
+       STR="-stripe"
+       PRO="12"
+       echo "Copy "${A}${B}${C}
+       echo "To   "${X}${Y}${Z}
+       $GUC -vb $STR -p $PRO -sbs $SBS -tcp-bs $BS ${A}${B}${C} ${X}${Y}${Z}
+       ;;
+
+# Copy to TACC Lonestar
+
+       ls-work )
+       X="gsiftp://tg-gridftp.lonestar.tacc.teragrid.org:2811/work/staff/harkness/"
+       BS="1048576"
+       SBS="268787456"
+       STR="-stripe"
+       PRO="12"
+       echo "Copy "${A}${B}${C}
+       echo "To   "${X}${Y}${Z}
+       $GUC -vb $STR -p $PRO -sbs $SBS -tcp-bs $BS ${A}${B}${C} ${X}${Y}${Z}
+       ;;
+
+# Copy to TACC Ranger
+
+       tx-work )
+       X="gsiftp://gridftp1.ranger.tacc.utexas.edu:2811/scratch/00369/tg456484/"
+       BS="1048576"
+       SBS="268787456"
+       STR="-stripe"
+       PRO="12"
+       echo "Copy "${A}${B}${C}
+       echo "To   "${X}${Y}${Z}
+       $GUC -vb $STR -p $PRO -sbs $SBS -tcp-bs $BS ${A}${B}${C} ${X}${Y}${Z}
+       ;;
+
+# Copy to PSC BigBen
+
+       bb-work )
+       X="gsiftp://tg-gridftp.bigben.psc.teragrid.org:2811/scratcha/harkness/"
+       BS="1048576"
+       SBS="268787456"
+       STR="-stripe"
+       PRO="12"
+       echo "Copy "${A}${B}${C}
+       echo "To   "${X}${Y}${Z}
+       $GUC -vb $STR -p $PRO -sbs $SBS -tcp-bs $BS ${A}${B}${C} ${X}${Y}${Z}
+       ;;
+
+# Copy to NICS Kraken
+
+       kr-work )
+	echo "penis"
+       X="gsiftp://gridftp.nics.teragrid.org:2811/lustre/scratch/collins/"
+       BS="1048576"
+       SBS="268787456"
+       STR="-stripe"
+       PRO="12"
+       echo "Copy "${A}${B}${C}
+       echo "To   "${X}${Y}${Z}
+       $GUC -vb $STR -p $PRO -sbs $SBS -tcp-bs $BS ${A}${B}${C} ${X}${Y}${Z}
+       ;;
+
+# Copy to NERSC DaVinci
+
+       dav )
+       X="gsiftp://davinci.nersc.gov:2811/project/projectdirs/incite8/harkness/XFER"
+       BS="1048576"
+       $GUC -vb -p 4  -tcp-bs $BS ${A}${B}${C} ${X}${Y}${Z}
+       ;;
+
+# Copy to GPFS-WAN
+
+       wan-work )
+       X="gsiftp://gw-gridftp.sdsc.teragrid.org:2811//gpfs-wan/projects/lca/dcollins/"
+       BS="1048576"
+       SBS="268787456"
+       STR="-stripe"
+       PRO="12"
+       echo "Copy "${A}${B}${C}
+       echo "To   "${X}${Y}${Z}
+       echo $GUC -vb $STR -p $PRO -sbs $SBS -tcp-bs $BS ${A}${B}${C} ${X}${Y}${Z}
+       $GUC -vb $STR -p $PRO -sbs $SBS -tcp-bs $BS ${A}${B}${C} ${X}${Y}${Z}
+
+       ;;
+
+       wan-asta )
+       X="gsiftp://tg-gridftp.sdsc.teragrid.org:2811/gpfs-wan/projects/asta/harkness/"
+       BS="1048576"
+       SBS="268787456"
+       STR="-stripe"
+       PRO="12"
+       echo "Copy "${A}${B}${C}
+       echo "To   "${X}${Y}${Z}
+       $GUC -vb $STR -p $PRO -sbs $SBS -tcp-bs $BS ${A}${B}${C} ${X}${Y}${Z}
+       ;;
+
+       wan-enzo )
+       X="gsiftp://tg-gridftp.sdsc.teragrid.org:2811/gpfs-wan/projects/lca/harkness/"
+       BS="1048576"
+       SBS="268787456"
+       STR="-stripe"
+       PRO="12"
+       echo "Copy "${A}${B}${C}
+       echo "To   "${X}${Y}${Z}
+       $GUC -vb $STR -p $PRO -sbs $SBS -tcp-bs $BS ${A}${B}${C} ${X}${Y}${Z}
+       ;;
+
+# failure
+       * )
+       ;;
+
+esac
+
+

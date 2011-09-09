@@ -1,0 +1,10 @@
+#!/bin/tcsh
+set dir = ""
+while( ! -e ms.tex )
+    set dir = `basename $cwd`"/$dir"
+    cd ..
+end
+echo $dir
+#set dirname = `pwd`
+#set 
+#end

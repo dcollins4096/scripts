@@ -1,0 +1,66 @@
+#!/bin/tcsh
+
+if( $2 == "" ) then
+    echo "gdsm mach file_base"
+    echo "isssues scp ux454321@dslogin.sdsc.edu:Microscope/trunk/$file_base*"
+    echo "makes everything readable"
+    echo "Pulls thumbnail info of the html file."
+    echo "Acceptable mach:"
+    echo "     ds: ux454321@dsdirect.sdsc.edu:Microscope/trunk/"
+    echo "     pp: dcollins@ppcluster.ucsd.edu:Microscope/trunk/"
+    exit
+endif
+set mach_short = $1
+set file_base = $2
+set hdir = `pwd`
+set destdir = /tmp/gdsm
+if ( ! -e $destdir ) mkdir $destdir
+set machine = "no machine"
+switch ( $mach_short ) 
+    case triton:
+	#set machine = "dccollin@triton-login.sdsc.edu:yt/"
+	set machine = "dccollin@triton-38.sdsc.edu:yt2.0/"
+	breaksw
+    case tritonM:
+	set machine = "dccollin@triton-login.sdsc.edu:Microscope/"
+	breaksw
+    case ds:
+	set machine =  "ux454321@dsdirect.sdsc.edu:Microscope/trunk/"
+	breaksw
+
+    case kr:
+	set machine =  "collins@kraken-pwd.nics.utk.edu:yt/"
+	breaksw
+
+    case abe:
+	set machine =  "dcollins@abe.ncsa.uiuc.edu:yt"
+	breaksw
+
+    case dsy:
+	set machine =  "ux454321@dslogin.sdsc.edu:yt/"
+	breaksw
+    case pp:
+	set machine = "dcollins@ppcluster.ucsd.edu:Microscope/trunk/"
+	breaksw
+    case ranger:
+	set machine = tg456484@tg-login.ranger.tacc.teragrid.org:yt/
+	breaksw
+    case rangert:
+	set machine = tg456484@tg-login.ranger.tacc.teragrid.org:yt_tmp/
+	breaksw
+    default:
+	echo "no machine found."
+	breaksw
+endsw
+cd $destdir
+echo scp "$machine"/"$file_base" .
+scp "$machine"/"$file_base*" .
+set new_files = *
+cd $hdir
+mv $destdir/* .
+OpenStuff $new_files
+#chmod a+r $file_base*
+#if( -e $file_base.html ) head -n4 $file_base.html
+#if( "$open" == "-o" ) open "$file_base"*png
+#if( "$open" == "-o" ) view_eps "$file_base"*eps
+#end

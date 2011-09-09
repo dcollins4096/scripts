@@ -1,0 +1,9 @@
+#!/bin/tcsh
+if( $1 != "" ) then
+    set file = $1
+else
+    set file = `steps |tail -1`
+endif
+echo $file
+cat $file |sed -n 's:InitialTime[[:space:]]*=\(.*\):\1\*11.4:p'|bc
+#end

@@ -1,0 +1,15 @@
+#! /bin/csh
+if( $1 == "" ) then 
+   echo "FuckYou <l (ell) to list> <process name to kill>"
+else
+    if( $1 == "l") then
+	    echo Listing $2
+	    ps -A | grep -w $2 | awk '{print $1}'
+    else
+	    echo Killing $1
+	    foreach i ( `ps -u dcollins | grep -w $1 | awk '{print $1}'` )
+		    echo Killing $i
+		    kill -9 $i
+	    end
+    endif
+endif

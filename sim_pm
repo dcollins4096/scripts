@@ -1,0 +1,142 @@
+#!/bin/tcsh
+#
+# Simulation Post Mortem. dcollins. Fall 2009.
+#
+# Grabs information about a simulation in the directory, posts it to the run tracker, restars another sim.
+# If there is a RunTracker.xml, this is used to build the xml that is posted.  Otherwise, defaults are used.
+#
+# Usage:
+# sim_pm <np> <nr> <nx> <dbg 0>
+# > sim_pm help 
+#   to print help message
+# Post mortem (and resurection) for a sim.
+# 1.) Sort out the earliest output file, using Script.kraken5 and PBS -N
+# 2.) PostTracker for that script
+# 3.) Move output to Meta
+#
+# Options: 
+# np     : no post.  Generate and display the xml file, don't post to the tracker.
+# nr     : no resubmission.  Post the xml to the tracker, don't resubmit the sim.
+# nx     : don't show the xml file
+# nrt    : no RunTracker.xml
+#
+# Assumptions and behavior:
+# The earliest output file is used to ensure that sims get posted in run order.
+# All log files are moved into a directory called Meta
+# Machine dependant behavior should be updated as new machines are used.  This can be found
+# under "Machine Dependant Stuff."  
+#
+
+#
+# parse args
+#
+
+set xml   = "-x"
+set post  = "-p"
+set resub = True
+set debug = 0
+set nrt   = False
+while( $#argv )
+    switch( $1 )
+	case np:
+        # No Post
+	    set post = ""
+	    shift
+	breaksw
+	case nx:
+        # No xml
+	    set xml = ""
+	    shift
+	breaksw
+	case nr:
+	    set resub = False
+	    shift
+	breaksw
+	case nrt:
+	    set nrt = True
+	    shift
+	breaksw
+	case debug:
+	    set debug = $2
+	    shift
+	    shift
+	breaksw
+	case help:
+	    echo "sim_pm (opts)"
+	    echo "    Expects that wall-time information is in the err file."
+	    echo "    options: "
+	    echo "       nx don't show xml file.
+        echo "       np don't post to the RunTracker data base."
+	    echo "          This option also doesn't move the job file to Meta"
+	    echo "       nr don't resubmit."
+	    echo "       nrt ignore the lack of RunTracker.xml"
+	    echo "       debug (level)"
+	    echo "          0 (none) 1 (some) 2 (set echo)"
+	    exit
+	breaksw
+	default:
+	    echo "Unknown argument ($1) ignoring"
+	    shift
+	    
+	breaksw
+    endsw
+end
+
+if( $debug > 1 ) then
+    set echo
+endif
+
+
+if( $debug > 0) then
+    echo "Post " $post
+    echo "Resub" $resub
+    echo "Debug" $debug 
+endif
+
+
+#
+# Track down earliest sim file.
+# Machine dependant stuff.
+#
+
+set machine =  `uname -a | awk '{print $2}'` 
+if( `echo $machine |cut -c 1-6` == "kraken") then
+    set submit = qsub
+    set script = Script.kraken5
+    set jobname = `sed -n 's,#PBS\s*-N\s*\(.*\),\1,p' $script`
+    set earliest_err = `ls -1 $jobname.e* |sort |head -1`
+    set earliest_out = `ls -1 $jobname.o* |sort |head -1`
+    if( $status != 0 ) then
+	echo "No jobs to PM?"
+	exit
+    endif
+else
+    echo "machine not supported"
+    exit
+endif
+
+if( $debug > 0 ) then
+    echo "Script:  " $script
+    echo "Job name:" $jobname
+    echo "Earliest:" $earliest_err
+endif
+
+if( ( ! -e RunTracker.xml ) && $nrt == False ) then
+    echo "No RunTracker.xml found."
+    echo "Either create one, or supply the 'nrt' flag to sim_pm"
+    exit -1
+endif
+
+PostTracker.py $earliest_err $xml $post
+
+if( ! -e Meta ) mkdir Meta
+if( "$post" != "" ) then
+    mv $earliest_err $earliest_out Meta
+else
+    echo "not posting, so not moving files" $earliest_err $earliest_out
+endif
+ls Meta/$earliest_err Meta/$earliest_out
+
+if( $resub == True ) $submit $script
+
+#end

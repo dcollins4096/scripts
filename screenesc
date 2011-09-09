@@ -1,0 +1,15 @@
+#!/bin/tcsh
+set current_escape = `sed -n 's,^escape\s*\^\(..\),\1,p' ~/.screenrc`
+switch ( $current_escape)
+    case "Gg":
+        sed -i 's,escape\s*\^Gg,escape ^Oo,' ~/.screenrc
+        breaksw
+    case "Oo":
+        sed -i 's,escape\s*\^Oo,escape ^Gg,' ~/.screenrc
+        breaksw
+    default:
+        echo "Not sure what to do with the current"
+endsw
+echo "New escape: "  `grep ^escape ~/.screenrc |awk '{print $2}'`
+#end
+

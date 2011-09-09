@@ -1,0 +1,13 @@
+#!/bin/tcsh
+if( -e data_time_master) rm data_time_master
+touch data_time_master
+foreach i (data_time_????)
+    cat $i >> data_time_master
+end
+#end
+set name = $1
+if( $1 == "" ) set name = t7
+
+time_parse.py data_time_master -i $1.png
+time_parse.py data_time_master -s > $1.txt
+cat $1.txt

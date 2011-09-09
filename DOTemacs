@@ -1,0 +1,9 @@
+(setq load-path (cons "~/emacs" load-path))
+
+(define-key global-map "\C-h" 'backward-delete-char)
+(global-set-key [backspace]  'delete-backward-char)
+
+(autoload 'python-mode "python-mode-1.0/python-mode" nil t)
+(add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
+
+(add-to-list 'auto-mode-alist '("\\.src\\'" . fortran-mode))

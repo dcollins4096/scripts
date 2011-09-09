@@ -1,0 +1,5 @@
+[extensions]
+hgext.extdiff =
+
+[extdiff]
+cmd.vimdiff = vimdiff

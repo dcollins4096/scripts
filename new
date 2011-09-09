@@ -1,0 +1,43 @@
+#!/bin/tcsh
+
+# Makes a blank executable script.
+
+if ( $1 == "" ) then 
+	echo "> new monkey"
+	echo " generates an executable script called monkey, makes it executable, adds the tcsh header."
+	exit
+endif
+set file = $1
+set tcshHead = '#\!/bin/tcsh'
+set pyHead = '#\!/usr/bin/env python'
+set head = $tcshHead
+
+#select environment by argment.
+switch( $2 )
+  case "":
+    set head = "$tcshHead"
+    breaksw
+  case "-py":
+    set head = "$pyHead"
+    breaksw
+  default:
+    echo "unknown option $2"
+    exit
+    breaksw
+endsw
+
+#select environment by extension.
+if( `basename $file .py` != $file) set head = "$pyHead"
+
+if( -e $file ) then 
+	echo " file $file exists.  Pick again."
+	exit
+endif
+touch $file
+chmod +x $file
+echo "$head" >> $file
+echo '' >> $file
+echo '#end' >> $file
+vim $file
+
+#end

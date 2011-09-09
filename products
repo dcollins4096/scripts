@@ -1,0 +1,67 @@
+#!/bin/tcsh -f
+#
+# Exameine ProductFile file for list of fields and list of directories and sizes.
+# Runs mglue using those parameters
+#
+
+#Read file for parameters.  If non-existent, help the user out.
+#Loop over directories. 
+#Make 'dd0000.product' directory (or whatever)
+#loop over products
+#make data product
+#copy to dest directory
+
+set ProductFile = ProductFile
+
+if( $1 == prompt ) then
+    if( ! -e $ProductFile ) then
+	echo "set dirlist = " > $ProductFile
+	echo "set fields =  " >> $ProductFile
+	echo "set n_grids = " >> $ProductFile
+	echo "set size = "  >> $ProductFile
+	echo "set binary = 0 " >> $ProductFile
+    endif
+    emacs -nw ProductFile
+endif
+if( ! (-e $ProductFile ) ) then
+    echo "products"
+    echo "Looks for a file ProductFile, which contains:"
+    echo "  set dirlist = list "
+    echo "  set fields = list "
+    echo "  set n_grids = ngrids"
+    echo "  set size = rootgrid size"
+    echo "Assumes things are in the DDxxxx file structure, one output per file."
+    echo "products prompt"
+    echo "creates and edits the file for you."
+    exit
+else
+    source ProductFile
+
+    foreach dir ($dirlist)
+	set DestDir = $dir".products"
+	if( ! (-e $DestDir) ) then
+	    mkdir $DestDir
+	endif
+	cd $dir
+	set dataset = `steps |tail -1`	
+	foreach f ($fields) 
+	    if( $binary == 1 ) then
+
+		mglue $dataset $f $size $n_grids -b
+
+	    else
+		if( ! ( -e ../$DestDir/$f )  )then
+		    echo mglue $dataset $f $size $n_grids
+		    exit
+		    mv $f ../$DestDir
+		else
+		    echo Skipping $DestDir/$f
+		endif
+	    endif
+	 end
+	 if( $binary == 1 ) mv *.dat *.dim ../$DestDir
+	 cd -
+    end
+endif
+
+#end

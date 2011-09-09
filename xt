@@ -1,0 +1,273 @@
+#! /bin/tcsh -f
+set title = "monkey"
+set SSH_TO = ""
+set ForwardingFlag = "-X"
+if( `uname -a | awk '{print $1}'` == Darwin ) set ForwardingFlag = "-Y"
+set Modifier = no
+set MultipleWindows = no
+set NewWindow = no
+set counter = 1
+if( "$1" == "-many" ) then 
+    set argset = (2 3 4 5 6 7 8 9)
+else if ("$1" == "-std" ) then
+    set argset = (lca2 lca2 4 5 6 sftp write nine)
+else if ("$1" == "-stdm" ) then
+    set argset = (mn mn 4 5 6 sftp write nine)
+else if ("$1" == "-stdt" ) then
+    set argset = (triton38 triton38 4 5 6 sftp write nine)
+else
+ set argset = ($argv)
+endif
+
+
+while( $counter <= $#argset )
+    set arg = $argset[$counter]
+    @ counter = $counter + 1    
+
+    if( $MultipleWindows == no ) then
+	set n_windows = 1
+    endif
+    set MultipleWindows = no
+
+    #default values for window
+    if( $Modifier == no ) then
+	set bgcolor = cornsilk
+	set size = "-fn 10x20"
+	#modifiers are placed before the window argument
+	#If a modifier is found, no xterm is launched.
+    endif
+    set Modifier = no
+
+
+    if( "$arg" == "" ) then
+	set title = dcpc
+    else
+	set title = $arg
+    endif
+
+
+    switch( $arg ) 
+    case bigred:
+    set SSH_TO = tg-dcoll@login.bigred.iu.teragrid.org
+    breaksw
+    case triton:
+    	set SSH_TO = dccollin@triton-login.sdsc.edu
+	breaksw
+    case triton38:
+    	set SSH_TO = dccollin@triton-38.sdsc.edu
+	breaksw
+    case verne:
+	set SSH_TO = collins@verne.nics.tennessee.edu
+	breaksw
+
+    case ranger:
+	set SSH_TO = tg456484@tg-login.ranger.tacc.teragrid.org
+	breaksw
+
+    case naut:
+    case nautilus:
+    set SSH_TO = collins@login.nautilus.nics.teragrid.org
+    breaksw
+    
+    case hactar:
+	echo actually, you cant get there directly.
+	set SSH_TO = ""
+#	    set SSH_TO = dcollins@hactar.astro.helsinki.fi
+	    breaksw
+    case dash:
+        set SSH_TO = ux454321@dash-login2.sdsc.edu
+        breaksw
+    case sky1:
+	    set SSH_TO = dcollins@sky1.astro.helsinki.fi
+	    breaksw
+    case ppmac:
+	    set SSH_TO = dcollins@ppmac.ucsd.edu
+	    breaksw
+    case mn:
+	    set SSH_TO = dcollins@mngrid.ucsd.edu
+	    breaksw
+    case lca2:
+	    set SSH_TO = dcollins@lca2.ucsd.edu
+	    breaksw
+    case svn:
+	    set SSH_TO = svn@lca2.ucsd.edu
+	    breaksw
+    case yubm:
+	    set SSH_TO = yubm2@lca2.ucsd.edu
+	    breaksw
+    case cosmos:
+	    set SSH_TO = dcollins@10.1.1.2
+	    breaksw
+    case bh:
+	    set SSH_TO = ux454321@horizon.npaci.edu
+	    breaksw
+    case b80:
+	    set SSH_TO = ux454321@b80login.sdsc.edu
+	    breaksw
+    case b82:
+	    set SSH_TO = ux454321@b80n02.sdsc.edu
+	    breaksw
+    case physics-shell:
+	    set SSH_TO = dcollins@physics-shell.ucsd.edu
+	    breaksw
+    case physics:
+	    set SSH_TO = dcollins@physics.ucsd.edu
+	    breaksw
+    case ds:
+	    set SSH_TO = ux454321@dslogin.sdsc.edu
+	    breaksw
+	    
+    case dspoe: 
+	    set SSH_TO = ux454321@dspoe.sdsc.edu
+	    breaksw
+    case ds4: 
+	    set SSH_TO = ux454321@ds004.sdsc.edu
+	    breaksw
+    case ds11: 
+	    set SSH_TO = ux454321@ds011.sdsc.edu
+	    breaksw
+    case dsdirect: 
+	    set SSH_TO = ux454321@dsdirect.sdsc.edu
+	    breaksw
+    case pp: 
+	    set SSH_TO = dcollins@ppcluster.ucsd.edu
+	    breaksw
+    case tgn: 
+	    set SSH_TO = dcollins@tg-login.ncsa.teragrid.org
+	    breaksw
+    case tgs: 
+	    set SSH_TO = ux454321@tg-login.sdsc.teragrid.org
+	    breaksw
+    case tgs2: 
+	    set SSH_TO = ux454321@tg-login2.sdsc.teragrid.org
+	    breaksw
+    case co: 
+	    set SSH_TO = dcollins@cobalt.ncsa.teragrid.org
+	    breaksw
+    case abe: 
+	    set SSH_TO = dcollins@abe.ncsa.uiuc.edu
+	    breaksw
+    case abe3: 
+	    set SSH_TO = dcollins@honest3.ncsa.uiuc.edu
+	    breaksw
+    case abe4: 
+	    set SSH_TO = dcollins@honest4.ncsa.uiuc.edu
+	    breaksw
+    case t3:
+	    set SSH_TO = dcollins@t3.ncsa.uiuc.edu
+	    breaksw
+    case lemieux:
+	    set SSH_TO = dcollins@lemieux.psc.edu
+	    breaksw
+    case rachel:
+	    set SSH_TO = dcollins@rachel.psc.edu
+	    breaksw
+
+    case mamacass:
+	    set SSH_TO = guest1@mamacass.ucsd.edu
+	    breaksw
+    case krakenp:
+	    set SSH_TO = collins@kraken-pwd.nics.utk.edu
+	    breaksw
+    case kraken1:
+            set SSH_TO = collins@krakenpf1.nics.utk.edu
+            breaksw
+    case kraken2:
+            set SSH_TO = collins@krakenpf2.nics.utk.edu
+            breaksw
+    case kraken3:
+            set SSH_TO = collins@krakenpf3.nics.utk.edu
+            breaksw
+    case kraken4:
+            set SSH_TO = collins@krakenpf4.nics.utk.edu
+            breaksw
+    case kraken5:
+            set SSH_TO = collins@krakenpf5.nics.utk.edu
+            breaksw
+    case kraken6:
+            set SSH_TO = collins@krakenpf6.nics.utk.edu
+            breaksw
+    case kraken7:
+            set SSH_TO = collins@krakenpf7.nics.utk.edu
+            breaksw
+    case kraken8:
+            set SSH_TO = collins@krakenpf8.nics.utk.edu
+            breaksw
+    case kraken9:
+            set SSH_TO = collins@krakenpf9.nics.utk.edu
+            breaksw
+    case kraken10:
+            set SSH_TO = collins@krakenpf10.nics.utk.edu
+            breaksw
+    case kraken11:
+            set SSH_TO = collins@krakenpf11.nics.utk.edu
+            breaksw
+    case kraken12:
+            set SSH_TO = collins@krakenpf12.nics.utk.edu
+            breaksw
+    case yellow:
+            set SSH_TO = david_c@yr-fe1
+            breaksw
+    case subsonic:
+            set SSH_TO = dcollins@192.168.1.105
+            set SSH_TO = dcollins@69.254.149.103
+            breaksw
+
+
+#
+# Options
+#
+
+    case "-small":
+	   set Modifier = yes
+	   set size = ""
+	   breaksw
+	    
+    case "-n":
+	   set n_windows = $argset[$counter]
+	   @ counter = $counter + 1
+	   set Modifier = yes
+	   set MultipleWindows = yes
+	   breaksw
+    case "-nw":
+	   set NewWindow = no
+	   set Modifier = yes
+	   breaksw
+    case "-ww":
+	   set NewWindow = yes
+	   set Modifier = yes
+	   breaksw
+    default:
+	    set SSH_TO = ""
+	    breaksw
+	
+    endsw
+
+    if( $Modifier == yes ) then
+	continue
+    endif
+
+
+#set bgcolor = lightgoldenrodyellow
+
+    set window_counter = 1
+    while( $window_counter <= $n_windows )
+    @ window_counter = $window_counter + 1
+
+    sleep 0.5
+    WN $arg
+    if( $NewWindow == yes ) then
+
+     if( $SSH_TO != "") then
+ 	xterm -sb -sl 2000 $size -bg $bgcolor -title $title  -e ssh $ForwardingFlag $SSH_TO &
+     else
+	xterm -sb -sl 2000 $size -bg $bgcolor -title $title &
+     endif
+
+    else
+        ssh $ForwardingFlag $SSH_TO
+    endif
+    end
+    
+end
+

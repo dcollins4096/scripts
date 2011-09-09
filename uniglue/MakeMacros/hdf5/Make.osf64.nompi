@@ -1,0 +1,17 @@
+
+ifeq ($(HDF5_INSTALL),$(null))
+HDF5_INSTALL = $(HOME)/hdf5/5-1.4.3-osf1
+endif
+
+CCxx         = cxx
+CCxx_OPT     = -O4 -DHDF5_BE
+
+LDR          = cxx
+LDR_OPT      =
+
+LIB          = $(HDF5_INSTALL)/lib/libhdf5.a \
+               /usr/local/packages/szip/lib/libsz.a \
+               -L$(DECF90_LIB_DIR) -lfor \
+               -lz -lm
+
+OPTS         = -c -I$(HDF5_INSTALL)/include

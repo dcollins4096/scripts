@@ -1,0 +1,19 @@
+
+#ifeq ($(HDF5_INSTALL),$(null))
+#HDF5_INSTALL = /usr/local/apps/apps64/hdf5
+HDF5_INSTALL = /usr/local/apps64/hdf5
+#endif
+#ifeq ($(HDF4_INSTALL),$(null))
+HDF4_INSTALL = /usr/local/apps/apps64/hdf4
+HDF4_INSTALL = /usr/local/apps64/hdf4
+#endif
+
+CCxx         = xlC_r
+CCxx_OPT     = -O3 -DHDF5_BE
+
+LDR          = xlC_r
+LDR_OPT      =
+
+LIB          = $(HDF5_INSTALL)/lib/libhdf5.a -L$(HDF4_INSTALL)/lib -lz -lsz -lm
+
+OPTS         = -c -I$(HDF5_INSTALL)/include
