@@ -238,7 +238,8 @@ while( $counter <= $#argset )
 	   set Modifier = yes
 	   breaksw
     default:
-	    set SSH_TO = ""
+      echo "No machine named $arg"
+      exit
 	    breaksw
 	
     endsw
