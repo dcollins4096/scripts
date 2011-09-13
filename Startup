@@ -27,6 +27,7 @@ set rangerw="tg456484@tg-login.ranger.tacc.teragrid.org:/scratch/00369/tg456484/
 set triton="dccollin@triton-login.sdsc.edu:"
 set subsonic="dcollins@69.254.149.103:"
 set yellow="david_c@yr-fe1"
+set nautilus="collins@login.nautilus.nics.teragrid.org:"
 set noclobber
 
 #
