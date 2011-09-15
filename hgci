@@ -1,5 +1,6 @@
 #!/bin/tcsh
-set message =  $1
+set echo
+set message =  "$1"
 shift
 hg ci -m "$message" $argv
 hg push
