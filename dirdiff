@@ -25,7 +25,8 @@ foreach i ("^Common" "^Only" "^Files")
     mv tmp90210b tmp90210
 end
 
-sed -e 's,^Files\(.*\) and \(.*\) differ,diff -wc \1 \2 | less,' $outname > tmp90210b
+#sed -e 's,^Files\(.*\) and \(.*\) differ,diff -wc \1 \2 | less,' $outname > tmp90210b
+sed -e 's,^Files\(.*\) and \(.*\) differ,vimdiff \1 \2,' $outname > tmp90210b
 mv tmp90210b $outname
 cat tmp90210 >> $outname
 rm tmp90210
