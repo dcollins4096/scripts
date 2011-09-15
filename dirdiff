@@ -2,9 +2,10 @@
 #
 # Diff the source files from $1 and $2.
 # Ignores .o, *~ singleton
-
-if( $2 == "" ) then
+if( -e diffz ) rm diffz
+if( $1 == "" ||  $2 == "" ) then
     echo "dirdiff <dir1> <dir2> <outname = diffz>"
+    exit
 endif
 set outname = diffz
 if ( $3 != "" ) set outname = $3
@@ -24,7 +25,8 @@ foreach i ("^Common" "^Only" "^Files")
     mv tmp90210b tmp90210
 end
 
-sed -i 's,^Files\(.*\) and \(.*\) differ,diff -wc \1 \2 | less,' $outname
+sed -e 's,^Files\(.*\) and \(.*\) differ,diff -wc \1 \2 | less,' $outname > tmp90210b
+mv tmp90210b $outname
 cat tmp90210 >> $outname
 rm tmp90210
 vim $outname
