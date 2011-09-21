@@ -1,4 +1,8 @@
 #!/bin/tcsh
+if ( "$1" == "-m" ) then
+  echo "don't need the -m"
+  exit
+endif
 set echo
 set message =  "$1"
 shift
