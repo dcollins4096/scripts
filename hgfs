@@ -1,0 +1,10 @@
+#!/bin/tcsh
+
+echo "============== status  ============="
+hg status
+echo "============== outgoing ============="
+hg outgoing
+echo "============== incoming ============="
+hg incoming
+
+#end
