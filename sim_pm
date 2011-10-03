@@ -65,7 +65,7 @@ while( $#argv )
 	    echo "sim_pm (opts)"
 	    echo "    Expects that wall-time information is in the err file."
 	    echo "    options: "
-	    echo "       nx don't show xml file.
+	    echo "       nx don't show xml file."
         echo "       np don't post to the RunTracker data base."
 	    echo "          This option also doesn't move the job file to Meta"
 	    echo "       nr don't resubmit."
@@ -135,7 +135,7 @@ if( "$post" != "" ) then
 else
     echo "not posting, so not moving files" $earliest_err $earliest_out
 endif
-ls Meta/$earliest_err Meta/$earliest_out
+echo $EDITOR Meta/$earliest_err Meta/$earliest_out
 
 if( $resub == True ) $submit $script
 

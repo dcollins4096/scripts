@@ -4,28 +4,45 @@ if( $1 == "" ) then
     echo "tars all directories, puts in the archive, leaves a note in the file called monitor when finished"
     echo "The directories Archived and Skip are not archived"
     echo "dirlist is optional, defaults to all dirs"
+    echo "if tm issupplied as the second argument, only Meta and TD???? will be archived"
 else
 set ArchName = Archived
 set DestName = $1
+if( $DestName == guess ) then
+    if( ! -e arch_dir ) then
+        echo "No arch_dir.  Can't guess"
+        exit
+    endif
+    set DestName = `cat arch_dir`
+endif
+
 set SkipName = Skip
 if( ! ( -e $ArchName ) ) then 
     mkdir $ArchName
 endif
 if( $#argv > 1 ) then 
-    set directory_list = ""
-    set counter = 2
-    while($counter <= $#argv ) 
-	set directory_list = "$directory_list  $argv[$counter]"
-	@ counter = $counter + 1
-    end
+    if( $2 == "td" ) then
+        set directory_list = `lusg TD`
+        set directory_list = "$directory_list `lusg DD`"
+        set directory_list = "$directory_list Meta PreviousRunTracker"
+    else
+        set directory_list = ""
+        set counter = 2
+        while($counter <= $#argv ) 
+            set directory_list = "$directory_list  $argv[$counter]"
+            @ counter = $counter + 1
+        end
+    endif
 else
-    set directory_list = `dirlist`
+    #set directory_list = `dirlist`
+    echo "Do you really want to call archiver with no directories?"
+    exit
 endif
 
 foreach i ($directory_list)
 
     set ArchThisSet = True
-    if( ($i == $ArchName) || ($i == $SkipName) ) then
+    if( ($i == $ArchName) || ($i == $SkipName) || ($i == kill) || (`echo $i |cut -c -2` == 'CD') ) then
 	set ArchThisSet = False
     endif
 
@@ -43,24 +60,29 @@ foreach i ($directory_list)
     echo $DestName >> monitor
     date >> monitor
     if( $ArchThisSet == True) then	    
-	echo "tar and feather" $i
-	if( `which mssftp |cut -c 1 ` == "/" ) then 
-	    echo    msscmd "tar cvf $DestName/$i.tar $i"
-	    msscmd "tar cvf $DestName/$i.tar $i"
-	else if ( `which hsi | cut -c 1 ` == "/" ) then
-	    echo "htar cvf $DestName/$i.tar $i"
-	    htar cvf $DestName/$i.tar $i |& tee -a monitor_log
-	else
-	    echo "Archive Command not found."
-	    exit -1
-	endif
-	if( $status == 0) then
-	    echo $i >> monitor
-	else
-	    echo $i PROBLEM!!!!
-	endif
+        echo "tar and feather" $i
+        if( 0 == 0 ) then 
+            set tarstatus = -666
+            if( `which mssftp |cut -c 1 ` == "/" ) then 
+                echo    msscmd "tar cvf $DestName/$i.tar $i"
+                msscmd "tar cvf $DestName/$i.tar $i"
+                set tarstatus = $status
+            else if ( `which hsi | cut -c 1 ` == "/" ) then
+                echo "htar cvf $DestName/$i.tar $i"
+                htar cvf $DestName/$i.tar $i |& tee -a monitor_log
+                set tarstatus = $status
+            else
+                echo "Archive Command not found."
+                exit -1
+            endif
+            if( $tarstatus == 0) then
+                echo $i >> monitor
+            else
+                echo $i PROBLEM!!!!
+            endif
+        endif #machine off switch
     else
-	echo skip $i
+        echo skip $i
     endif
 end
 
