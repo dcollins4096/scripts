@@ -1,0 +1,34 @@
+#!/bin/tcsh
+#Get the figures in order from your paper.
+# - Makes a subdirectory 'submit,'
+# - Copies all relevant tex files to ./submit
+# - Copies and orders all figures to .submit
+#When you submit to ApJ:
+# - Make the paper (to get the bbl and ms.aux files)
+# - Tar  the whole damned thing
+# - submit.
+set directory = submit
+if( ! -e $directory ) mkdir $directory
+#Only grab relevant files: relevant tex files and meta files.
+cp `tex_figs -i` $directory
+cp apj-jour.bib  apj.bst emulateapj.cls ms.bib $directory
+
+cd $directory
+set figs = (`tex_figs -g`)
+set counter = 1
+set ExtraTextForCollisions = AND_SOME_EXTRA_TEXT_TO_AVOID_NAME_COLLISIONS
+set Live = True
+while( $counter <= $#figs)
+    set InitialName = $figs[$counter] 
+    set DestText = "f"$ExtraTextForCollisions$counter".eps"
+    set DestFileName = "f"$counter".eps"
+
+    echo $InitialName $DestFileName
+    if( $Live == True ) then
+	cp ../$InitialName $DestFileName
+	sed -i .bak "s,$InitialName,$DestText," *.tex
+    endif
+    @ counter ++
+end
+if( $Live == True ) sed -i .bak "s,$ExtraTextForCollisions,," *.tex
+#end
