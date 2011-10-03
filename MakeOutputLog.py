@@ -7,17 +7,29 @@
 import fnmatch
 import os
 import glob
+from optparse import OptionParser
 
+parser = OptionParser()
+parser.add_option("-H","--Hierarchy",dest="hierarchy",action="store_true",default=False,
+                      help="takes list of hierarchy files")
+(options,args)=parser.parse_args()
 if glob.glob('OutputLog') != []:
     print "OutputLog written.  Please remove existing file before running."
 else:
 
     #Hunt for *.hierarchy files (easier to search than parameter files)
     matches = []
-    for root, dirnames, filenames in os.walk('.'):
-      for filename in fnmatch.filter(filenames, '*.hierarchy'):
-          matches.append(os.path.join(root, filename.split('.')[0]))
+    if len(args) == 0:
+        for root, dirnames, filenames in os.walk('.'):
+          for filename in fnmatch.filter(filenames, '*.hierarchy'):
+              matches.append(os.path.join(root, filename.split('.')[0]))
 
+
+    else:
+        if options.hierarchy:
+            for hierarchy in args:
+                matches.append(hierarchy.split('.')[0])
+                print hierarchy.split('.')
     fptr= open('OutputLog','w')
     for PF in matches:
         inptr = open(PF,'r')
