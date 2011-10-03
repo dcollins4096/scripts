@@ -3,6 +3,7 @@
 
 import sys
 import re
+import glob
 def grab_figures(filename):
     file = open(filename,'r')
 
@@ -16,7 +17,6 @@ def grab_figures(filename):
             if match != None:
                 figs.append(match.group(1))
                 #figs.append(match.group(1))
-                
 
     file.close()
     return figs
@@ -34,7 +34,10 @@ def grab_files(filename):
             if match != None:
                 texfile = texre.match(line)
         if texfile != None:
-            filenames.append( texfile.group(1)+".tex")
+            this_filename = texfile.group(1)
+            if this_filename[-4:] != ".tex":
+                this_filename += ".tex"
+            filenames.append(this_filename )
     file.close()
     return filenames
 if __name__ == '__main__':
