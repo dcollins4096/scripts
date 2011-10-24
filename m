@@ -188,6 +188,10 @@ while( $#argv )
 endsw
 end
 
+if( "$silent" == "direct" && $GrepAfter == "yes" ) then
+  echo "silent == direct cannot be used with the dump grep option"
+  exit
+endif
 #
 # New local file.  Only sets the paramert name.
 #
@@ -726,7 +730,7 @@ endif
 		    endif
 		end
 		if( $saveThis == 0 ) then
-		    rm -r $i
+		    rm -rf $i
 		    echo "kill " $i
 		endif
 	    end
