@@ -1,5 +1,4 @@
 #! /bin/tcsh 
-set echo
 #
 # m 
 # To compile, copy, run, report.  For the extremely lazy.  And vim users.
