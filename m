@@ -1,4 +1,5 @@
 #! /bin/tcsh 
+set echo
 #
 # m 
 # To compile, copy, run, report.  For the extremely lazy.  And vim users.
@@ -298,14 +299,13 @@ if( `echo $machine | cut -c 1-8` == co-login ) then
 endif
 
 echo "machine: " $machine
-
 switch ( $machine )
 
     case David-Collinss-MacBook-Pro.local:
     case fnord.ucsd.edu:
         case MAC:
         if( `uname -a | awk '{print $2}'` == 1283355 ) then
-            set nProcCompile = -j4
+            if( $?nProcCompile == 0 ) set nProcCompile = -j4
         endif
 
         set srcdir = $src
@@ -619,7 +619,6 @@ switch ( $machine )
 	breaksw
 
 endsw
-
 #dbg
 #echo $exeMPI
 #echo REFORMAT
