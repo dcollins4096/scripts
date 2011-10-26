@@ -3,19 +3,19 @@
 # Diff the source files from $1 and $2.
 # Ignores .o, *~ singleton
 if( -e diffz ) rm diffz
-if( $1 == "" ||  $2 == "" ) then
+if( "$1" == "" ||  "$2" == "" ) then
     echo "dirdiff <dir1> <dir2> <outname = diffz>"
     exit
 endif
 set outname = diffz
-if ( $3 != "" ) set outname = $3
+if ( "$3" != "" ) set outname = "$3"
 if( -e tmp90210 ) rm tmp90210
 if( -e tmp90210b ) rm tmp90210b
 if( -e $outname ) then
     echo "Output file $outname exists"
     exit
 endif
-diff -r --brief --exclude=".svn" --exclude="*.o" --exclude="singleton.mod" $1 $2 |& tee tmp90210
+diff -r --brief --exclude=".svn" --exclude="*.o" --exclude="singleton.mod" "$1" "$2" |& tee tmp90210
 touch $outname
 foreach i ("^Common" "^Only" "^Files")
     #echo "=============" $i

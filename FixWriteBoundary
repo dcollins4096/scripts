@@ -1,0 +1,5 @@
+#!/bin/tcsh
+set file = $1
+mv $file $file.back
+sed -e 's,\(.*\)//.*,\1,' $file.back > $file
+#end
