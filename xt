@@ -208,6 +208,9 @@ while( $counter <= $#argset )
     case yellow:
             set SSH_TO = david_c@yr-fe1
             breaksw
+    case tu:
+            set SSH_TO = david_c@tu-fe1
+            breaksw
     case subsonic:
             set SSH_TO = dcollins@192.168.1.105
             set SSH_TO = dcollins@69.254.149.103
