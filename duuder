@@ -2,7 +2,12 @@
 
 if( -e duud) rm duud
 if( -e duud.sort) rm duud.sort
-du -h --max-depth 1 > duud
+if( `uname` == Darwin ) then 
+  du -h -d 1 > duud
+else
+  du -h --max-depth=1 > duud
+endif
+
 
 SortDU duud
 cat duud.sort
