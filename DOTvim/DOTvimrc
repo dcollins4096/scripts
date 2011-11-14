@@ -56,6 +56,7 @@ au  BufNewFile,BufRead *.src set tw=72
 au  BufNewFile,BufRead *.html set tw=80
 au  BufNewFile,BufRead *.tex set tw=80
 au  BufNewFile,BufRead *.txt set tw=80
+au  BufNewFile,BufRead *.rst set tw=80
 hi Tab ctermbg=white
 match Tab ,\t, 
 
