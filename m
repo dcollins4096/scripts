@@ -193,6 +193,13 @@ if( "$silent" == "direct" && $GrepAfter == "yes" ) then
   exit
 endif
 #
+# Check consistency
+#
+if( $silent == direct && $GrepAfter == "yes" ) then
+  echo "Cannot grep dump after run, silent == direct "
+  exit
+endif
+#
 # New local file.  Only sets the paramert name.
 #
 if( $new_local == 'yes' ) then
