@@ -234,6 +234,7 @@ alias em "emacs \!*"
 alias cvd "cvs diff -wc \!* |less"
 alias svd "svn diff \!* |less"
 alias hgd "hg diff \!* |less"
+alias hgs "hg status \!* |less"
 alias cvu "cvs update"
 alias svd "svn diff \!* |less"
 
