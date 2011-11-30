@@ -225,6 +225,7 @@ alias more less
 # Because Im Lazy
 #
 
+alias li "ls -1 |grep -i \!*"
 alias ll ls -l
 alias la ls -a
 alias lh ls -lh
