@@ -1,5 +1,6 @@
 #! /bin/tcsh 
 #
+
 # m 
 # To compile, copy, run, report.  For the extremely lazy.  And vim users.
 # Usage:
@@ -232,7 +233,9 @@ if( $RestartJob != "yes" && $KillDataOnStartup == "only_new" ) set KillDataOnSta
 # determine machine name.
 #
 
-set machine =  `uname -a | awk '{print $2}'` 
+if( $?machine == 0 ) then
+  set machine =  `uname -a | awk '{print $2}'` 
+endif
 
 if( `uname` == Darwin ) then
     set machine = "MAC"
@@ -310,6 +313,13 @@ endif
 
 echo "machine: " $machine
 switch ( $machine )
+    case lobo:
+      set srcdir = $src
+      set nProcCompile = -j8
+      set exeSer = "$exec $dbg $Problem"
+      set exeMPI = "mpirun -n $nprocRun $exec $dbg $Problem"
+      breaksw
+
 
     case David-Collinss-MacBook-Pro.local:
     case fnord.ucsd.edu:
