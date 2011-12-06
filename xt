@@ -218,8 +218,13 @@ while( $counter <= $#argset )
             set SSH_TO = dcollins@192.168.1.105
             set SSH_TO = dcollins@69.254.149.103
             breaksw
+    case teahupoo:
+            set SSH_TO = dcollins2@130.55.124.119
+            breaksw
     case lobo:
-            set SSH_TO = "ssh -t wtrw.lanl.gov ssh lo-fe1"
+      #set SSH_TO = "ssh -t wtrw.lanl.gov ssh lo-fe1"
+      set echo
+            set SSH_TO = "-t david_c@wtrw.lanl.gov ssh lo-fe1"
             breaksw
 
 

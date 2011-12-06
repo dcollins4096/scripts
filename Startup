@@ -226,6 +226,7 @@ alias more less
 # Because Im Lazy
 #
 
+alias li "ls -1 |grep -i \!*"
 alias ll ls -l
 alias la ls -a
 alias lh ls -lh
@@ -235,6 +236,7 @@ alias em "emacs \!*"
 alias cvd "cvs diff -wc \!* |less"
 alias svd "svn diff \!* |less"
 alias hgd "hg diff \!* |less"
+alias hgs "hg status \!* |less"
 alias cvu "cvs update"
 alias svd "svn diff \!* |less"
 
