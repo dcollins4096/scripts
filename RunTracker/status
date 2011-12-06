@@ -1,0 +1,5 @@
+svn ci -m "error handling for uuid"   MultiPost.py
+svn ci -m "added moving of RunTrackers to Previous Directory" PreviousRun.py
+svn ci -m "fixed some ui" GsubFinish.py
+svn ci -m "Update now accepts alternative files" GsubUpdate.py
+svn ci -m "generalized input filename (not just the stderr), now works with the WeekOfCode version"  DaveParse.py

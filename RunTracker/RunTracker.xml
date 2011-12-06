@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Run xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://cadac.sdsc.edu/schema" xsi:schemaLocation="http://cadac.sdsc.edu/schema http://cadac.sdsc.edu/schema/run.xsd">
+  <Name>TestSim0</Name>
+  <Computer url="http://www.sdsc.edu/us/resources/datastar/">datastar</Computer>
+  <Program url="none" version="mhd">Enzo</Program>
+  <User url="http://en.wikipedia.org/wiki/Ada_Lovelace">dcollins</User>
+  <SubmitTime>2008-03-24T00:11:07.228540</SubmitTime>
+  <JobID>ds100.443924</JobID>
+  <TagList>
+    <Tag user="dcollins">test0</Tag>
+    <Tag user="dcollins">test1</Tag>
+  </TagList>
+</Run>

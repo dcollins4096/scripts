@@ -31,7 +31,7 @@ endif
 
 foreach file ($directory_list)
     echo "getting $dir/$file"
-    if( `grep "[^#]$dir/$file" monitor_down |wc -l` == 0 ) then
+    if( `grep "$dir/$file" monitor_down |wc -l` == 0 ) then
 
 	if( `which mssftp |cut -c 1 ` == "/" ) then 
 	    msscmd "tar xvf $dir/$file" |& tee monitor_log_down

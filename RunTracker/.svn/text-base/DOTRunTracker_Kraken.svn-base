@@ -1,0 +1,22 @@
+computerName = Kraken
+computerLink = www.google.com
+programName  = Enzo
+programLink  = www.google.com
+userName     = dcollins
+userLink     = www.google.com
+cadacInstall = ~/cadac
+machineProcPerNode = 8
+
+batchSystemName = PBS
+submitCommand = qsub
+jobName_reg   = #\s*PBS\s*-N\s(\S+)
+nodeCount_reg = #\s*PBS\s*-l\s*nodes\s*=\s*(\d+):ppn=\d+
+taskPerNode_reg = set\s*proc_per_node\s*=\s(\d+)
+taskCount_reg = #\s*PBS\s*-l\s*walltime\s*=\s*\S+\s*,\s*size\s*=\s*(\d+)
+queueName_reg = normal
+queueTime_reg = #\s*PBS\s*-l\s*walltime\s*=\s*(\S+)\s*,.*
+jobID_reg     = ^(\d.*)
+
+jobID_var     = PBS_JOBID
+stdout_var    = none
+stderr_var    = none

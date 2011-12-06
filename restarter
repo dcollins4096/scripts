@@ -1,5 +1,4 @@
 #!/bin/tcsh
-
 #restarter <StopCycle/StopTime = StopCycle> <increment = 50> <file>
 #increases either StopCycle or StopTime by <increment>, defaults shown.
 #increment only defaults to 50 if no argments are presented
@@ -7,30 +6,30 @@
 
 switch( $1 )
     case "StopCycle":
-	set grepfor = $1
+    set grepfor = $1
     breaksw
     case "StopTime":
-	set grepfor = $1
+    set grepfor = $1
     breaksw
     default:
-	echo $1 not an acceptable thing to increment.  No change made
-	echo 'restarter <StopCycle/StopTime = StopCycle> <increment = 50> <file=DD????/data???? | tail -1>'
-	exit
-endsw	    
+    echo $1 not an acceptable thing to increment.  No change made
+    echo 'restarter <StopCycle/StopTime = StopCycle> <increment = 50> <file=DD????/data???? | tail -1>'
+    exit
+endsw        
 if( $#argv > 1 ) set increment = $2
 if( $#argv == 3 ) then
     set file = $3
 else
-    set file = `steps | tail -1`
+    set file = `LastStep`
     echo $file
 endif
 set initial = `sed -n 's:'$grepfor'[[:space:]]*=\([[:digit:]\.]*\):\1:p' $file`
 cp $file $file.backup
 set final = `echo $initial + $increment | bc`
 sed -i 's:'$grepfor'.*:'$grepfor' = '"$final"':' $file
-set n_restarts = `ls -1 data_time_0000 |wc -l`
-foreach i (data_time_????)
-mv $i $i.$n_restarts
-end
+#set n_restarts = `ls -1 data_time_0000 |wc -l`
+#foreach i (data_time_????)
+#mv $i $i.$n_restarts
+#end
 
 #end

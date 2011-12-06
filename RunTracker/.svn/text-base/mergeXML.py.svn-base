@@ -1,0 +1,41 @@
+
+
+from xml.dom import minidom
+#The mythology isn't perfect.  sue me.
+def mergeXML(Saturn,Son):
+
+    sons = Son.getElementsByTagName('appendMe')
+    if sons == None or len(sons) != 1:
+        print "mergeXML: error. Source XML must be wrapped in a single appendMe"
+        return Saturn
+    else:
+        for node in sons[0].childNodes:
+            thisName = node.nodeName
+
+            SaturnsThrone = Saturn.getElementsByTagName(thisName)
+
+            #if there's no matching node, make a new one.
+            #if there's one node and it's not a list, replace it
+            #if there's one node and it is a list, append contents to that list.
+            #if there's more than one, append.
+            if len(SaturnsThrone) == 0:
+                Saturn.firstChild.appendChild(node.cloneNode(True))
+            elif len(SaturnsThrone) == 1:
+                #if this is a list type element, append contents.
+                #Otherwise, replace.  Assumes that both have the same structure.
+                if len(SaturnsThrone[0].childNodes) > 1:
+                    for hera in node.childNodes:
+                        newNode = hera.cloneNode(True)
+                        SaturnsThrone[0].appendChild(newNode)
+                else:
+                    Jupiter = node.cloneNode(True)
+                    Uranus = SaturnsThrone[0].parentNode
+                    Uranus.insertBefore(Jupiter,SaturnsThrone[0] )
+                    Uranus.removeChild(SaturnsThrone[0])
+            elif len(SaturnsThrone) > 1:
+                Saturn.firstChild.appendChild(node)
+
+    #print Saturn.toxml()
+    return Saturn
+
+

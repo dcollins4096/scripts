@@ -19,6 +19,7 @@ else:
 
     #Hunt for *.hierarchy files (easier to search than parameter files)
     matches = []
+    output_list=[]
     if len(args) == 0:
         for root, dirnames, filenames in os.walk('.'):
           for filename in fnmatch.filter(filenames, '*.hierarchy'):
@@ -30,7 +31,6 @@ else:
             for hierarchy in args:
                 matches.append(hierarchy.split('.')[0])
                 print hierarchy.split('.')
-    fptr= open('OutputLog','w')
     for PF in matches:
         inptr = open(PF,'r')
         nSuccess = 0
@@ -42,11 +42,17 @@ else:
                 nSuccess += 1
                 time = float(line.split("=")[1].strip())
             if nSuccess == 2:
-                fptr.write( "DATASET WRITTEN %s %8d %18.16e\n"%(PF, cycle, time))
+                #fptr.write( "DATASET WRITTEN %s %8d %18.16e\n"%(PF, cycle, time))
+                output_list.append([PF,cycle,time])
                 break
         inptr.close()
         if nSuccess != 2:
             print "Error parsing", PF
+
+    #write output sorted by sim time
+    fptr= open('OutputLog','w')
+    for p in sorted(output_list, key=lambda item:item[2]):
+        fptr.write( "DATASET WRITTEN %s %8d %18.16e\n"%(p[0], p[1],p[2]))
     fptr.close()
 
 

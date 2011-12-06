@@ -43,23 +43,23 @@ foreach i ($directory_list)
 
     set ArchThisSet = True
     if( ($i == $ArchName) || ($i == $SkipName) || ($i == kill) || (`echo $i |cut -c -2` == 'CD') ) then
-	set ArchThisSet = False
+    set ArchThisSet = False
     endif
 
     if( -e monitor ) then
-	if( `grep $i monitor |wc -l` != 0) then
-	    set ArchThisSet = False
-	endif
+    if( `grep $i monitor |wc -l` != 0) then
+        set ArchThisSet = False
+    endif
     else
-	touch monitor
+    touch monitor
     endif
     if( ! -e monitor_log ) touch monitor_log
     if( $i == Meta || $i == PreviousRunTracker ) then
-	set ArchThisSet = True
+    set ArchThisSet = True
     endif
     echo $DestName >> monitor
     date >> monitor
-    if( $ArchThisSet == True) then	    
+    if( $ArchThisSet == True) then        
         echo "tar and feather" $i
         if( 0 == 0 ) then 
             set tarstatus = -666

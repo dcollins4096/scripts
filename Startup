@@ -28,6 +28,7 @@ set triton="dccollin@triton-login.sdsc.edu:"
 set subsonic="dcollins@69.254.149.103:"
 set yellow="david_c@yr-fe1"
 set nautilus="collins@login.nautilus.nics.teragrid.org:"
+set lobo="david_c@wtrw.lanl.gov:lo-fe1:"
 set noclobber
 
 #

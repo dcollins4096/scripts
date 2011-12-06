@@ -127,7 +127,9 @@ if( ( ! -e RunTracker.xml ) && $nrt == False ) then
     exit -1
 endif
 
-PostTracker.py $earliest_err $xml $post
+
+PostTracker.py $earliest_err $xml $post |& tee rt_temp.xml
+mv rt_temp.xml RunTracker.xml
 
 if( ! -e Meta ) mkdir Meta
 if( "$post" != "" ) then
