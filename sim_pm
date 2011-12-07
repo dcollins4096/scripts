@@ -32,7 +32,8 @@
 #
 
 set xml   = "-x"
-set post  = "-p"
+#set post  = "-p"
+set post  = 
 set resub = True
 set debug = 0
 set nrt   = False
@@ -99,7 +100,7 @@ endif
 # Machine dependant stuff.
 #
 
-set machine =  `uname -a | awk '{print $2}'` 
+set machine =  `uname -n`
 if( `echo $machine |cut -c 1-6` == "kraken") then
     set submit = qsub
     set script = Script.kraken5
@@ -110,6 +111,11 @@ if( `echo $machine |cut -c 1-6` == "kraken") then
 	echo "No jobs to PM?"
 	exit
     endif
+else if ( `echo $machine |cut -c -2` == "lo") then
+  set submit = msub
+  set script = Script.lobo
+  set earliest_err = `ls -1t slurm* | tail -1`
+  set earliest_out = $earliest_err
 else
     echo "machine not supported"
     exit
@@ -127,9 +133,8 @@ if( ( ! -e RunTracker.xml ) && $nrt == False ) then
     exit -1
 endif
 
-
-PostTracker.py $earliest_err $xml $post |& tee rt_temp.xml
-mv rt_temp.xml RunTracker.xml
+PostTracker.py $earliest_err $xml $post
+#mv rt_temp.xml RunTracker.xml
 
 if( ! -e Meta ) mkdir Meta
 if( "$post" != "" ) then
