@@ -18,7 +18,11 @@ endif
 #echo time : $time 
 #echo nodes: $nodes
 #echo ppn  : $ppn
-echo qsub -I -V -l size="$total_proc",walltime="$time"
+if ( $machine == lobo ) then
+  echo msub -I -V -l procs="$total_proc",walltime="$time"
+else
+  echo qsub -I -V -l size="$total_proc",walltime="$time"
+endif
 #echo qsub -I -V -l walltime="$time",nodes="$nodes":ppn="$ppn"
 endif
 #end
