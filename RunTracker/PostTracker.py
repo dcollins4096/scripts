@@ -82,6 +82,9 @@ def parse_glsjob_kraken(id,filename):
     return {'totalTasks':processors,'StartTime':start_dt.isoformat(),
             'EndTime':end_dt.isoformat(),'queueName':queueName}
 
+def parse_lobo(id,filename):
+    """I think this 'qhist parser' doesn't work."""
+    pass
 def grab_and_post(filename,qhist_filename,style='cvs'):
     """Scrub *filename* for job info.  Timing info comes from *qhist_filename*, if provided.
     """
@@ -97,6 +100,8 @@ def grab_and_post(filename,qhist_filename,style='cvs'):
         parse_function = parse_glsjob_kraken
     elif sysInfo.computerName == "Ranger":
         parse_function = parse_qhist_ranger
+    elif sysInfo.computerName == "Lobo":
+        parse_function = parse_lobo
     else:
         print "Computer",sysInfo.computerName,"not recognized"
         return None

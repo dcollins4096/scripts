@@ -46,9 +46,11 @@ set mrg_repo = "http://dcollins:se7meaor@hg.spacepope.org/mhdctmerge/"
 
 #set path=($path ~/Scripts . $src)
 #echo "warning: path not set correctly.  totalview wont' work."
-set path=($path ~/Scripts . )
-
-
+set path=($path  . )
+if( $?ScriptDir == 0 ) then
+    echo Please Define Script Dir.
+endif
+set path=($ScriptDir $ScriptDir/RunTracker $path)
 
 #
 # Determine machine, for preferences and prompts.
@@ -226,6 +228,7 @@ alias more less
 # Because Im Lazy
 #
 
+alias lusg "ls -1f | grep \!* |sort"
 alias li "ls -1 |grep -i \!*"
 alias ll ls -l
 alias la ls -a
@@ -260,7 +263,11 @@ alias name       'printf "\033]0;\!*\007"'
 
 alias perf '/usr/local/apps/perf/perf \!*'
 
-alias ack '~/Scripts/ack --nogroup \!*'
+if( -e ~/Scripts ) then
+  alias ack '~/Scripts/ack --nogroup \!*'
+else
+  alias ack "$proj/Scripts/ack --nogroup \!*"
+endif
 
 #if ( ${?SSH_TTY} ) then
 #    echo "dont forget to check the code back in"
