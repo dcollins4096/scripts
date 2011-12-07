@@ -1,0 +1,29 @@
+#!/usr/bin/env python
+
+import os
+import sys
+
+# make sure the cadac classes are in our path
+scriptfile = os.path.abspath(sys.argv[0])
+scriptdir = os.path.dirname(scriptfile)
+packagedir = os.path.dirname(scriptdir)
+sys.path.append(packagedir)
+
+from cadac import client
+
+username = sys.argv[1]
+password = sys.argv[2]
+run_id = sys.argv[3]
+run_file = sys.argv[4]
+
+update_loc = '/xml/members/%s/runs/%s' % (username, run_id)
+
+fin = open(run_file)
+xml = fin.read()
+fin.close()
+
+# 0 is good, otherwise -HTTP response code.
+post_status = -client.post(username, password, update_loc, xml)
+
+sys.exit(post_status)
+

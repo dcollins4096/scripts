@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserFieldList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://cadac.sdsc.edu/schema" xsi:schemaLocation="http://cadac.sdsc.edu/schema http://cadac.sdsc.edu/schema/run.xsd">
+  <UserField name="mydat0">0.0</UserField>
+  <UserField name="mydat1">10.4</UserField>
+  <UserField name="mydat2">20.8</UserField>
+  <UserField name="mydat3">31.2</UserField>
+  <UserField name="mydat4">41.6</UserField>
+</UserFieldList>

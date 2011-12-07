@@ -1,0 +1,31 @@
+#!/usr/bin/env python
+import os
+import sys
+
+# make sure the simulations classes are in our path
+scriptfile = os.path.abspath(sys.argv[0])
+scriptdir = os.path.dirname(scriptfile)
+packagedir = os.path.dirname(scriptdir)
+sys.path.append(packagedir)
+
+from cadac import sim
+
+if len(sys.argv) < 2:
+    # try to get the job id out of the environment
+
+    # LoadLeveler LOADL_JOB_NAME
+    # e.g., ds002.252495.0
+    # need to pop the end off
+
+    # jobid = os.getenv('LOADL_JOB_NAME')
+    # jobid = jobid.split('.')[:2]
+
+    # PBS = PBS_JOBID
+    # e.g., 291597.co-master
+    
+    jobid = os.getenv('PBS_JOBID')
+
+else:
+    jobid = sys.argv[1]
+
+sim.postStartTime(jobid)

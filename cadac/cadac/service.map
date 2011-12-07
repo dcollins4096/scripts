@@ -1,0 +1,60 @@
+# A line is a comment if the first non-whitespace character on it is a '#'
+# Blank lines are ignored
+
+# Currently implemented mappings
+# URI relative to http://cadac.sdsc.edu/xml/members      GET 
+# /{username}/runs 	          list of {username}'s runs 			
+# /{username}/runs/{run}            {uuid} information
+# /{username}/runs/{run}/tags       list of {run}'s {tag}s 			
+
+# Read-only GETs
+# /{username}/{tag}/runs       list of {run}'s with {tag}
+
+
+@prefix /xml
+/runs[/]
+    POST service_api:add_run
+
+/runs/{uuid}
+    GET service_api:get_run
+    DELETE service_api:delete_run
+    POST service_api:update_run
+
+/runs/{uuid}/tags[/]
+    GET service_api:get_run_tags
+    DELETE service_api:delete_object_tags
+
+/runs/{uuid}/tags/{tag}
+    GET service_api:get_object_tags_by_tag
+
+@prefix /xml/members
+[/]
+    GET service_api:get_members
+    POST service_api:update_member
+
+/{username}[/]
+    GET service_api:get_member
+    DELETE service_api:delete_member
+
+/{username}/tags[/]
+    GET service_api:get_user_tags
+
+/{username}/runs[/]
+    GET service_api:get_user_runs
+
+/{username}/runs/{uuid}
+    GET service_api:get_run
+
+/{username}/runs/{uuid}/tags[/]
+    GET service_api:get_run_tags
+
+/{username}/runs/{uuid}/tags/{tag}
+    GET service_api:get_object_tags_by_tag
+    POST service_api:add_object_tag
+    DELETE service_api:delete_object_tag
+
+/{username}/{tag}/runs[/]
+    GET service_api:get_tagged_runs
+
+/{username}/{tag}/runs/{uuid}
+    GET service_api:get_run

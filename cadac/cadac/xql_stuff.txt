@@ -1,0 +1,17 @@
+declare namespace sim="http://cadac.sdsc.edu/simulation";
+for $sub in //sim:Run[sim:JobID &='291298.co-master']/sim:SubmitTime
+let $start2 := <StartTime xmlns="http://cadac.sdsc.edu/simulation">2008-01-21T15:00:00</StartTime>
+return 
+  update insert   $start2  following $sub
+
+declare namespace sim="http://cadac.sdsc.edu/simulation";
+for $sub in //sim:SubmitTime
+let $start := concat('<',$sub/name(),'>',"2008-01-21T15:00:00",'</',$sub/name(),'>')
+let $start := util:eval(replace($start,"SubmitTime","StartTime"))
+return
+  update insert $start following $sub
+
+
+declare namespace sim="http://cadac.sdsc.edu/simulation";
+for $run in //sim:Run[sim:JobID="291298.co-master"][sim:Computer="Cobalt"]
+return $run

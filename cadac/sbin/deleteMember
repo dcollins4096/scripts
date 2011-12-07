@@ -1,0 +1,23 @@
+#!/usr/bin/env python
+
+import os
+import sys
+
+# make sure the cadac classes are in our path
+scriptfile = os.path.abspath(sys.argv[0])
+scriptdir = os.path.dirname(scriptfile)
+packagedir = os.path.dirname(scriptdir)
+sys.path.append(packagedir)
+
+from cadac import client
+
+username = sys.argv[1]
+password = sys.argv[2]
+member = sys.argv[3]
+
+del_loc = '/xml/members/%s' % (member)
+
+# 0 is good, otherwise -HTTP response code.
+post_status = -client.delete(username, password, del_loc)
+
+sys.exit(post_status)

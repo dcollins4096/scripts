@@ -1,0 +1,7 @@
+#! /bin/bash
+
+CADAC_PID=`cat /Users/rpwagner/Projects/lcagrid/cadac/code/var/cadac.pid`
+
+kill -9 $CADAC_PID
+
+rm -f  /Users/rpwagner/Projects/lcagrid/cadac/code/var/cadac.pid

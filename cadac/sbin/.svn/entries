@@ -1,0 +1,53 @@
+8
+
+dir
+298
+svn://mngrid.ucsd.edu/lcagrid/trunk/lcagrid/cadac/code/sbin
+svn://mngrid.ucsd.edu/lcagrid
+
+
+
+2008-02-01T07:20:42.014121Z
+264
+rpwagner
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+d94a8e44-8e2d-0410-8c44-9b5ab8aca3d2
+
+addMember
+file
+
+
+
+
+2008-09-30T20:03:34.000000Z
+4462c46a7306e8fb4b6d711e7c8caaf3
+2008-02-01T07:20:42.014121Z
+264
+rpwagner
+
+deleteMember
+file
+
+
+
+
+2008-09-30T20:03:34.000000Z
+e712757ffc4e474af2741bd59b1edbd1
+2008-02-01T07:20:42.014121Z
+264
+rpwagner
+has-props
+

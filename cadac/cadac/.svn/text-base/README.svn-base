@@ -1,0 +1,20 @@
+== Make Database ==
+
+To create a new database, do
+
+$ sqlite3 test.db < create_db.sql
+
+To drop a database, do
+
+sqlite3 test.db < drop_db.sql
+
+Unless you want to really, really 
+drop it, then
+
+$ rm test.db
+
+== Dependencies ==
+
+pysqlite2
+
+Python 2.5 or higher

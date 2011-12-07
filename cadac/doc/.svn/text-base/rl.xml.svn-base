@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://cadac.sdsc.edu/schema" xsi:schemaLocation="http://cadac.sdsc.edu/schema http://cadac.sdsc.edu/schema/run.xsd">
+  <Run>
+    <Name>r1</Name>
+    <Computer url="http://ppcluster.ucsd.edu">ppcluster</Computer>
+    <Program url="svn://mngrid.ucds.edu/Enzo/trunk/devel/Enzo" version="1052">Enzo</Program>
+    <User url="http://lca.ucsd.edu/projects/rpwagner">rpwagner</User>
+  </Run>
+  <Run>
+    <Name>r1</Name>
+    <Computer url="http://ppcluster.ucsd.edu">ppcluster</Computer>
+    <Program url="svn://mngrid.ucds.edu/Enzo/trunk/devel/Enzo" version="1052">Enzo</Program>
+    <User url="http://lca.ucsd.edu/projects/rpwagner">rpwagner</User>
+    <Account>MUT</Account>
+    <Nodes>2</Nodes>
+    <TasksPerNode>8</TasksPerNode>
+  </Run>
+</RunList>

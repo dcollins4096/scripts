@@ -1,0 +1,54 @@
+#!/usr/bin/python
+
+import sys
+from string import rfind
+import base64
+import httplib
+
+# usage 
+# xmldbput <collection> <file> <username> <password>
+
+collection = sys.argv[1]
+file = sys.argv[2]
+
+username = sys.argv[3]
+password = sys.argv[4]
+
+f = open(file, 'r')
+print "reading file %s ..." % file
+xml = f.read()
+f.close()
+
+p = rfind(file, '/')
+if p > -1:
+    doc = file[p+1:]
+else:
+    doc = file
+print doc
+
+userpass = username + ':' + password
+userpass = base64.encodestring(userpass).strip()
+authorization = 'Basic ' + userpass
+
+print "storing document to collection %s ..." % collection
+con = httplib.HTTP('lca.ucsd.edu')
+con.putrequest('PUT', '/xmldb/%s/%s' % (collection, doc))
+con.putheader('Content-Type', 'text/xml')
+clen = len(xml)
+con.putheader('Content-Length', `clen`)
+con.putheader('Authorization', authorization)
+
+con.endheaders()
+con.send(xml)
+
+errcode, errmsg, headers = con.getreply()
+
+# 201 == created
+# 200 == OK
+
+if errcode != 201:
+    f = con.getfile()
+    print 'An error occurred: %s' % errmsg
+    f.close()
+else:
+    print "Ok."

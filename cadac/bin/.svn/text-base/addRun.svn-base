@@ -1,0 +1,45 @@
+#!/usr/bin/env python
+
+import os
+import sys
+
+# make sure the cadac classes are in our path
+scriptfile = os.path.abspath(sys.argv[0])
+scriptdir = os.path.dirname(scriptfile)
+packagedir = os.path.dirname(scriptdir)
+sys.path.append(packagedir)
+
+from cadac import client
+from cadac import util
+if len(sys.argv) < 4:
+    print "addRun <username> <password> <run_file> -[v,q]"
+    print "adds run_file to the database, prints new uuid for that run"
+    print "opts: -v verbose, prints the entire return xml."
+    print "      -q quiet, doesn't print new uuid."
+    sys.exit(0)
+else:
+    username = sys.argv[1]
+    password = sys.argv[2]
+    run_file = sys.argv[3]
+    add_loc = '/xml/runs/'
+    
+    
+    fin = open(run_file)
+    xml = fin.read()
+    fin.close()
+    
+# 0 is good, otherwise -HTTP response code.
+    post_status, new_id = client.post(username, password, add_loc, xml)
+    
+    post_status *= -1
+    
+    if len(sys.argv) > 4 :
+        if sys.argv[4] != "-q":
+            if sys.argv[4] == "-v":
+                print new_id
+    else:
+        #There might be better ways to do this, but this works.
+        print util.xml_value(new_id)
+    
+    sys.exit(post_status)
+

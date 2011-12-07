@@ -1,0 +1,6 @@
+#! /bin/bash
+                               
+SOFTWARE_HOME="/Users/rpwagner/Projects/lcagrid/cadac/code/bin"
+
+$SOFTWARE_HOME/cadacWebStop
+$SOFTWARE_HOME/cadacWebStart

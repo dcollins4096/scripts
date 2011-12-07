@@ -1,0 +1,19 @@
+userfoo     http://foo.bar.edu/~foo
+userpasswd
+HAL         http://daisybell.mit.edu/docs/HAL
+
+Example resource file for CADAC web services.
+Only the 3 lines at the top are read, which 
+should contain
+UserName     (optional URL, no spaces)
+Password
+ComputerName (optional URL, no spaces)
+
+UserName is your CADAC web login, and you can followthat with a URL to
+a website.
+
+Password is you CADAC web login.
+
+The ComputerName is the local machine name (like Cobalt or DataStar)
+that will be used to identify your runs. A URL to the users docs or 
+status monitor is also a good idea.

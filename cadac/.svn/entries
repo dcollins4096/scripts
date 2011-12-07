@@ -1,0 +1,69 @@
+8
+
+dir
+298
+svn://mngrid.ucsd.edu/lcagrid/trunk/lcagrid/cadac/code
+svn://mngrid.ucsd.edu/lcagrid
+
+
+
+2008-05-09T05:46:08.925456Z
+286
+rpwagner
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+d94a8e44-8e2d-0410-8c44-9b5ab8aca3d2
+
+doc
+dir
+
+test_run_store.py
+file
+
+
+
+
+2008-09-30T20:03:34.000000Z
+cf3dac232e51c2f42845e24217bef57f
+2008-01-30T21:27:10.375371Z
+249
+rpwagner
+has-props
+
+bin
+dir
+
+var
+dir
+
+long_demo.py
+file
+
+
+
+
+2008-09-30T20:03:34.000000Z
+5a50ff5b597e6fcf5fc1bd7c48faa850
+2008-01-30T23:57:51.848391Z
+250
+rpwagner
+has-props
+
+cadac
+dir
+
+sbin
+dir
+

@@ -1,0 +1,14 @@
+#! /bin/bash
+                               
+PYTHON="/Library/Frameworks/Python.framework/Versions/Current/bin/python"
+SOFTWARE_HOME="/Users/rpwagner/Projects/lcagrid/cadac/code/cadac"
+PYTHONPATH="$SOFTWARE_HOME:$PYTHONPATH"
+export PYTHONPATH SOFTWARE_HOME
+
+ZDCTL="$SOFTWARE_HOME/web_service.py"
+
+#alias start_cadac="$PYTHON $ZDCTL"
+
+exec $PYTHON $ZDCTL >& /Users/rpwagner/Projects/lcagrid/cadac/code/var/cadac.log &
+
+echo $! > /Users/rpwagner/Projects/lcagrid/cadac/code/var/cadac.pid
