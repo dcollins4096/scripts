@@ -53,8 +53,8 @@ set make = make
 if( -e m.local ) then
     source m.local
     if ( $?Problem == 0 ) then
-	echo Please define Problem in m.local
-	exit
+    echo Please define Problem in m.local
+    exit
     endif
 
 else
@@ -105,65 +105,65 @@ if( $?silent == 0 ) set silent = no
 while( $#argv )
     switch( $1 )
     case "0":
-	set nProcCompile = ""
+    set nProcCompile = ""
     shift
-	breaksw
+    breaksw
 
     case "m":
-	set Parallel = "yes"
+    set Parallel = "yes"
     shift
-	breaksw
+    breaksw
     case "clean":
-	set Compile = no
-	set RunJob = no
+    set Compile = no
+    set RunJob = no
     shift
-	breaksw
+    breaksw
 
     case "o":
-	set RunJob = no
-	set CompileOnly = yes
+    set RunJob = no
+    set CompileOnly = yes
     shift
-	breaksw
+    breaksw
 
     case "c":
-	set CleanSrc = yes
+    set CleanSrc = yes
     shift
-	breaksw
+    breaksw
 
     case "h":
-	set HPMcount = yes
+    set HPMcount = yes
     shift
-	breaksw
+    breaksw
 
     case "t":
-	set RunDebugger = yes
+    set RunDebugger = yes
     shift
-	breaksw
+    breaksw
 
     case "dump":
-	set GrepAfter = "yes"
+    set GrepAfter = "yes"
     shift
-	set ToGrepFor = $1
+    set ToGrepFor = $1
     shift
-	breaksw
+    breaksw
 
     case "x":
-	set Extract = yes
-	set Problem = " -x -l $ExtractionLevel -b 0 0 0 -f 1 1 1  $ExtractDump"
-	set KillDataOnStartup = "no"
+    set Extract = yes
+    set Problem = " -x -l $ExtractionLevel -b 0 0 0 -f 1 1 1  $ExtractDump"
+    set KillDataOnStartup = "no"
     shift
-	breaksw
+    breaksw
 
     case "r":
-	set RestartJob = "yes"
-	set Problem = "-r  $RestartDump"
+    set RestartJob = "yes"
+    set Problem = "-r  $RestartDump"
     shift
-	breaksw
+    breaksw
 
     case "nc":
-	set Compile = "no"
+    set Compile = "no"
     shift
-	breaksw
+    breaksw
 
     case "new":
     set new_local = "yes"
@@ -185,7 +185,7 @@ while( $#argv )
     default:
         echo "Unrecognized argument" $1
         exit
-	breaksw
+    breaksw
 endsw
 end
 
@@ -215,8 +215,8 @@ endif
 #restart debugging: no fresh runs.
 if(  $RestartDebugging == yes ) then
  if(  $CompileOnly != yes && $RestartJob != "yes") then
-	echo "RestartDebugging = yes, so you can't do anything that isn't a restart"
-	exit
+    echo "RestartDebugging = yes, so you can't do anything that isn't a restart"
+    exit
  endif
 endif
 
@@ -260,7 +260,7 @@ if( `echo $machine | cut -c 1-3` == tcc ) then
  if( $Compile == yes) then
     echo $src
     cp $src/$exec .    
- endif	
+ endif    
  set Compile = no
  set machine = "triton"
 endif
@@ -290,20 +290,20 @@ endif
 
 if( `uname` == Linux ) then
     if( `hostname | cut -c 1-8` == tg-login ) then 
-	if( `hostname -f | cut -d . -f 2` == sdsc ) then
-	    set machine = "tg-sdsc"
-	endif
-	
-	if( `hostname -f | cut -d . -f 2` == ncsa ) then
-	    set machine = "tg-ncsa"
-	endif
+    if( `hostname -f | cut -d . -f 2` == sdsc ) then
+        set machine = "tg-sdsc"
+    endif
+    
+    if( `hostname -f | cut -d . -f 2` == ncsa ) then
+        set machine = "tg-ncsa"
+    endif
     endif
     #Abe login
     if( `hostname | cut -c 1-6 ` == honest ) then
-	set machine = "abe_login"
+    set machine = "abe_login"
     endif
     if( `hostname |cut -c 1-3` == abe ) then
-	set machine = "abe"
+    set machine = "abe"
     endif
 endif
 
@@ -336,307 +336,307 @@ switch ( $machine )
     breaksw
 
     case nautilus:
-	set srcdir = $src
-	if( $?nProcCompile == 0 ) set nProcCompile = 
-	if(  $?PBS_NODEFILE  == 0 ) then
-	    echo "no running without interactive shell. try:"
-	    echo " qsub -I -V -l walltime=00:30:00,nodes=2:ppn=2"
-	    set RunJob = no
-	else
-	if( $?hostfile == 0 ) set hostfile = $PBS_NODEFILE
-	set mpirun =  mpiexec 
+    set srcdir = $src
+    if( $?nProcCompile == 0 ) set nProcCompile = 
+    if(  $?PBS_NODEFILE  == 0 ) then
+        echo "no running without interactive shell. try:"
+        echo " qsub -I -V -l walltime=00:30:00,nodes=2:ppn=2"
+        set RunJob = no
+    else
+    if( $?hostfile == 0 ) set hostfile = $PBS_NODEFILE
+    set mpirun =  mpiexec 
     set exeSer = "$mpirun -machinefile $hostfile -np 1 $exec $dbg $Problem"
-	set exeMPI = "$mpirun -machinefile $hostfile -np $nprocRun $exec $dbg $Problem"
-	set exeTS = "$tv aprun -a -n 1 $exec $dbg $Problem"
-	set exeTM = "$tv aprun -a -n $nprocRun $exec $dbg $Problem"
-	endif
+    set exeMPI = "$mpirun -machinefile $hostfile -np $nprocRun $exec $dbg $Problem"
+    set exeTS = "$tv aprun -a -n 1 $exec $dbg $Problem"
+    set exeTM = "$tv aprun -a -n $nprocRun $exec $dbg $Problem"
+    endif
     breaksw
 
     case triton:
-	set srcdir = $src
-	if( $?nProcCompile == 0 ) set nProcCompile = -j4
-	if(  $?PBS_NODEFILE  == 0 ) then
-	    echo "no running without interactive shell. try:"
-	    echo " qsub -I -V -l walltime=00:30:00,nodes=2:ppn=2"
-	    set RunJob = no
-	else
-	if( $?hostfile == 0 ) set hostfile = $PBS_NODEFILE
+    set srcdir = $src
+    if( $?nProcCompile == 0 ) set nProcCompile = -j4
+    if(  $?PBS_NODEFILE  == 0 ) then
+        echo "no running without interactive shell. try:"
+        echo " qsub -I -V -l walltime=00:30:00,nodes=2:ppn=2"
+        set RunJob = no
+    else
+    if( $?hostfile == 0 ) set hostfile = $PBS_NODEFILE
   set mpirun =  /opt/mpich/intel/mx/bin/mpirun
   #set mpirun =  /opt/openmpi/bin/mpirun
     set exeSer = "$mpirun -machinefile $hostfile -np 1 $exec $dbg $Problem"
-	set exeMPI = "$mpirun -machinefile $hostfile -np $nprocRun $exec $dbg $Problem"
-	set exeTS = "$tv aprun -a -n 1 $exec $dbg $Problem"
-	set exeTM = "$tv aprun -a -n $nprocRun $exec $dbg $Problem"
-	endif
+    set exeMPI = "$mpirun -machinefile $hostfile -np $nprocRun $exec $dbg $Problem"
+    set exeTS = "$tv aprun -a -n 1 $exec $dbg $Problem"
+    set exeTM = "$tv aprun -a -n $nprocRun $exec $dbg $Problem"
+    endif
     breaksw
 
 
     case ranger:
-	set srcdir = $src
-	if( $?nProcCompile == 0 ) set nProcCompile = -j4
-	set exeSer = "$exec $dbg $Problem"
-	set exeMPI = DONT KNOW
-	
+    set srcdir = $src
+    if( $?nProcCompile == 0 ) set nProcCompile = -j4
+    set exeSer = "$exec $dbg $Problem"
+    set exeMPI = DONT KNOW
+    
     breaksw
 
     case verne:
-	set srcdir = $src
-	if( $?nProcCompile == 0 ) set nProcCompile = -j4
-	#set exeSer = "mpiexec -n 1 $exec $dbg $Problem"
-	set exeSer = "$exec $dbg $Problem"
-	set exeMPI = "mpiexec -n $nprocRun $exec $dbg $Problem"
-	set exeTS = "$tv mpiexec -a -n 1 $exec $dbg $Problem"
-	set exeTM = "$tv mpiexec -a -n $nprocRun $exec $dbg $Problem"
+    set srcdir = $src
+    if( $?nProcCompile == 0 ) set nProcCompile = -j4
+    #set exeSer = "mpiexec -n 1 $exec $dbg $Problem"
+    set exeSer = "$exec $dbg $Problem"
+    set exeMPI = "mpiexec -n $nprocRun $exec $dbg $Problem"
+    set exeTS = "$tv mpiexec -a -n 1 $exec $dbg $Problem"
+    set exeTM = "$tv mpiexec -a -n $nprocRun $exec $dbg $Problem"
     breaksw
 
     case kraken:
-	echo "yo"
-	set srcdir = $src
-	if( $?nProcCompile == 0 ) set nProcCompile = -j4
-	set exeSer = "aprun -n 1 $exec $dbg $Problem"
-	set exeMPI = "aprun -n $nprocRun $exec $dbg $Problem"
-	set exeTS = "$tv aprun -a -n 1 $exec $dbg $Problem"
-	set exeTM = "$tv aprun -a -n $nprocRun $exec $dbg $Problem"
+    echo "yo"
+    set srcdir = $src
+    if( $?nProcCompile == 0 ) set nProcCompile = -j4
+    set exeSer = "aprun -n 1 $exec $dbg $Problem"
+    set exeMPI = "aprun -n $nprocRun $exec $dbg $Problem"
+    set exeTS = "$tv aprun -a -n 1 $exec $dbg $Problem"
+    set exeTM = "$tv aprun -a -n $nprocRun $exec $dbg $Problem"
     breaksw
     
     case cosmos:
-	if( $?src == 0 ) set src = "~/enzo-code/amr_mpi/src"
+    if( $?src == 0 ) set src = "~/enzo-code/amr_mpi/src"
 
-	set srcdir = $src
-	
-	if( $?nProcCompile == 0 ) set nProcCompile = -j3
-	set exeMPI = "mpirun -np $nprocRun  $exec $dbg $Problem"
-	set exeSer = "$exec $dbg $Problem"
+    set srcdir = $src
+    
+    if( $?nProcCompile == 0 ) set nProcCompile = -j3
+    set exeMPI = "mpirun -np $nprocRun  $exec $dbg $Problem"
+    set exeSer = "$exec $dbg $Problem"
     breaksw
 
     
 
     case ppcluster.ucsd.edu:
-		
-	if( $?hostfile == 0 ) set hostfile = ~/machinefile
+        
+    if( $?hostfile == 0 ) set hostfile = ~/machinefile
 
-	if( $?nProcCompile == 0 ) set nProcCompile = -j2
-	if( $?src == 0 ) then
-	    set srcdir = "/home/dcollins/enzo-code/amr_mpi/src"
-	else
-	    set srcdir = "$src"
-	endif
-	set LaunchCommand = "ssh `head -1 $hostfile |cut -f 1 -d ":"` cd `pwd`;"
-	set exeMPI = "$LaunchCommand /opt/mpich/gnu/bin/mpirun -np $nprocRun -machinefile $hostfile   $exec  $dbg  $Problem"
+    if( $?nProcCompile == 0 ) set nProcCompile = -j2
+    if( $?src == 0 ) then
+        set srcdir = "/home/dcollins/enzo-code/amr_mpi/src"
+    else
+        set srcdir = "$src"
+    endif
+    set LaunchCommand = "ssh `head -1 $hostfile |cut -f 1 -d ":"` cd `pwd`;"
+    set exeMPI = "$LaunchCommand /opt/mpich/gnu/bin/mpirun -np $nprocRun -machinefile $hostfile   $exec  $dbg  $Problem"
 
-	set exeSer = "$exec  $dbg $Problem"
+    set exeSer = "$exec  $dbg $Problem"
     breaksw
 
 
     case ds004:
     case ds011:
-	if( $?nProcCompile == 0 ) set nProcCompile = -j8
-	set srcdir = "$src"
-	set poeargs2 =  "-resd no -hfile ~/NodeFile "
-	set exeMPI = "$poe $exec $dbg  $Problem -nodes 1 -tasks_per_node $nprocRun $poeargs2"
-	set exeSer = "$poe $exec $dbg  $Problem -nodes 1 -tasks_per_node 1 $poeargs2"
-	set exeTS = "$tv $poe -a $exec  $dbg $Problem -nodes 1 -tasks_per_node 1 $poeargs2"
+    if( $?nProcCompile == 0 ) set nProcCompile = -j8
+    set srcdir = "$src"
+    set poeargs2 =  "-resd no -hfile ~/NodeFile "
+    set exeMPI = "$poe $exec $dbg  $Problem -nodes 1 -tasks_per_node $nprocRun $poeargs2"
+    set exeSer = "$poe $exec $dbg  $Problem -nodes 1 -tasks_per_node 1 $poeargs2"
+    set exeTS = "$tv $poe -a $exec  $dbg $Problem -nodes 1 -tasks_per_node 1 $poeargs2"
         set exeTM0 = "$tv $poe -a $exec $dbg  $Problem"
-	set exeTM = "$exeTM0 -nodes 1 -tasks_per_node $nprocRun $poeargs2"
+    set exeTM = "$exeTM0 -nodes 1 -tasks_per_node $nprocRun $poeargs2"
 
 
-	breaksw
+    breaksw
     case ds100:
-	if( $?nProcCompile == 0 ) set nProcCompile = -j8
+    if( $?nProcCompile == 0 ) set nProcCompile = -j8
 
-	set nodes = 0
-	set ppn_mach = 8
-	set ppn_run = 0
-	set total = $nprocRun
-	
-	if( $total > $ppn_mach ) then
-	@ nodes = $total / $ppn_mach
-	set ppn_run = $ppn_mach
-	else
-	set nodes = 1
-	set ppn_run = $total
-	endif
-	echo nodes $nodes ppn $ppn_run
+    set nodes = 0
+    set ppn_mach = 8
+    set ppn_run = 0
+    set total = $nprocRun
+    
+    if( $total > $ppn_mach ) then
+    @ nodes = $total / $ppn_mach
+    set ppn_run = $ppn_mach
+    else
+    set nodes = 1
+    set ppn_run = $total
+    endif
+    echo nodes $nodes ppn $ppn_run
 
-	set srcdir = "$src"
+    set srcdir = "$src"
 
-	if( $HPMcount == 'yes') then
- 	  set exeMPI = "$poe hpmcount -o data_hpm $exec $dbg  $Problem -nodes $nodes -tasks_per_node $ppn_run $poeargs"
-	  set exeSer = "$poe hpmcount -o data_hpm $exec $dbg  $Problem -nodes 1 -tasks_per_node 1 $poeargs"
-	else	  
- 	  set exeMPI = "$poe $exec $dbg  $Problem -nodes $nodes -tasks_per_node $ppn_run $poeargs"
-	  set exeSer = "$poe $exec $dbg  $Problem -nodes 1 -tasks_per_node 1 $poeargs"
-	endif
-	set exeTS = "$tv $poe -a $exec  $dbg $Problem -nodes 1 -tasks_per_node 1 $poeargs"
+    if( $HPMcount == 'yes') then
+       set exeMPI = "$poe hpmcount -o data_hpm $exec $dbg  $Problem -nodes $nodes -tasks_per_node $ppn_run $poeargs"
+      set exeSer = "$poe hpmcount -o data_hpm $exec $dbg  $Problem -nodes 1 -tasks_per_node 1 $poeargs"
+    else      
+       set exeMPI = "$poe $exec $dbg  $Problem -nodes $nodes -tasks_per_node $ppn_run $poeargs"
+      set exeSer = "$poe $exec $dbg  $Problem -nodes 1 -tasks_per_node 1 $poeargs"
+    endif
+    set exeTS = "$tv $poe -a $exec  $dbg $Problem -nodes 1 -tasks_per_node 1 $poeargs"
         set exeTM0 = "$tv $poe -a $exec $dbg  $Problem"
-	set exeTM = "$exeTM0 -nodes $nodes -tasks_per_node $ppn_run $poeargs"
+    set exeTM = "$exeTM0 -nodes $nodes -tasks_per_node $ppn_run $poeargs"
 
-	if( $machine == 'ds100' && $poe == 'poe32' ) then
-	    echo "Can't use poe32 on ds100"
-	    set RunJob = 'no'
-	endif
+    if( $machine == 'ds100' && $poe == 'poe32' ) then
+        echo "Can't use poe32 on ds100"
+        set RunJob = 'no'
+    endif
 
     breaksw
 
     case tg-ncsa:
 
-	if( $?nProcCompile == 0 ) set nProcCompile = -j4
-	if( $?src == 0 ) then
-	    set srcdir = "/home/ac/dcollins/enzo-code/amr_mpi/src"
-	else
-	    set srcdir = "$src"
-	endif
+    if( $?nProcCompile == 0 ) set nProcCompile = -j4
+    if( $?src == 0 ) then
+        set srcdir = "/home/ac/dcollins/enzo-code/amr_mpi/src"
+    else
+        set srcdir = "$src"
+    endif
 
-	#test for the existance of "PBS_NODEFILE"
-	if(  $?PBS_NODEFILE  == 0 ) then
-	    echo "no running without interactive shell. try:"
-	    echo " qsub -I -V -l walltime=00:30:00,nodes=2:ppn=2"
-	    set RunJob = no
-	else
-	set exeMPI = "mpirun -machinefile $PBS_NODEFILE -np $nprocRun $exec $dbg  $Problem"
-	set exeSer = "mpirun -machinefile $PBS_NODEFILE -np 1 $exec $dbg  $Problem"
-	set exeTM  = "mpirun -machinefile $PBS_NODEFILE -np $nprocRun -tv $exec $Problem"
-	set exeTS  = "mpirun -machinefile $PBS_NODEFILE -np 1 -tv $exec $Problem"
+    #test for the existance of "PBS_NODEFILE"
+    if(  $?PBS_NODEFILE  == 0 ) then
+        echo "no running without interactive shell. try:"
+        echo " qsub -I -V -l walltime=00:30:00,nodes=2:ppn=2"
+        set RunJob = no
+    else
+    set exeMPI = "mpirun -machinefile $PBS_NODEFILE -np $nprocRun $exec $dbg  $Problem"
+    set exeSer = "mpirun -machinefile $PBS_NODEFILE -np 1 $exec $dbg  $Problem"
+    set exeTM  = "mpirun -machinefile $PBS_NODEFILE -np $nprocRun -tv $exec $Problem"
+    set exeTS  = "mpirun -machinefile $PBS_NODEFILE -np 1 -tv $exec $Problem"
 
-	endif
+    endif
 
     breaksw
 
     case tg-c227:
     case tg-sdsc:
-	#this machine provides two modes of interactive work.
-	#A batch type session or 4 interactive nodes.
+    #this machine provides two modes of interactive work.
+    #A batch type session or 4 interactive nodes.
 
-	if( $?nProcCompile == 0 ) set nProcCompile = -j4
+    if( $?nProcCompile == 0 ) set nProcCompile = -j4
 
-	if( $?src == 0 ) then
-	    set srcdir = "/users/ux454321/jb-cvs/amr_mpi/mhd/"
-	else
-	    set srcdir = "$src"
-	endif
-	#set hostfile = dummy
+    if( $?src == 0 ) then
+        set srcdir = "/users/ux454321/jb-cvs/amr_mpi/mhd/"
+    else
+        set srcdir = "$src"
+    endif
+    #set hostfile = dummy
 
-	#PBS_NODEFILE is given by the batch system.
-	#If it exists, run 
-	#if not, check if user is on an interactive node.
-	#If not on interactive node, issue instruction.  Otherwise, set up the run file
-	if( $?PBS_NODEFILE == 0 ) then
+    #PBS_NODEFILE is given by the batch system.
+    #If it exists, run 
+    #if not, check if user is on an interactive node.
+    #If not on interactive node, issue instruction.  Otherwise, set up the run file
+    if( $?PBS_NODEFILE == 0 ) then
 
 
-	    #if there's node 
-	    set OnInteractiveNode = 0
+        #if there's node 
+        set OnInteractiveNode = 0
 
-	    foreach node ( tg-c127 tg-c128 tg-c129 tg-c130 )
-		if( `hostname` == $node ) then
-		    set OnInteractiveNode = 1
-		endif
-	    end
+        foreach node ( tg-c127 tg-c128 tg-c129 tg-c130 )
+        if( `hostname` == $node ) then
+            set OnInteractiveNode = 1
+        endif
+        end
 
-	    if( $OnInteractiveNode == 1 ) then
-		if( $?hostfile == 0 ) set hostfile = /users/ux454321/InteractiveNodes
-	    else		
-		echo "Either:"
-		echo " login to tg-c127 tg-c128 tg-c129 tg-c130"
-		echo "    or run"
-		echo " qsub -I -V -l walltime=00:30:00,nodes=2:ppn=2 "
-		echo " NOT GOING TO RUN JOB"
-		set RunJob = no
-	    endif		
+        if( $OnInteractiveNode == 1 ) then
+        if( $?hostfile == 0 ) set hostfile = /users/ux454321/InteractiveNodes
+        else        
+        echo "Either:"
+        echo " login to tg-c127 tg-c128 tg-c129 tg-c130"
+        echo "    or run"
+        echo " qsub -I -V -l walltime=00:30:00,nodes=2:ppn=2 "
+        echo " NOT GOING TO RUN JOB"
+        set RunJob = no
+        endif        
 
-	else 
-	    set hostfile = $PBS_NODEFILE
-	endif	    
+    else 
+        set hostfile = $PBS_NODEFILE
+    endif        
 
-	set exeMPI = "mpirun -machinefile $hostfile -np $nprocRun $exec $dbg  $Problem"
-	set exeSer = "mpirun -machinefile $hostfile -np 1 $exec $dbg  $Problem"
-	set exeTM  = "mpirun -machinefile $hostfile -np $nprocRun -tv $exec $Problem"
-	set exeTS  = "mpirun -machinefile $hostfile -np 1 -tv $exec $Problem"
+    set exeMPI = "mpirun -machinefile $hostfile -np $nprocRun $exec $dbg  $Problem"
+    set exeSer = "mpirun -machinefile $hostfile -np 1 $exec $dbg  $Problem"
+    set exeTM  = "mpirun -machinefile $hostfile -np $nprocRun -tv $exec $Problem"
+    set exeTS  = "mpirun -machinefile $hostfile -np 1 -tv $exec $Problem"
 
 
     breaksw
     case cobalt:
-	if( $?nProcCompile == 0 ) set nProcCompile = -j4
+    if( $?nProcCompile == 0 ) set nProcCompile = -j4
 
-	if( $?src == 0 ) then
-	    set srcdir = "/u/ac/dcollins/enzo-code/amr_mpi/src"
-	else
-	    set srcdir = "$src"
-	endif
+    if( $?src == 0 ) then
+        set srcdir = "/u/ac/dcollins/enzo-code/amr_mpi/src"
+    else
+        set srcdir = "$src"
+    endif
 
 
-	set exeMPI = "mpirun -np $nprocRun $exec  $dbg $Problem"
-	set exeSer = "mpirun -np 1 $exec  $dbg $Problem"
+    set exeMPI = "mpirun -np $nprocRun $exec  $dbg $Problem"
+    set exeSer = "mpirun -np 1 $exec  $dbg $Problem"
 
-	endif
-	
+    endif
+    
     breaksw
 
     #ncsa's ABE
     case abe_login:
 
-	if( $?nProcCompile == 0 ) set nProcCompile = -j8
+    if( $?nProcCompile == 0 ) set nProcCompile = -j8
 
-	if( $?src == 0 ) then
+    if( $?src == 0 ) then
             set srcdir = /u/ac/dcollins/Enzo/MHD/Enzo/amr_mpi/src
         else
             set srcdir = "$src"
         endif
 
-	if( $exec == "enzo.exe" || "$Parallel" == "yes"  ) then
-	    echo "---- login node only.  No run.----"
-	    set RunJob = no
-	    set Compile = yes
-	else
-	    echo "---- login node only.  No run.----"
-	    set exeSer = "$exec $dbg  $Problem"
-	    set RunJob = yes
-	    set Compile = yes
-	    set exeTM = "echo NoParallel."
-	    set exeTS = "$tv $exec -a $Problem"
-	endif
+    if( $exec == "enzo.exe" || "$Parallel" == "yes"  ) then
+        echo "---- login node only.  No run.----"
+        set RunJob = no
+        set Compile = yes
+    else
+        echo "---- login node only.  No run.----"
+        set exeSer = "$exec $dbg  $Problem"
+        set RunJob = yes
+        set Compile = yes
+        set exeTM = "echo NoParallel."
+        set exeTS = "$tv $exec -a $Problem"
+    endif
     breaksw
     case abe:
 
-	if( $?nProcCompile == 0 ) set nProcCompile = -j8
+    if( $?nProcCompile == 0 ) set nProcCompile = -j8
 
-	if( $?src == 0 ) then
+    if( $?src == 0 ) then
             set srcdir = /u/ac/dcollins/Enzo/MHD/Enzo/amr_mpi/src
         else
             set srcdir = "$src"
         endif
 
-	#test for the existance of "PBS_NODEFILE"
-	if(  $?PBS_NODEFILE  == 0 ) then
-	    echo "no running without interactive shell. try:"
-	    echo " qsub -I -V -l walltime=00:30:00,nodes=2:ppn=2"
-	    set RunJob = no
-	else 
+    #test for the existance of "PBS_NODEFILE"
+    if(  $?PBS_NODEFILE  == 0 ) then
+        echo "no running without interactive shell. try:"
+        echo " qsub -I -V -l walltime=00:30:00,nodes=2:ppn=2"
+        set RunJob = no
+    else 
 
-	#old set abe_mpirun = "/opt/mpich-vmi-2.2.0-1-intel/bin/mpirun"
-#	set abe_mpirun = "/usr/local/ofed-1.2/mpi/intel/openmpi-1.2.2-1/bin/mpirun"
-	set abe_mpirun = mpirun 
-	set exeMPI = "$abe_mpirun -machinefile $PBS_NODEFILE -np $nprocRun $exec $dbg  $Problem"
-#	set exeSer = "$abe_mpirun -machinefile $PBS_NODEFILE -np 1 $exec $dbg  $Problem"
-	set exeSer = "$exec $dbg  $Problem"
-	set exeTM  = "$abe_mpirun -tv -machinefile $PBS_NODEFILE -np $nprocRun  $exec $Problem"
-	set exeTS  = "$abe_mpirun -tv -machinefile $PBS_NODEFILE -np 1 $exec $Problem"
+    #old set abe_mpirun = "/opt/mpich-vmi-2.2.0-1-intel/bin/mpirun"
+#    set abe_mpirun = "/usr/local/ofed-1.2/mpi/intel/openmpi-1.2.2-1/bin/mpirun"
+    set abe_mpirun = mpirun 
+    set exeMPI = "$abe_mpirun -machinefile $PBS_NODEFILE -np $nprocRun $exec $dbg  $Problem"
+#    set exeSer = "$abe_mpirun -machinefile $PBS_NODEFILE -np 1 $exec $dbg  $Problem"
+    set exeSer = "$exec $dbg  $Problem"
+    set exeTM  = "$abe_mpirun -tv -machinefile $PBS_NODEFILE -np $nprocRun  $exec $Problem"
+    set exeTS  = "$abe_mpirun -tv -machinefile $PBS_NODEFILE -np 1 $exec $Problem"
 
 
 
-	echo "------ abe interactive: no compile. ----"
-	echo "------ Please compile the code on a different node. ----"
-	set Compile = no
-	set RunJob = yes
-	endif
+    echo "------ abe interactive: no compile. ----"
+    echo "------ Please compile the code on a different node. ----"
+    set Compile = no
+    set RunJob = yes
+    endif
 
     breaksw
 
     
     default:
-	echo "Machine Not defined: " $machine
-	set Compile = no
-	set RunJob = no
-	breaksw
+    echo "Machine Not defined: " $machine
+    set Compile = no
+    set RunJob = no
+    breaksw
 
 endsw
 #dbg
@@ -648,75 +648,75 @@ endsw
 if( $Compile == "yes" ) then
 set Success = 'no'
 
-	if( $KillExec == yes ) if( -e $exec ) rm $exec
+    if( $KillExec == yes ) if( -e $exec ) rm $exec
 
-	cd $srcdir
-	echo "cd $srcdir"
+    cd $srcdir
+    echo "cd $srcdir"
 
-	if( -e $exec && $KillExec == yes) then 
-	    rm $exec
-	endif
+    if( -e $exec && $KillExec == yes) then 
+        rm $exec
+    endif
 
 #
 #       clean
 #
-	if( $linkforf == "yes" && $RunDebugger == yes ) then
-	       rm *.f
-	endif
+    if( $linkforf == "yes" && $RunDebugger == yes ) then
+           rm *.f
+    endif
 
-	if( $CleanSrc == "yes" ) then
-		echo Making Clean
-		$make clean
-	endif
+    if( $CleanSrc == "yes" ) then
+        echo Making Clean
+        $make clean
+    endif
 
 
 #
 #       compile
 #
 
-	$make $nProcCompile $exec && set Success = "yes"
+    $make $nProcCompile $exec && set Success = "yes"
 
 #
 #       move exec.exe if the recently compiled copy is newer
 #
 
-	if( -e $exec ) then
-	    set t1 = `ls -l $exec | awk '{print($5 $6 $7 $8)}'`
-	else
-	    set t1 = 'moops'
-	endif
-	if( -e $RunDir/$exec ) then
-	    set t2 = `ls -l $RunDir/$exec | awk '{print($5 $6 $7 $8)}'`
-	else
-	    set t2 = "monkeys"
-	endif
+    if( -e $exec ) then
+        set t1 = `ls -l $exec | awk '{print($5 $6 $7 $8)}'`
+    else
+        set t1 = 'moops'
+    endif
+    if( -e $RunDir/$exec ) then
+        set t2 = `ls -l $RunDir/$exec | awk '{print($5 $6 $7 $8)}'`
+    else
+        set t2 = "monkeys"
+    endif
 
-	if( ($t1 != $t2) && ($Success == "yes") ) then
-	    unalias cp
-	    echo copying exec
+    if( ($t1 != $t2) && ($Success == "yes") ) then
+        unalias cp
+        echo copying exec
 
 
-	    #cp -p $exec $RunDir || set Success = "NO"
-	    cp  $exec $RunDir || set Success = "NO"
+        #cp -p $exec $RunDir || set Success = "NO"
+        cp  $exec $RunDir || set Success = "NO"
 
-	    #On ncsa teragrid, when copying to gpfs-wan, something gets screwed up with permissions.
-	    #So an extra check is needed here
+        #On ncsa teragrid, when copying to gpfs-wan, something gets screwed up with permissions.
+        #So an extra check is needed here
 
-	    if( $machine == "tg-ncsa" ) then
-		if( -e $RunDir/$exec ) then
-		    set Success = "yes"
-		endif
+        if( $machine == "tg-ncsa" ) then
+        if( -e $RunDir/$exec ) then
+            set Success = "yes"
+        endif
 
-	    endif
-	else
-	    if( $Success == "yes" ) then
-		echo No exec change.
-	    else
-		echo Sompins Wrong
-	    endif
-	endif
+        endif
+    else
+        if( $Success == "yes" ) then
+        echo No exec change.
+        else
+        echo Sompins Wrong
+        endif
+    endif
 
-	cd $RunDir
+    cd $RunDir
 
 endif
 
@@ -728,41 +728,41 @@ endif
     if( ($RestartJob == no || $RestartClean == "yes") && $RunJob == "yes" ) then
 
     if( $Success == "yes" && $KillDataOnStartup == "yes") then
-	touch data666 file666
-    foreach i (OutputLog randomForcing.out)
-        if( -e $i ) rm $i
-    end
+      touch data666 file666
+      foreach i (OutputLog randomForcing.out)
+          if( -e $i ) rm $i
+      end
 
-    set KILL = ""
-    foreach start (data cycle time Extra TD DD CD ED)
-        set KILL = "$KILL "`find . -name "$start*"`
-    end
-	if( $?SaveList != 0 ) then
-	    foreach i ($KILL)
-		set saveThis = 0
-		foreach save ($SaveList)	
-		    if( "$i" =~ *"$save"* ) then
-			echo "save " $i
-			set saveThis = 1
-		    endif
-		end
-		if( $saveThis == 0 ) then
-		    rm -rf $i
-		    echo "kill " $i
-		endif
-	    end
-	else #save list not defined.
+      set KILL = ""
+      foreach start (data cycle time Extra TD DD CD ED)
+          set KILL = `find . -maxdepth 1 -name "$start*"`
+          if( $?SaveList != 0 ) then
+              foreach i ($KILL)
+                set saveThis = 0
+                foreach save ($SaveList)    
+                    if( "$i" =~ *"$save"* ) then
+                      echo "save " $i
+                      set saveThis = 1
+                    endif
+                end
+                if( $saveThis == 0 ) then
+                    rm -rf $i
+                    echo "kill " $i
+                endif
+              end
+          else #save list not defined.
 
-	 foreach i ($KILL)
-	    echo rm -r $i
-	     rm $i
-	 end
-	endif #savelist
+             foreach i ($KILL)
+               echo rm -rf $i
+               rm -rf $i
+             end
+          endif #savelist
+      end
 
     endif
 
 #    foreach ff (`ls *file* data* *~ *\# .\#* amr.out SRBlog OutputLevelInformation.out core perfdata_* Density *velocity* MagneticField_* Total-Energy amr* dump pie >& pie`)
-#	    if( -e $ff ) rm $ff
+#        if( -e $ff ) rm $ff
 #    end
 #
     endif
@@ -775,60 +775,60 @@ if( -e $exec && $Success == "yes" && $RunJob == "yes") then
 
 #    Moved this to be a part of $exeSer and $exeMPI
 #    if( $HPMcount == yes ) then 
-#	poe hpmcount $exec -d $Problem |& tee dump
+#    poe hpmcount $exec -d $Problem |& tee dump
 #    endif
 
     if( $GrepAfter == yes ) then
-	echo Will Grep For $ToGrepFor
+    echo Will Grep For $ToGrepFor
     endif
 
     if( $RunDebugger == yes ) then
     
-	# This is needed for totalview, 'cause I can't figure out how to get 
-	# it to look for .src files instead of .f files.  Makes soft links.
+    # This is needed for totalview, 'cause I can't figure out how to get 
+    # it to look for .src files instead of .f files.  Makes soft links.
 
-	if( $linkforf == "yes" ) then
-	    cd $srcdir
-	    echo linking "*.src" to "*.f"
-	    Linker.dcc
-	    cd $RunDir
-	endif
+    if( $linkforf == "yes" ) then
+        cd $srcdir
+        echo linking "*.src" to "*.f"
+        Linker.dcc
+        cd $RunDir
+    endif
 
-	set exeMPI = "$exeTM"
-	set exeSer = "$exeTS"
+    set exeMPI = "$exeTM"
+    set exeSer = "$exeTS"
     endif
 
 
     if( $Parallel == yes ) then
-	echo "parallel " $exeMPI
-	if( "$exeMPI" != "no" ) then
+    echo "parallel " $exeMPI
+    if( "$exeMPI" != "no" ) then
         if( $silent == yes ) then
             echo "running silently"
             $exeMPI >& dump
         else if ( $silent == no ) then
-    	    $exeMPI |& tee dump
+            $exeMPI |& tee dump
         else if ( $silent == direct ) then
             $exeMPI
         endif
-	 endif
+     endif
 
     else
-	echo "Serial " $exeSer $silent
-	if( "$exeSer" != "no" ) then 
+    echo "Serial " $exeSer $silent
+    if( "$exeSer" != "no" ) then 
         if( $silent == yes ) then
             echo "running silently"
-    	    $exeSer >& dump    
+            $exeSer >& dump    
         else if ( $silent == no ) then
-    	    $exeSer |& tee dump
+            $exeSer |& tee dump
         else if ( $silent == direct ) then
             $exeSer
         endif
-	endif
+    endif
     endif
 
 
     if( $GrepAfter == yes ) then
-	grep $ToGrepFor dump
+    grep $ToGrepFor dump
     endif
 
     if( $vim_when_done == yes ) then
@@ -842,10 +842,10 @@ endif # runjob
     if(  -e $exec && $Success == "yes" && $Extract == yes ) then
 
     foreach i (9999 9998 9997 9996 9995 9994 9993 9992 9991 9990)
-	set DestName = $ExtractDump.grid$i
+    set DestName = $ExtractDump.grid$i
         if( -e amr_extract0000 && !( -e $DestName ) ) then
-	    mv -f amr_extract0000 $DestName
-	    echo "Moved to " $DestName
+        mv -f amr_extract0000 $DestName
+        echo "Moved to " $DestName
         endif
     end
 
@@ -856,36 +856,36 @@ endif # runjob
 #
 
     if(  -e $exec && $Success == "yes" && $Extract == yes && $?FinishAllExtractionLater == 1 ) then
-	if( ! ( -e dump ) ) then
-	    touch dump
-	endif
-	if( $ExtractDump != "all" ) then
-	    echo =============
-	    echo ============= extract
-	    echo =============
-	    #$exec -x -l 1 -b 0 0 0.375 -f 1 1 0.75  $ExtractDump
-	    #	mv -f amr_extract0000 $Extract.grid9998
+    if( ! ( -e dump ) ) then
+        touch dump
+    endif
+    if( $ExtractDump != "all" ) then
+        echo =============
+        echo ============= extract
+        echo =============
+        #$exec -x -l 1 -b 0 0 0.375 -f 1 1 0.75  $ExtractDump
+        #    mv -f amr_extract0000 $Extract.grid9998
 
-	    set ExtCmd = "$exec -x -l $ExtractionLevel -b 0 0 0 -f 1 1 1  $ExtractDump"
-	    if( $RunDebugger == 'yes' ) then
-		$tv $poe -a $ExtCmd -nodes 1 -tasks_per_node 1 $poeargs2
-	    else
-		$ExtCmd
-	    endif
+        set ExtCmd = "$exec -x -l $ExtractionLevel -b 0 0 0 -f 1 1 1  $ExtractDump"
+        if( $RunDebugger == 'yes' ) then
+        $tv $poe -a $ExtCmd -nodes 1 -tasks_per_node 1 $poeargs2
+        else
+        $ExtCmd
+        endif
 
-	    if( -e amr_extract0000 ) then
-		mv -f amr_extract0000 $ExtractDump.grid9999
-	    endif
-	else
-	    foreach i (*.hierarchy )
-		set ExtractName = `basename $i .hierarchy`
-		if( ! ( -e $ExtractName.grid9999 ) ) then
-		    echo $ExtractName
-		    $exec -x -l $ExtractionLevel -b 0 0 0 -f 1 1 1  $ExtractName >>& dump
-		    mv -f amr_extract0000 $ExtractName.grid9999
-		endif
-	    end
-        endif	    
+        if( -e amr_extract0000 ) then
+        mv -f amr_extract0000 $ExtractDump.grid9999
+        endif
+    else
+        foreach i (*.hierarchy )
+        set ExtractName = `basename $i .hierarchy`
+        if( ! ( -e $ExtractName.grid9999 ) ) then
+            echo $ExtractName
+            $exec -x -l $ExtractionLevel -b 0 0 0 -f 1 1 1  $ExtractName >>& dump
+            mv -f amr_extract0000 $ExtractName.grid9999
+        endif
+        end
+        endif        
     endif
 
 
