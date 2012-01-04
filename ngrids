@@ -1,0 +1,3 @@
+#!/bin/tcsh
+grep "^Grid = " $1 |wc -l
+#end
