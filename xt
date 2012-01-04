@@ -226,6 +226,16 @@ while( $counter <= $#argset )
       set echo
             set SSH_TO = "-t david_c@wtrw.lanl.gov ssh lo-fe1"
             breaksw
+    case conejo:
+      #set SSH_TO = "ssh -t wtrw.lanl.gov ssh lo-fe1"
+      set echo
+            set SSH_TO = "-t david_c@wtrw.lanl.gov ssh cj-fe1"
+            breaksw
+    case mapache:
+      #set SSH_TO = "ssh -t wtrw.lanl.gov ssh lo-fe1"
+      set echo
+            set SSH_TO = "-t david_c@wtrw.lanl.gov ssh mp-fe1"
+            breaksw
 
 
 #
