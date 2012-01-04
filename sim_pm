@@ -115,7 +115,7 @@ else if ( `echo $machine |cut -c -2` == "lo") then
   set submit = msub
   set script = Script.lobo
   set earliest_err = `ls -1t slurm* | tail -1`
-  set earliest_out = $earliest_err
+  set earliest_out = 
 else
     echo "machine not supported"
     exit
@@ -127,9 +127,10 @@ if( $debug > 0 ) then
     echo "Earliest:" $earliest_err
 endif
 
-if( ( ! -e RunTracker.xml ) && $nrt == False ) then
+if( ( ! -e PreviousRunTracker/RunTracker.xml.0001 ) && $nrt == False ) then
     echo "No RunTracker.xml found."
     echo "Either create one, or supply the 'nrt' flag to sim_pm"
+    echo "Create one with GsubAssembleXML.py (scriptname)"
     exit -1
 endif
 
@@ -137,11 +138,7 @@ PostTracker.py $earliest_err $xml $post
 #mv rt_temp.xml RunTracker.xml
 
 if( ! -e Meta ) mkdir Meta
-if( "$post" != "" ) then
-    mv $earliest_err $earliest_out Meta
-else
-    echo "not posting, so not moving files" $earliest_err $earliest_out
-endif
+mv $earliest_err $earliest_out Meta
 echo $EDITOR Meta/$earliest_err Meta/$earliest_out
 
 if( $resub == True ) $submit $script
