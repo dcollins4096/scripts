@@ -39,17 +39,17 @@ autocmd BufRead *.py set smartindent cinwords=if,elif,else,for,while,try,except,
 
 "" C style
 
-set shiftwidth=2
+set shiftwidth=4
 set expandtab
-set softtabstop=2
+set softtabstop=4
 set autoindent
-set tabstop=2
+set tabstop=4
 
-autocmd BufRead *.html set shiftwidth=2
+autocmd BufRead *.html set shiftwidth=4
 autocmd BufRead *.html set expandtab
-autocmd BufRead *.html set softtabstop=2
+autocmd BufRead *.html set softtabstop=4
 autocmd BufRead *.html set autoindent
-autocmd BufRead *.html set tabstop=2
+autocmd BufRead *.html set tabstop=4
 
 au BufNewFile,BufRead *.src set ft=fortran
 au  BufNewFile,BufRead *.src set tw=72
