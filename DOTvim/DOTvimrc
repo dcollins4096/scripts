@@ -62,6 +62,9 @@ match Tab ,\t,
 
 set laststatus=2
 set statusline=%F%m%r%h%w\ [POS=%04l,%04v][%p%%]\ [LEN=%L] 
+if &diff
+    colorscheme evening
+endif
 
 
 "" Spellchecking
