@@ -29,24 +29,17 @@ class PreviousRun:
     scavengedFields = []
     #These I will want as defaults.  Stick them in the dictionary.
     prevRun = {'Name':Name,'Description':Description,'Comments':Comments,'ToDo':ToDo,'TagList':TagList}
-    def __init__(self,filename,listOfFields=defaultListOfFields):
+    def __init__(self,listOfFields=defaultListOfFields):
         prevDic={}
 
         #get the xml, make a dictionary.
         PreviousDirectoryName = 'PreviousRunTracker'
-        if glob.glob(filename) != []:
-            xmldoc = minidom.parse(filename)
-            for node in xmldoc.firstChild.childNodes:
-                prevDic[ node.nodeName ] = node
-            self.prevRun.update( prevDic )
-            if glob.glob(PreviousDirectoryName) == []:
-                os.mkdir(PreviousDirectoryName)
-            previousList = glob.glob(PreviousDirectoryName + "/*")
-            number = len(previousList) + 1
-            save_file = open("%s/%s.%04d"%(PreviousDirectoryName, filename, number),'w')
-            save_file.write(xmldoc.toxml())
-            save_file.write('\n')
-            save_file.close()
+        previousList = sorted(glob.glob(PreviousDirectoryName + "/*"))
+        last_file = previousList[-1]
+        xmldoc = minidom.parse(last_file)
+        for node in xmldoc.firstChild.childNodes:
+            prevDic[ node.nodeName ] = node
+        self.prevRun.update( prevDic )
         for name in listOfFields:
             if self.prevRun.has_key(name):
                 self.scavengedFields.append( self.prevRun[name] )
