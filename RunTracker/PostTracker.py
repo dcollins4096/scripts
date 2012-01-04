@@ -137,7 +137,7 @@ def grab_and_post(filename,qhist_filename,style='cvs'):
 
     runXML = minidom.parseString(baseRunObj.toxml())
 
-    Previous   = PreviousRun(sysInfo.runTrackerXMLname)
+    Previous   = PreviousRun()
 
     for i in PreviousRun.scavengedFields:
         runXML.firstChild.insertBefore(i,runXML.firstChild.firstChild)
@@ -211,4 +211,17 @@ if __name__ == "__main__":
             output= client.post(sysInfo.userName,'amrrox','/xml/runs',xml.toxml())
         if options.printXML:
             print xml.toxml()
+        if True:
+            PreviousDirectoryName = 'PreviousRunTracker'
+            previousList = sorted(glob.glob(PreviousDirectoryName + "/*"))
+            outfile = "%s/%s.%04d"%(PreviousDirectoryName, sysInfo.runTrackerXMLname, len(previousList)+1)
+            save_file = open(outfile,'w')
+            save_file.write(xml.toxml())
+            save_file.write("\n")
+            save_file.close()
+            print "wrote ", outfile
+
+
+            
+
 #end

@@ -121,7 +121,10 @@ for i in PreviousRun.scavengedFields:
 if debug > 0 :
     print runXML.toxml()
 else:
-    file = open(sysInfo.runTrackerXMLname,"w")
+    PreviousDirectoryName = 'PreviousRunTracker'
+    if glob.glob(PreviousDirectoryName) == []:
+        os.mkdir(PreviousDirectoryName)
+    file = open("PreviousRunTracker/%s.%04d"%(sysInfo.runTrackerXMLname,1),"w")
     file.write(runXML.toxml())
     file.write('\n') #to shut emacs up.
     file.close
