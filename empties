@@ -1,0 +1,8 @@
+#!/bin/tcsh
+et empties = `find . -type d -empty`
+while( $#empties > 0 )
+    rmdir $empties 
+    set empties = `find . -type d -empty`
+end 
+
+#end
