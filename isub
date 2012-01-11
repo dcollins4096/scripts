@@ -18,7 +18,7 @@ endif
 #echo time : $time 
 #echo nodes: $nodes
 #echo ppn  : $ppn
-if ( $machine == lobo ) then
+if ( $machine == lobo || $machine == conejo || $machine == mapache ) then
   echo msub -I -V -l procs="$total_proc",walltime="$time"
 else
   echo qsub -I -V -l size="$total_proc",walltime="$time"
