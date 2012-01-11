@@ -236,6 +236,11 @@ while( $counter <= $#argset )
       set echo
             set SSH_TO = "-t david_c@wtrw.lanl.gov ssh mp-fe1"
             breaksw
+    case mapache2:
+      #set SSH_TO = "ssh -t wtrw.lanl.gov ssh lo-fe1"
+      set echo
+            set SSH_TO = "-t david_c@wtrw.lanl.gov ssh mp-fe2"
+            breaksw
 
 
 #
