@@ -204,7 +204,7 @@ endif
 # New local file.  Only sets the paramert name.
 #
 if( $new_local == 'yes' ) then
-    sed -e 's,setenv\ *Problem.*,setenv Problem '$Problem',' ~/Scripts/m.local > ./m.local
+    sed -e 's,setenv\ *Problem.*,setenv Problem '$Problem',' $ScriptDir/m.local > ./m.local
     vim m.local
     exit
 endif
@@ -313,6 +313,7 @@ endif
 
 echo "machine: " $machine
 switch ( $machine )
+    case mapache:
     case lobo:
       set srcdir = $src
       set nProcCompile = -j8
