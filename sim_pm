@@ -128,7 +128,7 @@ if( $debug > 0 ) then
 endif
 
 if( ( ! -e PreviousRunTracker/RunTracker.xml.0001 ) && $nrt == False ) then
-    echo "No RunTracker.xml found."
+    echo "No previous run tracker found in PreviousRunTracker/RunTracker.xml.0001"
     echo "Either create one, or supply the 'nrt' flag to sim_pm"
     echo "Create one with GsubAssembleXML.py (scriptname)"
     exit -1
