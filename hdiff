@@ -1,10 +1,26 @@
 #!/bin/tcsh
-set f1 = $1
-set f2 = $2
+set dir1 = $1
+set dir2 = $2
+set n1 = $3
+if( $#argv == 4 ) then
+    set n2 = $4
+else
+    set n2 = $n1
+endif
+@ n1= $n1 + 1
+@ n2= $n2 + 1
+set f1 = $dir1/`head -$n1 $dir1/OutputLog  |tail -1 |awk '{print $3}'`.hierarchy
+set f2 = $dir2/`head -$n2 $dir2/OutputLog  |tail -1 |awk '{print $3}'`.hierarchy
+echo $f1
+echo $f2
 if( -e $f2.hdiff ) rm $f2.hdiff
 if( -e $f1.hdiff ) rm $f1.hdiff
-egrep -v "FieldType|Task|BaryonFileName" $f1 > $f1.hdiff
-egrep -v "FieldType|Task|BaryonFileName" $f2 > $f2.hdiff
+set ToGrepFor = "FieldType|Task|BaryonFileName" 
+if( 0 == 0 ) then
+    set ToGrepFor = "$ToGrepFor|NumberOfParticles|ParticleFileName"
+endif
+egrep -v $ToGrepFor $f1 > $f1.hdiff
+egrep -v $ToGrepFor $f2 > $f2.hdiff
 vimdiff $f1.hdiff $f2.hdiff
 
 #end
