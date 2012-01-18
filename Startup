@@ -7,7 +7,7 @@ set EDITOR = vim
 setenv CVSEDITOR vim
 setenv backups "*~ *#* .#*"
 setenv a "*.C *.h *.src *.f *.F"
-
+alias int_resize = "set noglob; eval `resize`"
 #
 # Machine Overloads
 #
@@ -49,7 +49,7 @@ set mrg_repo = "http://dcollins:se7meaor@hg.spacepope.org/mhdctmerge/"
 #echo "warning: path not set correctly.  totalview wont' work."
 set path=($path  . )
 if( $?ScriptDir == 0 ) then
-    echo Please Define Script Dir.
+    setenv ScriptDir  $HOME/Scripts
 endif
 set path=($ScriptDir $ScriptDir/RunTracker $path)
 
@@ -136,6 +136,7 @@ alias prompt_long set prompt = $prompt_word":%~\>"
 alias prompt_short set prompt = $prompt_word":%c\>"
 alias prompt_shortest set prompt = "%c\>"
 prompt_long
+alias lsi "ls -1 |grep -i \!*"
 #
 # Aliases for directories.
 #
