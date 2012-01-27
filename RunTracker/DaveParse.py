@@ -174,7 +174,16 @@ if finalStepInfo.wall != None:
     output_dom.firstChild.appendChild( output_dom.createTextNode('\n'))
     output_dom.firstChild.appendChild(end_xml)
 
+if initialStepInfo.wall != None and finalStepInfo.wall != None:
+    difference = int( float(finalStepInfo.wall) - float(initialStepInfo.wall) )
+    hours = int( difference/3600 )
+    minutes = int( (difference - hours*3600)/60 )
+    runtime_xml = minidom.parseString('<RunTime>%d:%d</RunTime>'%(hours,minutes)).firstChild
+    output_dom.firstChild.appendChild( output_dom.createTextNode('\n'))
+    output_dom.firstChild.appendChild(runtime_xml)
+
+
+
 sys.stdout.write( output_dom.toxml())
 sys.stdout.write("\n")
-
 #end
