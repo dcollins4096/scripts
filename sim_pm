@@ -1,4 +1,7 @@
 #!/bin/tcsh
+
+echo Moving to dpm.
+exit
 #
 # Simulation Post Mortem. dcollins. Fall 2009.
 #
