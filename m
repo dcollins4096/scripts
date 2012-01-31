@@ -314,9 +314,10 @@ endif
 echo "machine: " $machine
 switch ( $machine )
     case mapache:
+    case conejo:
     case lobo:
+      set nProcCompile = -j16
       set srcdir = $src
-      set nProcCompile = -j8
       set exeSer = "$exec $dbg $Problem"
       set exeMPI = "mpirun -n $nprocRun $exec $dbg $Problem"
       breaksw
