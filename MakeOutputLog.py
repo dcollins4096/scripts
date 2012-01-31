@@ -23,6 +23,7 @@ else:
     if len(args) == 0:
         for root, dirnames, filenames in os.walk('.'):
           for filename in fnmatch.filter(filenames, '*.hierarchy'):
+              print "filename",filename
               matches.append(os.path.join(root, filename.split('.')[0]))
 
 
