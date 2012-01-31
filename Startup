@@ -137,6 +137,9 @@ alias prompt_short set prompt = $prompt_word":%c\>"
 alias prompt_shortest set prompt = "%c\>"
 prompt_long
 alias lsi "ls -1 |grep -i \!*"
+alias pybuild "python setup.py build_ext -i"
+
+
 #
 # Aliases for directories.
 #
