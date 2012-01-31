@@ -1,0 +1,11 @@
+#!/bin/tcsh
+set oot = `msub $1`
+source $ScriptDir/DOTdschedrc
+set log = $AllRuns
+if( ! -e $log ) touch $log
+if( ! -e $QueuedRuns ) touch $QueuedRuns
+#echo `date +"%Y-%m-%d"` $oot `pwd` >> $log
+echo `date +"%Y-%m-%d-%H-%M-%S"` $oot `pwd` >> $log
+echo `date +"%Y-%m-%d-%H-%M-%S"` $oot `pwd` >> $QueuedRuns
+echo $oot
+#end

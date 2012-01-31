@@ -1,0 +1,19 @@
+#!/bin/tcsh
+if( $1 == "" ) then
+    echo "ddel <job id> <unqueue only>"
+    echo "deletes job id, removes from the JobsQueued"
+    echo "if unqueue_only is 0 or not present, qdel is called."
+    exit
+endif
+set jobid = $1
+set unqueue_only = $2
+source $ScriptDir/DOTdschedrc
+if( $unqueue_only == 0 || $unqueue_only == "") then
+    qdel $jobid
+endif
+
+if ( -e $QueuedRuns.backup ) rm $QueuedRuns.backup
+
+mv -f $QueuedRuns $QueuedRuns.backup
+grep -v $jobid $QueuedRuns.backup > $QueuedRuns
+#end

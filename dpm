@@ -1,0 +1,25 @@
+#!/bin/tcsh
+
+if( $1 == "" ) then
+    echo "dpm <joblog>"
+    echo "Parses output.  Moves job records around."
+    echo "If job has completed, moves output to Meta dir"
+    exit
+endif
+
+set jobid = `echo $1 | cut -c 7- | cut -d . -f -1`
+set filename = $1
+set still_running = True
+if( `dstat |grep $jobid` == "" ) then
+    set still_running = False
+endif
+ddel $jobid 1
+DaveParse.py $filename
+if( $still_running == True ) then
+    echo "Job still running"
+    echo "vim $filename"
+else
+    mv $filename Meta
+    echo "vim Meta/$filename"
+endif
+#end

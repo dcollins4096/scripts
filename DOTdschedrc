@@ -1,0 +1,2 @@
+setenv AllRuns $proj/.dsched/AllRuns
+setenv QueuedRuns $proj/.dsched/QueuedRuns
