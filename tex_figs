@@ -4,15 +4,23 @@
 import sys
 import re
 import glob
-def grab_figures(filename):
+def grab_figures(filename,format):
     file = open(filename,'r')
 
     re_eps = re.compile(r'^[^%].*{(.*\.(eps)).*}')
     re_pdf = re.compile(r'^[^%].*{(.*\.(pdf)).*}')
     re_png = re.compile(r'^[^%].*{(.*\.(png)).*}')
+    reg_list = [re_eps,re_pdf,re_png]
+    if format == 'pdf':
+        reg_list = [re_pdf]
+    elif format == 'eps':
+        reg_list = [re_eps]
+    elif format in ['pdfpng','pngpdf']:
+        reg_list = [re_pdf,re_png]
+
     figs = []
     for line in file:
-        for reg in [re_eps,re_pdf,re_png]:
+        for reg in reg_list:
             match = reg.match(line)
             if match != None:
                 figs.append(match.group(1))
@@ -50,6 +58,9 @@ if __name__ == '__main__':
     parser.add_option("-g", "--figs", dest="figs",
                                         help="Return figs from tex files",
                                         action = "store_true", default = False)
+    parser.add_option("-f", "--format", dest="format",
+                                        help="Restrict to a particular format",
+                                        action = "store", default = None)
     (options, args) = parser.parse_args()
 
     if options.files:
@@ -60,13 +71,13 @@ if __name__ == '__main__':
         files = grab_files('ms.tex')
         figures = []
         for file in files:
-            figures += grab_figures(file)
+            figures += grab_figures(file,options.format)
         for figure in figures:
             print figure
     if len(args) != 0:
         figures = []
         for file in args:
-            figures += grab_figures(file)
+            figures += grab_figures(file,options.format)
         for figure in figures:
             print figure
 

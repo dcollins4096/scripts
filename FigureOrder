@@ -12,16 +12,16 @@ if( ! -e $directory ) mkdir $directory
 #Only grab relevant files: relevant tex files and meta files.
 cp `tex_figs -i` $directory
 cp apj-jour.bib  apj.bst emulateapj.cls ms.bib $directory
-
+set plt_format = "pdf"
 cd $directory
-set figs = (`tex_figs -g`)
+set figs = (`tex_figs -g -f $plt_format`)
 set counter = 1
 set ExtraTextForCollisions = AND_SOME_EXTRA_TEXT_TO_AVOID_NAME_COLLISIONS
 set Live = True
 while( $counter <= $#figs)
     set InitialName = $figs[$counter] 
-    set DestText = "f"$ExtraTextForCollisions$counter".eps"
-    set DestFileName = "f"$counter".eps"
+    set DestText = "f"$ExtraTextForCollisions$counter".$plt_format"
+    set DestFileName = "f"$counter".$plt_format"
 
     echo $InitialName $DestFileName
     if( $Live == True ) then
