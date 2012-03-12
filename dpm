@@ -13,13 +13,14 @@ set still_running = True
 if( `dstat |grep $jobid` == "" ) then
     set still_running = False
 endif
-ddel $jobid 1
 DaveParse.py $filename
 if( $still_running == True ) then
-    echo "Job still running"
     echo "vim $filename"
+    echo "Job still running"
 else
+    ddel $jobid 1
     mv $filename Meta
     echo "vim Meta/$filename"
+    echo "job finished."
 endif
 #end

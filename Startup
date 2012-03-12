@@ -7,7 +7,7 @@ set EDITOR = vim
 setenv CVSEDITOR vim
 setenv backups "*~ *#* .#*"
 setenv a "*.C *.h *.src *.f *.F"
-alias int_resize = "set noglob; eval `resize`"
+#alias int_resize = "set noglob; eval `resize`"
 #
 # Machine Overloads
 #
