@@ -1,0 +1,13 @@
+#!/bin/tcsh
+
+source $ScriptDir/DOTdschedrc
+set still_running = `dstat |grep david_c |awk '{print $1}'`
+set not_done = $still_running[1]
+set counter = 2
+while( $counter <= $#still_running)
+    set not_done = $not_done"|"$still_running[$counter]
+@ counter += 1
+end
+egrep -v "$not_done" $QueuedRuns
+
+#end
