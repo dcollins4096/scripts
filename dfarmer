@@ -1,0 +1,8 @@
+#!/bin/tcsh
+
+source $ScriptDir/DOTdschedrc
+if( -e $StatFile ) rm $StatFile
+dstat >& $StatFile
+dfarmer.py 
+#end
+
