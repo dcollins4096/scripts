@@ -19,6 +19,7 @@ if( $still_running == True ) then
     echo "Job still running"
 else
     ddel $jobid 1
+    if( ! -e Meta ) mkdir Meta
     mv $filename Meta
     echo "vim Meta/$filename"
     echo "job finished."
