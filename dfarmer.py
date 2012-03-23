@@ -55,8 +55,9 @@ def scrub_output():
                 break
         if match is not None:
             for j in JobIDs:
-                print qhash[j]
-                qhash.pop(j)
+                if qhash.has_key(j):
+                    print qhash[j]
+                    qhash.pop(j)
             JobIDs = []
             if debug > 2:
                 print "==== Remaining QUEUED ===="
