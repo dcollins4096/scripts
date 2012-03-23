@@ -1,0 +1,6 @@
+#!/bin/tcsh
+set scr = Script.lobo
+grep "set Dir" $scr
+sed -i "s,set Dir = .*,set Dir = `pwd`", $scr
+grep "set Dir" $scr
+#end
