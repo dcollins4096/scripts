@@ -1,0 +1,4 @@
+#!/bin/tcsh
+source $ScriptDir/DOTdschedrc
+cat $QueuedRuns
+#end

@@ -16,6 +16,8 @@ foreach i ($steps)
 
     set number = `echo $i | sed -e 's,.*\([[:digit:]]\{4\}\).*,\1,'`
     set prefix = `echo $i | sed -e 's,\(.*\)[[:digit:]]\{4\}.*,\1,'`
+    set prefix = `basename $prefix`
+    set dirname = "NOT_FOUND"
     if( $prefix == 'data' ) then
         set dirname = 'DD'
     else if ( $prefix == 'time' ) then
@@ -23,6 +25,13 @@ foreach i ($steps)
     else if ( $prefix == 'cycle' ) then
         set dirname = 'CD'
     else
+        foreach extra_num (`nums 0 99 -np 2`)
+            if( $prefix == 'Extra'$extra_num'_' ) then
+                set dirname = 'ED'$extra_num'_'
+            endif
+        end
+    endif
+    if( $dirname == "NOT_FOUND" ) then
         echo "Unknown prefix for " $i "skipping"
         continue
     endif

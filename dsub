@@ -7,5 +7,6 @@ if( ! -e $QueuedRuns ) touch $QueuedRuns
 #echo `date +"%Y-%m-%d"` $oot `pwd` >> $log
 echo `date +"%Y-%m-%d-%H-%M-%S"` $oot `pwd` >> $log
 echo `date +"%Y-%m-%d-%H-%M-%S"` $oot `pwd` >> $QueuedRuns
+echo "Did you check: executable? compiler?  Script.lobo (dir, cores)"
 echo $oot
 #end
