@@ -6,8 +6,9 @@ shift
 if( "$1" == "-w") then
     set args = "common ms write make figs herp"
 else
-    set args = $argv
+    set args = ($argv)
 endif
+
 set tmp_exec = '/var/tmp/screenm_tmp'
 if( -e $tmp_exec ) rm $tmp_exec
 touch $tmp_exec
