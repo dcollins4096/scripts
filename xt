@@ -218,6 +218,7 @@ while( $counter <= $#argset )
             set SSH_TO = dcollins@192.168.1.105
             set SSH_TO = dcollins@69.254.149.103
             set SSH_TO = dcollins@68.84.147.70
+            set SSH_TO = dcollins@65.19.59.133
             breaksw
     case teahupoo:
             set SSH_TO = dcollins2@130.55.124.119
