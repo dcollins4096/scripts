@@ -1,4 +1,5 @@
 #!/bin/tcsh
+#set echo
 if($#argv == 0) then
     echo "newfig <file list>"
     echo "makes one tex fig for all files in file list"
@@ -9,8 +10,28 @@ echo "\begin{figure} \begin{center}"
 foreach i ($argv)
     #set dirname = `basename $cwd`
     set dirname = `whatdir`
-    set fig = $dirname/$i
-    echo "\includegraphics[width=\hw\textwidth]{$fig}"
+    if( `not_fig.py $i` == 1 ) then
+        # "not a figure: assume complex figure"
+        set eps = $i/*eps
+        if( $status != 0 || $#eps != 1 ) then
+            echo "error with finding eps file"
+            exit 1
+        endif
+        set pdf = $i/*pdf
+        if( $status != 0 || $#pdf != 1 ) then
+            echo "error with finding eps file"
+            exit 1
+        endif
+        echo "\ifpdf"
+        echo "\includegraphics[width=\hw\textwidth]{$dirname/$pdf}"
+        echo "\else"
+        echo "\includegraphics[width=\hw\textwidth]{$dirname/$eps}"
+        echo "\fi"
+    else
+        #simple figure
+        set fig = $dirname/$i
+        echo "\includegraphics[width=\hw\textwidth]{$fig}"
+    endif
 end
 echo "\caption[ ]{ }"
 echo "\label{} \end{center} \end{figure}"
