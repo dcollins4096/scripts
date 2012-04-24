@@ -1,3 +1,5 @@
-setenv AllRuns $proj/.dsched/AllRuns
-setenv QueuedRuns $proj/.dsched/QueuedRuns
-setenv StatFile $proj/.dsched/StatFile
+setenv dsched_dir "$ScriptDir/../.dsched"
+if( ! -e $dsched_dir ) mkdir $dsched_dir
+setenv AllRuns $dsched_dir/AllRuns
+setenv QueuedRuns $dsched_dir/QueuedRuns
+setenv StatFile $dsched_dir/StatFile
