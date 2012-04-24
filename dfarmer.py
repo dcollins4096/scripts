@@ -10,6 +10,11 @@ def scrub_output():
     else:
         print "No user in environment.  Rework script"
         return -1
+
+    machine = None
+    if 'machine' in os.environ:
+        machine = os.environ['machine']
+
     if 'StatFile' in os.environ:
         sptr = open(os.environ['StatFile'])
         slines = sptr.readlines()
@@ -32,7 +37,7 @@ def scrub_output():
     if debug > 0:
         print "==== ALL QUEUED ===="
     for q in qlines:
-        jobid = q.split(" ")[1]
+        jobid = q.split(" ")[2]
         qhash[jobid] = q[:-1]
         if debug > 0:
             print jobid, qhash[jobid]
@@ -66,6 +71,13 @@ def scrub_output():
 
         print sl,
     print "finished jobs ----------"
+    for q in qhash.keys():
+        queue_machine = qhash[q].split(" ")[1]
+        if machine == queue_machine:
+            print qhash[q]
+            qhash.pop(q)
+
+    print "\n\nother machines ----------"
     for q in qhash.keys():
         print qhash[q]
 
