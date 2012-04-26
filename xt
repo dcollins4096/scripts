@@ -224,9 +224,10 @@ while( $counter <= $#argset )
             set SSH_TO = dcollins2@130.55.124.119
             breaksw
     case lobo:
-      #set SSH_TO = "ssh -t wtrw.lanl.gov ssh lo-fe1"
-      set echo
             set SSH_TO = "-t david_c@wtrw.lanl.gov ssh lo-fe1"
+            breaksw
+    case mustang:
+            set SSH_TO = "-t david_c@wtrw.lanl.gov ssh mu-fe1"
             breaksw
     case conejo:
       #set SSH_TO = "ssh -t wtrw.lanl.gov ssh lo-fe1"
@@ -269,7 +270,7 @@ while( $counter <= $#argset )
 	   set Modifier = yes
 	   breaksw
     default:
-      echo "No machine named $arg"
+      echo "xt: No machine named $arg"
       exit
 	    breaksw
 	
