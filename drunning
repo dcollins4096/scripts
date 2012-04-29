@@ -1,7 +1,19 @@
 #!/bin/tcsh
 dstat #|grep david_c
 source $ScriptDir/DOTdschedrc
-set still_running = `dstat |grep david_c |awk '{print $1}'`
+switch( $machine )
+    case "lobo":
+    case "mapache":
+    case "conejo":
+        set still_running = `dstat |grep david_c |awk '{print $1}'`
+        breaksw
+    case "arronax":
+    case "natilus":
+    case "conseil":
+    case "kraken":
+        set still_running = `dstat |grep collins | cut -f -1 -d "." `
+        breaksw
+endsw
 foreach i ($still_running)
     grep $i $AllRuns
 end
