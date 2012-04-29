@@ -320,6 +320,8 @@ switch ( $machine )
       set srcdir = $src
       set exeSer = "$exec $dbg $Problem"
       set exeMPI = "mpirun -n $nprocRun $exec $dbg $Problem"
+      set exeSer = "mpirun -mca orte_allocation_required 0 -hostfile hostfile -n 1 $exec $dbg $Problem"
+      set exeMPI = "mpirun -mca orte_allocation_required 0 -hostfile hostfile -n $nprocRun $exec $dbg $Problem"
       breaksw
 
 
@@ -815,7 +817,8 @@ if( -e $exec && $Success == "yes" && $RunJob == "yes") then
      endif
 
     else
-    echo "Serial " $exeSer $silent
+        echo "Serial " $exeSer 
+        echo "silent" $silent
     if( "$exeSer" != "no" ) then 
         if( $silent == yes ) then
             echo "running silently"
