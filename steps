@@ -6,15 +6,19 @@
 #foreach i (`find . -name "*.hierarchy"`)
 #    echo `dirname $i`"/"`basename $i .hierarchy`
 #end
-if( $1 == "" ) then
-    foreach i (`/bin/ls -1U |sort |grep hierarchy`)
-        set potential_parameter = `basename $i .hierarchy`
-        if( $i != $potential_parameter ) echo $potential_parameter
-    end
+if( -e OutputLog ) then 
+    awk '{print $3}' OutputLog
 else
-    foreach i (`/bin/ls -1Ud TD???? | sort |grep -v products`)
-	set num = `echo $i | cut -c 3-`
-	echo TD$num/time$num
-    end
+    if( $1 == "" ) then
+        foreach i (`/bin/ls -1U |sort |grep hierarchy`)
+            set potential_parameter = `basename $i .hierarchy`
+            if( $i != $potential_parameter ) echo $potential_parameter
+        end
+    else
+        foreach i (`/bin/ls -1Ud TD???? | sort |grep -v products`)
+        set num = `echo $i | cut -c 3-`
+        echo TD$num/time$num
+        end
+    endif
 endif
 #endp
