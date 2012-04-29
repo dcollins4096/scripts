@@ -6,6 +6,7 @@ if ( $1 == '-all' )  set skip_restarters = no
 set last = `LastStep`   
 #echo $last
 #echo $steps
+#echo $steps
 foreach i ($steps)
     if( "$skip_restarters" == "yes" && "$i" == "data0000" ) then
         continue
@@ -16,6 +17,7 @@ foreach i ($steps)
 
     set number = `echo $i | sed -e 's,.*\([[:digit:]]\{4\}\).*,\1,'`
     set prefix = `echo $i | sed -e 's,\(.*\)[[:digit:]]\{4\}.*,\1,'`
+
     set prefix = `basename $prefix`
     set dirname = "NOT_FOUND"
     if( $prefix == 'data' ) then
@@ -31,6 +33,7 @@ foreach i ($steps)
             endif
         end
     endif
+
     if( $dirname == "NOT_FOUND" ) then
         echo "Unknown prefix for " $i "skipping"
         continue
@@ -40,7 +43,8 @@ foreach i ($steps)
     #if( -e $i ) mv $i* $dirname$number
     if ( -e $i )  then
         echo Moving $i $dirname$number
-        foreach file ( `lusg $i` )
+        set name_to_use = `basename $i`
+        foreach file ( `lusg $name_to_use` )
             mv $file $dirname$number
         end
     endif
