@@ -6,17 +6,25 @@
 
 import fnmatch
 import os
+import shutil
 import glob
+import sys
 from optparse import OptionParser
 
 parser = OptionParser()
 parser.add_option("-H","--Hierarchy",dest="hierarchy",action="store_true",default=False,
                       help="takes list of hierarchy files")
+parser.add_option("-b","--backup",dest="backup",action="store_true",default=False,
+                      help="Backup old outputlog in OldOutputLog")
 (options,args)=parser.parse_args()
-if glob.glob('OutputLog') != []:
+if glob.glob('OutputLog') != [] and not options.backup:
     print "OutputLog written.  Please remove existing file before running."
-else:
+    sys.exit(0)
+if glob.glob('OutputLog') != [] and options.backup:
+    n_backup = len(glob.glob('*OutputLog*'))
+    shutil.move('OutputLog','OutputLog.backup%s'%n_backup)
 
+if 1:
     #Hunt for *.hierarchy files (easier to search than parameter files)
     matches = []
     output_list=[]
