@@ -1,3 +1,4 @@
 setenv AllRuns $proj/.dsched/AllRuns
 setenv QueuedRuns $proj/.dsched/QueuedRuns
 setenv StatFile $proj/.dsched/StatFile
+setenv SlurmFile $proj/.dsched/SlurmFile
