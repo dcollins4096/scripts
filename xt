@@ -225,6 +225,7 @@ while( $counter <= $#argset )
             breaksw
     case teahupoo:
             set SSH_TO = dcollins2@130.55.124.119
+            set SSH_TO = dcollins2@128.165.45.11
             breaksw
     case lobo:
             set SSH_TO = "-t david_c@wtrw.lanl.gov ssh lo-fe1"
@@ -258,6 +259,7 @@ while( $counter <= $#argset )
             breaksw
     case trestles:
         set SSH_TO = 'ux454321@trestles.sdsc.edu'
+        set SSH_TO = 'ux454321@trestles-login1.sdsc.edu'
         breaksw
 
 
