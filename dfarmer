@@ -1,8 +1,16 @@
 #!/bin/tcsh
-
+set local_only 
+if ( $#argv > 0 ) then
+    if( $1 == "1" || $1 == "-l" ) then
+        set local_only = "-l"
+    else
+        echo "Unrecognized argument to dfarmer: " $argv
+        exit
+    endif
+endif
 source $ScriptDir/DOTdschedrc
 if( -e $StatFile ) rm $StatFile
 dstat >& $StatFile
-dfarmer.py 
+dfarmer.py $local_only
 #end
 

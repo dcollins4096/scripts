@@ -3,7 +3,7 @@
 import os, sys
 import re
 
-def scrub_output():
+def scrub_output(local_only = False):
 
     if 'USER' in os.environ:
         user = os.environ['USER']
@@ -44,7 +44,7 @@ def scrub_output():
 
 
     """this can be generalized by machine. Setup for the moab system."""
-    trigger_lines = [r'^active jobs',r'^eligible jobs', r'^blocked jobs']
+    trigger_lines = [r'^active jobs',r'^eligible jobs', r'^blocked jobs',r'^Total']
 
     trigger_reg = [re.compile(lll) for lll in trigger_lines]
 
@@ -77,18 +77,24 @@ def scrub_output():
             print qhash[q]
             qhash.pop(q)
 
-    print "\n\nother machines ----------"
-    for q in qhash.keys():
-        print qhash[q]
+    if not local_only:
+        print "\n\n=========== other machines ===========\n"
+        for q in qhash.keys():
+            print qhash[q]
 
 
 
 
 
+from optparse import OptionParser
 
+parser = OptionParser()
+parser.add_option("-l","--local",dest="local",action="store_true",default=False,
+                      help="ignore other machines in queue file")
 
+(options,args)=parser.parse_args()
 if __name__ == "__main__":
-    scrub_output()
+    scrub_output(options.local)
 
 
 
