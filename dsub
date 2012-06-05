@@ -1,11 +1,20 @@
 #!/bin/tcsh
+if ( ! -e $1 ) then 
+    echo "no file $1"
+    exit
+endif
+set verbo = True
+if ( $2 != "" ) then
+    set verbo = False
+endif
 
 set oot = `msub $1`
-if ( $status != 0 ) then
+if ( ( $status != 0 ) || ( $oot == "" )) then
     echo $oot
     echo "Error with submission."
     exit
-endif
+else
+
 source $ScriptDir/DOTdschedrc
 set log = $AllRuns
 if( ! -e $log ) touch $log
@@ -13,6 +22,9 @@ if( ! -e $QueuedRuns ) touch $QueuedRuns
 #echo `date +"%Y-%m-%d"` $oot `pwd` >> $log
 echo `date +"%Y-%m-%d-%H-%M-%S"` $machine $oot `pwd` >> $log
 echo `date +"%Y-%m-%d-%H-%M-%S"` $machine $oot `pwd` >> $QueuedRuns
-echo "Did you check: executable? compiler?  Script.lobo (dir, cores)"
+if ( $verbo == True ) then
+    echo "Did you check: executable? compiler?  Script.lobo (dir, cores)"
+endif
 echo $oot
+endif
 #end
