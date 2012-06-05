@@ -83,6 +83,7 @@ initialFileString = None
 oldTicker = re.compile(r'.*TopGrid\s*cycle\s*=\s*(\S+)\s*dt\s*=\s*(\S*)\s*time\s*=\s*(\S+)\s*(wall = (\S+))?')
 newTicker = re.compile(r'.*STEP_INFO\s*N\s*=\s*(\S+)\s*\s*DT\s*=\s*(\S+)\s*,?\s*T\s*=\s*(\S+)')
 weekOfCodeTicker = re.compile(r'.*TopGrid\s*dt\s*=\s(\S+)\s*time\s*=\s*(\S+)\s*cycle\s*=\s*(\S+)\s*(wall = (\S+))?')
+#weekOfCodeTicker = re.compile(r'.*TopGrid\s*dt\s*=\s(\S+)\s*time\s*=\s*(\S+)\s*cycle\s*=\s*(\S+)\s*(wall = (\d*\.\d*))?C.*)?')
 #TopGrid dt = 1.690168e-06     time = 0.025478588    cycle = 10500
 old_map = {'cycle':1,'dt':2,'time':3,'wall':5}
 woc_map = {'cycle':3,'dt':1,'time':2,'wall':5}
@@ -157,11 +158,17 @@ if parameterList != None:
     param_dom = minidom.parseString(parameterList.toxml()).firstChild
     output_dom.firstChild.appendChild(param_dom)
 
+#Sanatize wall info. This should be in the regexp, but my regexp-fu is weak today.
+if 'C' in finalStepInfo.wall:
+    finalStepInfo.wall = finalStepInfo.wall[ :finalStepInfo.wall.index('C') ]
+if 'C' in initialStepInfo.wall:
+    initialStepInfo.wall = initialStepInfo.wall[ :initialStepInfo.wall.index('C') ]
 
 if initialStepInfo.wall != None:
     #This sure is a lot of work for one line of xml.
     #there has to be an easier way...
     round = int(float(initialStepInfo.wall))  #really don't care about microseconds.
+
     iso_string = datetime.fromtimestamp(round).isoformat()
     start_xml=minidom.parseString('<StartTime>'+iso_string+'</StartTime>').firstChild
     output_dom.firstChild.appendChild( output_dom.createTextNode('\n'))
