@@ -1,4 +1,8 @@
 #!/bin/tcsh
 source $ScriptDir/DOTdschedrc
-cat $QueuedRuns
+if( $1 == "" ) then 
+    cat $QueuedRuns
+else
+    grep $1 $QueuedRuns
+endif
 #end
