@@ -211,6 +211,9 @@ while( $counter <= $#argset )
     case tu:
             set SSH_TO = david_c@tu-fe1
             breaksw
+    case mu:
+            set SSH_TO = david_c@mu-fe1
+            breaksw
     case nature:
             set SSH_TO = dcollins@nature.lanl.gov
             breaksw
@@ -222,12 +225,22 @@ while( $counter <= $#argset )
             breaksw
     case teahupoo:
             set SSH_TO = dcollins2@130.55.124.119
+            set SSH_TO = dcollins2@128.165.45.11
             breaksw
     case lobo:
             set SSH_TO = "-t david_c@wtrw.lanl.gov ssh lo-fe1"
             breaksw
     case mustang:
             set SSH_TO = "-t david_c@wtrw.lanl.gov ssh mu-fe1"
+            breaksw
+    case mu2:
+            set SSH_TO = "-t david_c@wtrw.lanl.gov ssh mu-fe2"
+            breaksw
+    case mu3:
+            set SSH_TO = "-t david_c@wtrw.lanl.gov ssh mu-fe3"
+            breaksw
+    case mu4:
+            set SSH_TO = "-t david_c@wtrw.lanl.gov ssh mu-fe4"
             breaksw
     case conejo:
       #set SSH_TO = "ssh -t wtrw.lanl.gov ssh lo-fe1"
@@ -244,6 +257,10 @@ while( $counter <= $#argset )
       set echo
             set SSH_TO = "-t david_c@wtrw.lanl.gov ssh mp-fe2"
             breaksw
+    case trestles:
+        set SSH_TO = 'ux454321@trestles.sdsc.edu'
+        set SSH_TO = 'ux454321@trestles-login1.sdsc.edu'
+        breaksw
 
 
 #
