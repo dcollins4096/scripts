@@ -1,5 +1,6 @@
 #! /bin/csh -f
-
-printf "\033]0;$1\007"
-echo $1
+set title = $1
+if ( $?machine == 1 ) set title = "$machine $title"
+printf "\033]0;$title\007"
+echo $title
 echo Done
