@@ -211,9 +211,6 @@ while( $counter <= $#argset )
     case tu:
             set SSH_TO = david_c@tu-fe1
             breaksw
-    case mu:
-            set SSH_TO = david_c@mu-fe1
-            breaksw
     case nature:
             set SSH_TO = dcollins@nature.lanl.gov
             breaksw
@@ -231,6 +228,9 @@ while( $counter <= $#argset )
             set SSH_TO = "-t david_c@wtrw.lanl.gov ssh lo-fe1"
             breaksw
     case mustang:
+            set SSH_TO = "-t david_c@wtrw.lanl.gov ssh mu-fe1"
+            breaksw
+    case mu:
             set SSH_TO = "-t david_c@wtrw.lanl.gov ssh mu-fe1"
             breaksw
     case mu2:
