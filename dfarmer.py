@@ -3,8 +3,11 @@
 import os, sys
 import re
 
-def scrub_output(local_only = False):
+def scrub_output(options):
 
+    verbose = not (options.finished + options.running +options.queue + options.blocked)
+
+    actions = []
     if 'USER' in os.environ:
         user = os.environ['USER']
     else:
@@ -45,6 +48,7 @@ def scrub_output(local_only = False):
 
     """this can be generalized by machine. Setup for the moab system."""
     trigger_lines = [r'^active jobs',r'^eligible jobs', r'^blocked jobs',r'^Total']
+    trigger_bool = [False, options.running, options.queue, options.blocked]
 
     trigger_reg = [re.compile(lll) for lll in trigger_lines]
 
@@ -57,11 +61,13 @@ def scrub_output(local_only = False):
             match = reg.match(sl)
             if match is not None:
                 trigger_reg.pop(nr)
+                print_this = trigger_bool.pop(nr)
                 break
         if match is not None:
             for j in JobIDs:
                 if qhash.has_key(j):
-                    print qhash[j]
+                    if verbose or print_this:
+                        print qhash[j]
                     qhash.pop(j)
             JobIDs = []
             if debug > 2:
@@ -69,15 +75,18 @@ def scrub_output(local_only = False):
                 for q in qhash.keys():
                     print q, qhash[q]
 
-        print sl,
-    print "finished jobs ----------"
+        if verbose:
+            print sl,
+    if verbose:
+        print "finished jobs ----------"
     for q in qhash.keys():
         queue_machine = qhash[q].split(" ")[1]
         if machine == queue_machine:
-            print qhash[q]
+            if options.finished or verbose:
+                print qhash[q]
             qhash.pop(q)
 
-    if not local_only:
+    if not options.local and verbose:
         print "\n\n=========== other machines ===========\n"
         for q in qhash.keys():
             print qhash[q]
@@ -91,10 +100,18 @@ from optparse import OptionParser
 parser = OptionParser()
 parser.add_option("-l","--local",dest="local",action="store_true",default=False,
                       help="ignore other machines in queue file")
+parser.add_option("-f","--finished",dest="finished",action="store_true",default=False,
+                      help="Only show finished jobs")
+parser.add_option("-r","--running",dest="running",action="store_true",default=False,
+                      help="Only show currently running jobs")
+parser.add_option("-q","--queue",dest="queue",action="store_true",default=False,
+                      help="Only show currently queued jobs")
+parser.add_option("-b","--blocked",dest="blocked",action="store_true",default=False,
+                      help="Only show currently blocked jobs")
 
 (options,args)=parser.parse_args()
 if __name__ == "__main__":
-    scrub_output(options.local)
+    scrub_output(options)
 
 
 
