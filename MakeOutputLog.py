@@ -16,13 +16,17 @@ parser.add_option("-H","--Hierarchy",dest="hierarchy",action="store_true",defaul
                       help="takes list of hierarchy files")
 parser.add_option("-b","--backup",dest="backup",action="store_true",default=False,
                       help="Backup old outputlog in OldOutputLog")
+parser.add_option("-o","--output",dest="output",action="store",default="OutputLog",
+                      help="Name of output log file")
 (options,args)=parser.parse_args()
-if glob.glob('OutputLog') != [] and not options.backup:
+OutputLog = options.output
+
+if glob.glob(OutputLog) != [] and not options.backup:
     print "OutputLog written.  Please remove existing file before running."
     sys.exit(0)
-if glob.glob('OutputLog') != [] and options.backup:
-    n_backup = len(glob.glob('*OutputLog*'))
-    shutil.move('OutputLog','OutputLog.backup%s'%n_backup)
+if glob.glob(OutputLog) != [] and options.backup:
+    n_backup = len(glob.glob('*%s*'%(OutputLog)))
+    shutil.move(OutputLog,'%s.backup%s'%(OutputLog,n_backup))
 
 if 1:
     #Hunt for *.hierarchy files (easier to search than parameter files)
@@ -59,7 +63,7 @@ if 1:
             print "Error parsing", PF
 
     #write output sorted by sim time
-    fptr= open('OutputLog','w')
+    fptr= open(OutputLog,'w')
     for p in sorted(output_list, key=lambda item:item[2]):
         fptr.write( "DATASET WRITTEN %s %8d %18.16e\n"%(p[0], p[1],p[2]))
     fptr.close()
