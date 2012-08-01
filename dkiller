@@ -1,0 +1,12 @@
+#!/bin/tcsh
+set echo
+while ( 1 ) 
+    if ( `dfarmer -m |wc -l` != 0 ) then
+        foreach j ( "`dfamer -k`")
+            `$j`
+        end
+    endif
+    sleep 3600
+
+end
+#end
