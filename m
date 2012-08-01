@@ -320,8 +320,10 @@ switch ( $machine )
       set srcdir = $src
       set exeSer = "$exec $dbg $Problem"
       set exeMPI = "mpirun -n $nprocRun $exec $dbg $Problem"
-      set exeSer = "mpirun -mca orte_allocation_required 0 -hostfile hostfile -n 1 $exec $dbg $Problem"
-      set exeMPI = "mpirun -mca orte_allocation_required 0 -hostfile hostfile -n $nprocRun $exec $dbg $Problem"
+      #set exeSer = "mpirun -mca orte_allocation_required 0 -hostfile hostfile -n 1 $exec $dbg $Problem"
+      #set exeMPI = "mpirun -mca orte_allocation_required 0 -hostfile hostfile -n $nprocRun $exec $dbg $Problem"
+      set exeSer = "mpirun  -n 1 $exec $dbg $Problem"
+      set exeMPI = "mpirun  -n $nprocRun $exec $dbg $Problem"
       breaksw
     case mustang:
       set nProcCompile = -j20
