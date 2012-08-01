@@ -2,10 +2,11 @@
 
 import os, sys
 import re
+import datetime
 
 def scrub_output(options):
 
-    verbose = not (options.finished + options.running +options.queue + options.blocked)
+    verbose = not (options.finished + options.running +options.queue + options.blocked + options.monitor)
 
     actions = []
     if 'USER' in os.environ:
@@ -49,6 +50,8 @@ def scrub_output(options):
     """this can be generalized by machine. Setup for the moab system."""
     trigger_lines = [r'^active jobs',r'^eligible jobs', r'^blocked jobs',r'^Total']
     trigger_bool = [False, options.running, options.queue, options.blocked]
+    monitor_bool = [False, options.monitor, False,False]
+    running_list = []
 
     trigger_reg = [re.compile(lll) for lll in trigger_lines]
 
@@ -62,13 +65,16 @@ def scrub_output(options):
             if match is not None:
                 trigger_reg.pop(nr)
                 print_this = trigger_bool.pop(nr)
+                monitor = monitor_bool.pop(nr)
                 break
         if match is not None:
             for j in JobIDs:
                 if qhash.has_key(j):
                     if verbose or print_this:
                         print qhash[j]
-                    qhash.pop(j)
+                    this_job = qhash.pop(j)
+                    if monitor:
+                        running_list.append(this_job)
             JobIDs = []
             if debug > 2:
                 print "==== Remaining QUEUED ===="
@@ -79,6 +85,34 @@ def scrub_output(options):
             print sl,
     if verbose:
         print "finished jobs ----------"
+
+    def output_from_job_string(job_string):
+        subtime, machine, id, path = job_string.split(" ")
+        return "%s/slurm-%s.out"%(path,id)
+    def id_from_job_string(job_string):
+        subtime, machine, id, path = job_string.split(" ")
+        return id
+    machine_kill = "mjobctl -c"
+
+    if options.monitor:
+        for job in running_list:
+            filename = output_from_job_string(job)
+            id = id_from_job_string(job)
+            if os.path.exists(filename):
+                time = os.path.getmtime(filename)
+                now = datetime.datetime.now()
+                stamp = datetime.datetime.fromtimestamp(time)
+                seconds = (now-stamp).seconds
+                #print filename, "\n\t",stamp, "\n\t",now, "\n\t",stamp-now,"\n\t",seconds
+                if seconds > options.monitor_minutes*60:
+                    if options.kill:
+                        fptr = open(filename,"a")
+                        fptr.write('\n\ndfarmer: killing due to inactivity,%d> %d minutes\n\n\n'%(seconds/60.,options.monitor_minutes))
+                        fptr.close()
+                        print '%s %s'%(machine_kill,id)
+                    else:
+                        print filename
+        
     for q in qhash.keys():
         queue_machine = qhash[q].split(" ")[1]
         if machine == queue_machine:
@@ -108,8 +142,16 @@ parser.add_option("-q","--queue",dest="queue",action="store_true",default=False,
                       help="Only show currently queued jobs")
 parser.add_option("-b","--blocked",dest="blocked",action="store_true",default=False,
                       help="Only show currently blocked jobs")
+parser.add_option("-m","--monitor", dest="monitor", action ="store_true",default=False,
+                  help="Monitor reports all jobs whos output file is more than dt minuts old.")
+parser.add_option("-k","--kill", dest="kill", action ="store_true",default=False,
+                  help="Kills jobs older than t minutes old")
+parser.add_option("-t","--monitor_minutes", dest="monitor_minutes", default=20,
+                  help="Time window in minutes for monitor response")
 
 (options,args)=parser.parse_args()
+if options.kill:
+    options.monitor=True
 if __name__ == "__main__":
     scrub_output(options)
 

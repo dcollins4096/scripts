@@ -21,6 +21,9 @@ if( `dstat |grep $jobid` == "" ) then
     set still_running = False
 endif
 DaveParse.py $filename
+if ( -e OutputLog ) then
+    grep time OutputLog | tail -1
+endif
 if( $still_running == True ) then
     echo "vim $filename"
     echo "Job still running"
