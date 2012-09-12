@@ -840,6 +840,10 @@ if( -e $exec && $Success == "yes" && $RunJob == "yes") then
     endif
 
 
+    if( 1 ) then
+        grep -i CLOWN dump
+        grep -i kludge dump
+    endif
     if( $GrepAfter == yes ) then
     grep $ToGrepFor dump
     endif
