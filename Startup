@@ -8,6 +8,13 @@ setenv CVSEDITOR vim
 setenv backups "*~ *#* .#*"
 setenv a "*.C *.h *.src *.f *.F"
 #alias int_resize = "set noglob; eval `resize`"
+
+#
+# paper variables
+#
+setenv p4 "d116 d117 d118 d119 d120 d121 d122 d123 d124"
+
+
 #
 # Machine Overloads
 #
@@ -30,6 +37,7 @@ set yellow="david_c@yr-fe1"
 set nautilus="collins@login.nautilus.nics.teragrid.org:"
 set lobo="david_c@wtrw.lanl.gov:lo-fe1:"
 set lobosftp="david_c@turq-fta1.lanl.gov"
+set teahupoo="128.165.45.11"
 set noclobber
 
 #
