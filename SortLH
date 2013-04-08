@@ -1,0 +1,19 @@
+#!/bin/csh 
+foreach i (LH LH.sort)
+  if ( -e $i ) rm $i
+end
+set LHFILE = LH
+set LHSORT = LH.sort
+touch $LHSORT
+ls -lh > $LHFILE
+#pull out B,Kb,Mb,Gb
+foreach i (B K M G T)
+	grep "[^ ]\{1,6\}$i " $LHFILE | sort -n >> $LHSORT
+end
+cat $LHSORT
+wc -l $LHFILE
+wc -l $LHSORT
+
+
+
+#
