@@ -153,6 +153,11 @@ alias pybuild "python setup.py build_ext -i"
 #
 alias calc 'awk "BEGIN{ print \!* }" ' 
 
+alias dve "echo no dve directory defined"
+if( $?dve != 0 ) then
+    alias dve "cd $dve"
+endif
+
 alias mhdctmerge "echo no mhdctmerge directory defined."
 if( $?mhdctmerge != 0 ) then 
 alias mhdctmerge "cd $mhdctmerge" 
@@ -252,6 +257,7 @@ alias em "emacs \!*"
 alias cvd "cvs diff -wc \!* |less"
 alias svd "svn diff \!* |less"
 alias hgd "hg diff \!* |less"
+alias hgl "hg log \!* |less"
 alias hgs "hg status \!* |less"
 alias cvu "cvs update"
 alias svd "svn diff \!* |less"
