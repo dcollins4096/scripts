@@ -668,6 +668,9 @@ set Success = 'no'
     if( -e $exec && $KillExec == yes) then 
         rm $exec
     endif
+    foreach i ( EvolveLevel.o EvolveHierarchy.o enzo.o )
+      if ( -e $i ) rm $i
+    end
 
 #
 #       clean
