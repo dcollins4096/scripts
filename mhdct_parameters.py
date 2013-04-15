@@ -43,9 +43,6 @@ lines = fptr.readlines()
 useMHDCT = False
 for line in lines[:]:
     both = line.split("=")
-    if len(both) != 2:
-        optr.write(line)
-        continue
     parameter = both[0]
     parameter = no_whites(parameter)
     if parameter == 'HydroMethod':
