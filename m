@@ -348,6 +348,7 @@ switch ( $machine )
     breaksw
 
     case nautilus:
+    case harpoon3:
     set srcdir = $src
     if( $?nProcCompile == 0 ) set nProcCompile = 
     if(  $?PBS_NODEFILE  == 0 ) then
