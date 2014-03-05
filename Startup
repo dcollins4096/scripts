@@ -32,12 +32,13 @@ set lca2 = "dcollins@lca2.ucsd.edu:"
 set ranger="tg456484@tg-login.ranger.tacc.teragrid.org:"
 set rangerw="tg456484@tg-login.ranger.tacc.teragrid.org:/scratch/00369/tg456484/"
 set triton="dccollin@triton-login.sdsc.edu:"
-set subsonic="dcollins@65.19.59.133:"
+set subsonic="dcollins@98.230.62.55:"
 set yellow="david_c@yr-fe1"
 set nautilus="collins@login.nautilus.nics.teragrid.org:"
 set lobo="david_c@wtrw.lanl.gov:lo-fe1:"
 set lobosftp="david_c@turq-fta1.lanl.gov"
 set teahupoo="128.165.45.11"
+set nazare="dcollins4096@nazare.physics.fsu.edu:"
 set noclobber
 
 #
@@ -236,7 +237,7 @@ endif
 # Because I can't type
 #
 
-if(  $machine != MAC ) alias make gmake
+if(  $machine != MAC && $machine != cortezbank ) alias make gmake
 alias moer         'more'
 alias mroe         'more'
 alias meor         'more'
