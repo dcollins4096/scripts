@@ -314,6 +314,7 @@ endif
 echo "machine: " $machine
 switch ( $machine )
     case mapache:
+      case Nazare:
     case conejo:
     case lobo:
       set nProcCompile = -j16
