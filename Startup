@@ -18,8 +18,10 @@ setenv p4 "d116 d117 d118 d119 d120 d121 d122 d123 d124"
 #
 # Machine Overloads
 #
-
+set stampede = "tg456484@stampede.tacc.utexas.edu:"
+set ranch = "tg456484@ranch.tacc.utexas.edu:"
 set tgN = "dcollins@tg-login.ncsa.teragrid.org:"
+set maverick = "tg456484@maverick.tacc.utexas.edu:"
 set tgS = "ux454321@tg-login.sdsc.teragrid.org:"
 set CO = "dcollins@cobalt.ncsa.teragrid.org:"
 set kraken = "collins@kraken.nics.utk.edu:"
