@@ -7,7 +7,7 @@ set EDITOR = vim
 setenv CVSEDITOR vim
 setenv backups "*~ *#* .#*"
 setenv a "*.C *.h *.src *.f *.F"
-alias grepr 'grep -Rl --include="*.[ChFf]" \!*'
+alias grepr 'grep -Rl --include="*.[ChFf]" \!* .'
 #alias int_resize = "set noglob; eval `resize`"
 
 #
