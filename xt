@@ -50,6 +50,9 @@ while( $counter <= $#argset )
     case ranch:
       set SSH_TO = tg456484@ranch.tacc.utexas.edu
       breaksw
+    case maverick:
+      set SSH_TO = tg456484@maverick.tacc.utexas.edu
+      breaksw
     case stampede:
       set SSH_TO = tg456484@stampede.tacc.utexas.edu
       breaksw
