@@ -338,7 +338,7 @@ switch ( $machine )
     case fnord.ucsd.edu:
         case MAC:
         if( `uname -a | awk '{print $2}'` == 1283355 ) then
-            if( $?nProcCompile == 0 ) set nProcCompile = -j4
+            if( $?nProcCompile == 0 ) set nProcCompile = -j8
         endif
 
         set srcdir = $src
@@ -746,7 +746,7 @@ endif
 
     if( $Success == "yes" && $KillDataOnStartup == "yes") then
       touch data666 file666
-      foreach i (OutputLog randomForcing.out)
+      foreach i (OutputLog randomForcing.out Enzo_Build Enzo_Build_Diff  )
           if( -e $i ) rm $i
       end
 
