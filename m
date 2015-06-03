@@ -87,7 +87,7 @@ if ( $?dbg == 0 ) set dbg =
 echo $Problem
 
 #set tv = "/usr/local/apps/totalview/tv7.0/totalview.7.0.1-0/toolworks/totalview.7.0.1-0/bin//totalview"
-set tv = totalview
+set tv = valgrind
 
 #for datastar, "poe" runs on 8 way nodes, "poe32" runs on, you guessed it, a TI-89
 
@@ -319,12 +319,10 @@ switch ( $machine )
     case lobo:
       set nProcCompile = -j16
       set srcdir = $src
-      set exeSer = "$exec $dbg $Problem"
-      set exeMPI = "mpirun -n $nprocRun $exec $dbg $Problem"
-      #set exeSer = "mpirun -mca orte_allocation_required 0 -hostfile hostfile -n 1 $exec $dbg $Problem"
-      #set exeMPI = "mpirun -mca orte_allocation_required 0 -hostfile hostfile -n $nprocRun $exec $dbg $Problem"
       set exeSer = "mpirun  -n 1 $exec $dbg $Problem"
       set exeMPI = "mpirun  -n $nprocRun $exec $dbg $Problem"
+    set exeTS = "$tv $exec $dbg $Problem"
+    set exeTM = "mpirun  -n $nprocRun $tv $exec $dbg $Problem"
       breaksw
     case mustang:
       set nProcCompile = -j20
@@ -746,7 +744,7 @@ endif
 
     if( $Success == "yes" && $KillDataOnStartup == "yes") then
       touch data666 file666
-      foreach i (OutputLog randomForcing.out Enzo_Build Enzo_Build_Diff  )
+      foreach i (OutputLog randomForcing.out Enzo_Build Enzo_Build_Diff )
           if( -e $i ) rm $i
       end
 
