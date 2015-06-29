@@ -7,6 +7,8 @@ set EDITOR = vim
 setenv CVSEDITOR vim
 setenv backups "*~ *#* .#*"
 setenv a "*.C *.h *.src *.f *.F"
+alias greprl 'grep -Rl --include="*.[ChFf]" \!* .'
+alias grepr 'grep -R --include="*.[ChFf]" \!* .'
 #alias int_resize = "set noglob; eval `resize`"
 
 #
@@ -18,8 +20,10 @@ setenv p4 "d116 d117 d118 d119 d120 d121 d122 d123 d124"
 #
 # Machine Overloads
 #
-
+set stampede = "tg456484@stampede.tacc.utexas.edu:"
+set ranch = "tg456484@ranch.tacc.utexas.edu:"
 set tgN = "dcollins@tg-login.ncsa.teragrid.org:"
+set maverick = "tg456484@maverick.tacc.utexas.edu:"
 set tgS = "ux454321@tg-login.sdsc.teragrid.org:"
 set CO = "dcollins@cobalt.ncsa.teragrid.org:"
 set kraken = "collins@kraken.nics.utk.edu:"
@@ -32,12 +36,13 @@ set lca2 = "dcollins@lca2.ucsd.edu:"
 set ranger="tg456484@tg-login.ranger.tacc.teragrid.org:"
 set rangerw="tg456484@tg-login.ranger.tacc.teragrid.org:/scratch/00369/tg456484/"
 set triton="dccollin@triton-login.sdsc.edu:"
-set subsonic="dcollins@65.19.59.133:"
+set subsonic="dcollins@98.230.62.55:"
 set yellow="david_c@yr-fe1"
 set nautilus="collins@login.nautilus.nics.teragrid.org:"
 set lobo="david_c@wtrw.lanl.gov:lo-fe1:"
 set lobosftp="david_c@turq-fta1.lanl.gov"
 set teahupoo="128.165.45.11"
+set nazare="dcollins4096@nazare.physics.fsu.edu:"
 set noclobber
 
 #
@@ -236,7 +241,7 @@ endif
 # Because I can't type
 #
 
-if(  $machine != MAC ) alias make gmake
+if(  $machine != MAC && $machine != cortezbank && $machine != Nazare ) alias make gmake
 alias moer         'more'
 alias mroe         'more'
 alias meor         'more'

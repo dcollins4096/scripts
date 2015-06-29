@@ -12,7 +12,8 @@ if ( "$#parse" == 0 ) then
     screen -list
     echo "$attach not found"
 else
-    set session = `echo $parse |sed -n 's,\(.*\)\((.*\),\1,p'`
+  #set session = `echo $parse |sed -n 's,\(.*\)\((.*\),\1,p'`
+    set session = `echo $parse |awk '{print $1}'`
     WN $attach
     screen -r -d $session
     #sed -n "s,^[[:space:]]*\([[:digit:]]\{3\},&,p"
