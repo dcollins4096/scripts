@@ -166,10 +166,18 @@ while( $#argv )
     breaksw
 
     case "new":
+        echo $argv
     set new_local = "yes"
     shift
+        echo $argv
     set Problem = $1
     shift
+        echo $argv
+    if ( $#argv > 0 ) then
+        set src = $1
+        shift
+    endif
+        echo $argv
     breaksw
 
     case "s":
@@ -205,6 +213,9 @@ endif
 #
 if( $new_local == 'yes' ) then
     sed -e 's,setenv\ *Problem.*,setenv Problem '$Problem',' $ScriptDir/m.local > ./m.local
+    if ( $?src ) then
+        echo "setenv src $src" >> m.local
+    endif
     vim m.local
     exit
 endif
