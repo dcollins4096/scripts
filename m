@@ -763,7 +763,7 @@ endif
 
     if( $Success == "yes" && $KillDataOnStartup == "yes") then
       touch data666 file666
-      foreach i (OutputLog randomForcing.out Enzo_Build Enzo_Build_Diff )
+      foreach i (OutputLog randomForcing.out Enzo_Build Enzo_Build_Diff performance.out )
           if( -e $i ) rm $i
       end
 
