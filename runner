@@ -1,0 +1,23 @@
+#!/bin/tcsh
+cd ../src/enzo
+make clean;
+make -j 8;
+##if ( ! $status ) then
+    cd -
+    #test_runner.py --local-dir= /Users/dcollins/scratch/TestRunner  --run-suffix=_CenteredBremoval -o /Users/dcollins/scratch/TestRunner --suite=quick --answer-store --local    --answer-name=_gold_2015-07-31
+test_runner.py --local-dir= /Users/dcollins/scratch/TestRunner  -o /Users/dcollins/scratch/TestRunner \
+     --run-suffix=_CenteredBremoval_arse  \
+        --local    --answer-name=_gold_2015-07-31 --suite=quick #\
+            #      --answer-store 
+        #--problematic=True
+          #--suite=quick
+  #test_runner.py --run-suffix=_CenteredBremoval -o /Users/dcollins/scratch/TestRunner --suite=quick --answer-store --local --local-dir=   --answer-name=_gold_2015-07-31
+
+#make
+#test_runner.py --run-suffix=_2014-05-18 -o /scratch1/dcollins/TestRunner/dev --suite=push  --answer-store --local --local-dir=/scratch1/dcollins/TestRunner/dev --answer-name=_gold_2014-05-18
+
+#else 
+#  echo "compile failed"
+#endif
+
+#end
