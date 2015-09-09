@@ -9,6 +9,8 @@ else if ("$1" == "-y" ) then
     set args = "yt2 src lookit herp"
 else if ("$1" == "-y2" ) then
     set args = "yt1 yt2 src lookit herp"
+else if ("$1" == "-run" ) then
+    set args = "yt src lookit herp ed1 ed2 run1"
 else if ("$1" == "-x" ) then
     set args = "other hw1 hw2 hwOld eqn1 eqn2 plt1 plt2 python"
 else
