@@ -69,7 +69,9 @@ def ag(filename="data0001.hierarchy"):
 	file = open(NewFilename, "w")
 	print " "
 	print "writing ", NewFilename, ", saving the old as", OldFileName
-	print "Also: change MaximumGravityRefinementLevel to reflect the new change in gravity."
+	print "Also: change MaximumGravityRefinementLevel to reflect the new change in gravity"
+    print "      It should be at least the same as MaximumRefinementLevel"
+    print "Also Also: turn on SelfGravity and set GravitationalConstant to something meaningful."
 	print " "
 	for newline in NewLines:
 		file.write(newline)	
