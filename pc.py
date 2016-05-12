@@ -97,7 +97,8 @@ def compare(FileName1,FileName2):
             
             arglist = args.split(" ")
             newargs = []
-            for arg in arglist:
+            for arg1 in arglist:
+                arg = arg1.strip()
                 if arg == "":
                     continue
                 try:
@@ -124,7 +125,7 @@ def compare(FileName1,FileName2):
             if ParameterList[parameter_file].has_key(name):
                 print "File", filename, "has multiple instances of",name
                 print "       Using the last"
-            ParameterList[parameter_file][name] = args
+            ParameterList[parameter_file][name] = newargs
 
     IvePrintedHeadder = 0
     #compare list 1 aganst list2
@@ -155,7 +156,14 @@ def compare(FileName1,FileName2):
     SortedList = ParameterList[0].keys()
     SortedList.sort()
     for key1 in SortedList:
-        if ParameterList[0][key1] != ParameterList[1][key1]:
+        different=False
+        length = len(ParameterList[0][key1])
+        if length != len(ParameterList[1][key1]):
+            different=True
+        for n in range(length):
+            if ParameterList[0][key1] != ParameterList[1][key1]:
+                different=True
+        if different:
             if IvePrintedHeadder == 0:
                 IvePrintedHeadder = 1
                 print "Parameters that are different: ", FileName1, FileName2
