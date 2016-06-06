@@ -1,0 +1,19 @@
+#!/bin/tcsh
+
+set echo
+set fname = $1
+set dir1 = $2
+set dir2 = $3
+
+set full_1 = `find $dir1 -name $fname`
+set full_2 = `find $dir2 -name $fname`
+
+if ( $4 == "" ) then
+    vimdiff $full_1 $full_2
+else
+    echo "f1" $full_1
+    echo "f2" $full_2
+endif
+
+
+#end

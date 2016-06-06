@@ -1,0 +1,8 @@
+#!/bin/tcsh
+#mount -t smbfs //user@server/sharename share
+set mntpoint = /Volumes/seagate/
+if( ! -e $mntpoint ) mkdir $mntpoint
+#mount -t smbfs //192.168.1.100/Download $mntpoint
+mount -t smbfs //10.0.0.100/Download $mntpoint
+#end
+

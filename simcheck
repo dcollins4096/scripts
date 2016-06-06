@@ -1,0 +1,11 @@
+#!/bin/tcsh
+
+set dirs = `find . -name "SIMULATIONS"`
+foreach d ($dirs)
+    foreach file ($d/*)
+        echo "===" $file
+        grep -v "#" $file | grep -v "f" |head -1
+    end
+end
+
+#end

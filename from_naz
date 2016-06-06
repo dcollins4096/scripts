@@ -1,0 +1,4 @@
+#!/bin/tcsh
+
+scp $nazare"$1"
+#end

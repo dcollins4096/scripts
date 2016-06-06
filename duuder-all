@@ -1,0 +1,5 @@
+#!/bin/tcsh
+set echo 
+sudo du -h -d 4 / |& tee duud-all
+echo "RENAME duud-all"
+#end

@@ -1,0 +1,4 @@
+#!/bin/tcsh
+
+vim `find . -name $1`
+#end

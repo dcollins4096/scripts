@@ -1,0 +1,18 @@
+#!/bin/tcsh
+set echo
+set paper = "$1"
+set name = `basename "$1" .pdf`
+if ( $#argv == 2 ) then
+  set name = $2
+  mv "$paper" $name.pdf
+  set paper = $name.pdf
+endif
+set figname = "$name"_figs.pdf
+set refname = "$name"_refs.pdf
+cp "$paper" $figname
+cp "$paper" $refname
+#cp $paper WorkDir
+echo $paper
+echo $figname
+echo $refname
+#end
