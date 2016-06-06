@@ -1,0 +1,40 @@
+2013-09-20 (ish)
+  got the machine.  Built some stuff.
+Records spotty.  All suggested osx updates.
+
+2014-09-24: 
+  update xcode to 6.
+  tried to update openssl with homebrew, which works but doesn't make the symlinks:
+  """
+  src>brew install openssl
+  ==> Downloading https://downloads.sf.net/project/machomebrew/Bottles/openssl-1.0.1i.mavericks.bottle.3.tar.gz
+  ######################################################################## 100.0%
+  ==> Pouring openssl-1.0.1i.mavericks.bottle.3.tar.gz
+  ==> Caveats
+  A CA file has been bootstrapped using certificates from the system
+  keychain. To add additional certificates, place .pem files in
+  /usr/local/etc/openssl/certs
+
+  and run
+  /usr/local/opt/openssl/bin/c_rehash
+
+  This formula is keg-only, which means it was not symlinked into /usr/local.
+
+  Mac OS X already provides this software and installing another version in
+  parallel can cause all kinds of trouble.
+
+  The OpenSSL provided by OS X is too old for some software.
+
+  Generally there are no consequences of this for you. If you build your
+  own software and it requires this formula, you'll need to add to your
+  build variables:
+
+  LDFLAGS:  -L/usr/local/opt/openssl/lib
+  CPPFLAGS: -I/usr/local/opt/openssl/include
+
+  ==> Summary
+  🍺  /usr/local/Cellar/openssl/1.0.1i: 430 files, 15M
+  cortezbank:~/local-2014-09-24-yt3/src>brew link --force openssl
+  Linking /usr/local/Cellar/openssl/1.0.1i... 1140 symlinks created
+  """
+
