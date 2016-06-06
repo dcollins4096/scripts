@@ -684,9 +684,9 @@ set Success = 'no'
     cd $srcdir
     echo "cd $srcdir"
 
-    if( -e $exec && $KillExec == yes) then 
+    #if( -e $exec && $KillExec == yes) then 
         rm $exec
-    endif
+        #endif
     foreach i ( EvolveLevel.o EvolveHierarchy.o enzo.o )
       if ( -e $i ) rm $i
     end
@@ -768,7 +768,7 @@ endif
       end
 
       set KILL = ""
-      foreach start (data cycle time Extra TD DD CD ED)
+      foreach start (data cycle time Extra TD DD CD ED RD)
           set KILL = `find . -maxdepth 1 -name "$start*"`
           if( $?SaveList != 0 ) then
               foreach i ($KILL)

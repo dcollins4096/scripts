@@ -8,8 +8,8 @@ endif
 
 echo "\begin{figure} \begin{center}"
 foreach i ($argv)
-    #set dirname = `basename $cwd`
-    set dirname = `whatdir`
+    set dirname = `basename $cwd`
+    #set dirname = `whatdir`
     if( `not_fig.py $i` == 1 ) then
         # "not a figure: assume complex figure"
         set eps = $i/*eps
@@ -35,5 +35,8 @@ foreach i ($argv)
 end
 echo "\caption[ ]{ }"
 echo "\label{} \end{center} \end{figure}"
-
+#\begin{figure} \begin{center}
+#\includegraphics[width=\hw\textwidth]{$dirname/$pdf}
+#\caption[ ]{ }
+#\label{} \end{center} \end{figure}
 #end
