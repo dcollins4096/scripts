@@ -324,6 +324,14 @@ endif
 
 echo "machine: " $machine
 switch ( $machine )
+    case BW:
+      set nProcCompile = -j8
+      set srcdir = $src
+      set exeSer = "$exec $dbg $Problem"
+      set exeMPI = "aprun -n $nprocRun -N 16 -cc 0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30 -ss $exec $dbg $Problem"
+      breaksw
+
+
     case stampede:
       set nProcCompile = -j16
       set srcdir = $src
@@ -684,9 +692,9 @@ set Success = 'no'
     cd $srcdir
     echo "cd $srcdir"
 
-    #if( -e $exec && $KillExec == yes) then 
+    if( -e $exec && $KillExec == yes) then 
         rm $exec
-        #endif
+    endif
     foreach i ( EvolveLevel.o EvolveHierarchy.o enzo.o )
       if ( -e $i ) rm $i
     end
@@ -768,7 +776,7 @@ endif
       end
 
       set KILL = ""
-      foreach start (data cycle time Extra TD DD CD ED RD)
+      foreach start (data cycle time Extra TD DD CD ED)
           set KILL = `find . -maxdepth 1 -name "$start*"`
           if( $?SaveList != 0 ) then
               foreach i ($KILL)

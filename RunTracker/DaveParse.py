@@ -9,10 +9,15 @@ import re
 from datetime import *
 from xml.dom import minidom
 
-import RunTrackerStuff
-sysInfo = RunTrackerStuff.sysInfo() #Get info about the system and user.
-sys.path.append(sysInfo.cadacInstall)
-import cadac
+try:
+    import cadac
+    import RunTrackerStuff
+    sysInfo = RunTrackerStuff.sysInfo() #Get info about the system and user.
+    sys.path.append(sysInfo.cadacInstall)
+    RunTracker_on = True
+except:
+    RunTracker_on = False
+    sysInfo = None
 
 class stepInfo:
     dt = -1
@@ -82,12 +87,14 @@ initialFileString = None
 
 oldTicker = re.compile(r'.*TopGrid\s*cycle\s*=\s*(\S+)\s*dt\s*=\s*(\S*)\s*time\s*=\s*(\S+)\s*(wall = (\S+))?')
 newTicker = re.compile(r'.*STEP_INFO\s*N\s*=\s*(\S+)\s*\s*DT\s*=\s*(\S+)\s*,?\s*T\s*=\s*(\S+)')
-weekOfCodeTicker = re.compile(r'.*TopGrid\s*dt\s*=\s(\S+)\s*time\s*=\s*(\S+)\s*cycle\s*=\s*(\S+)\s*(wall = (\S+))?')
+weekOfCodeTicker_with_wall = re.compile(r'.*TopGrid\s*dt\s*=\s(\S+)\s*time\s*=\s*(\S+)\s*cycle\s*=\s*(\S+)\s*(wall = (\S+))?')
+weekOfCodeTicker = re.compile(r'.*TopGrid\s*dt\s*=\s(\S+)\s*time\s*=\s*(\S+)\s*cycle\s*=\s*(\S+)')
 #weekOfCodeTicker = re.compile(r'.*TopGrid\s*dt\s*=\s(\S+)\s*time\s*=\s*(\S+)\s*cycle\s*=\s*(\S+)\s*(wall = (\d*\.\d*))?C.*)?')
 #TopGrid dt = 1.690168e-06     time = 0.025478588    cycle = 10500
 old_map = {'cycle':1,'dt':2,'time':3,'wall':5}
+woc_map_wall = {'cycle':3,'dt':1,'time':2,'wall':5}
 woc_map = {'cycle':3,'dt':1,'time':2,'wall':5}
-TickerList = [(old_map,oldTicker), (old_map,newTicker),(woc_map,weekOfCodeTicker)]
+TickerList = [(old_map,oldTicker), (old_map,newTicker),(woc_map,weekOfCodeTicker), (woc_map_wall, weekOfCodeTicker_with_wall)]
 initialStepInfo = stepInfo()
 finalStepInfo = stepInfo()
 firstTime=True
@@ -130,67 +137,79 @@ for line in file:
 
 file.close()
 
-ua=[]
-if initialFileString != None:
-    ua.append(cadac.UserField('startFile',initialFileString))
-if initialStepInfo.set and not finalStepInfo.set:
-    #then the first step wasn't finished.
-    finalStepInfo = initialStepInfo
-ua.append(cadac.UserField('init_time',initialStepInfo.time ))
-ua.append(cadac.UserField('final_time',finalStepInfo.time ))
+if RunTracker_on:
+    ua=[]
+    if initialFileString != None:
+        ua.append(cadac.UserField('startFile',initialFileString))
+    if initialStepInfo.set and not finalStepInfo.set:
+        #then the first step wasn't finished.
+        finalStepInfo = initialStepInfo
+    ua.append(cadac.UserField('init_time',initialStepInfo.time ))
+    ua.append(cadac.UserField('final_time',finalStepInfo.time ))
 
-ua.append(cadac.UserField('init_cycle',initialStepInfo.cycle))
-ua.append(cadac.UserField('final_cycle',finalStepInfo.cycle ))
+    ua.append(cadac.UserField('init_cycle',initialStepInfo.cycle))
+    ua.append(cadac.UserField('final_cycle',finalStepInfo.cycle ))
 
-ua.append(cadac.UserField('init_dt',initialStepInfo.dt ))
-ua.append(cadac.UserField('final_dt',finalStepInfo.dt ))
+    ua.append(cadac.UserField('init_dt',initialStepInfo.dt ))
+    ua.append(cadac.UserField('final_dt',finalStepInfo.dt ))
 
-userlist = cadac.UserFieldList(ua)
+    userlist = cadac.UserFieldList(ua)
 
-parameterList = None #scrubParameterFile(initialFileString)
+    parameterList = None #scrubParameterFile(initialFileString)
 
-output_dom = minidom.parseString('<appendMe></appendMe>')
+    output_dom = minidom.parseString('<appendMe></appendMe>')
 
-list_dom= minidom.parseString(userlist.toxml()).firstChild
-output_dom.firstChild.appendChild(list_dom)
+    list_dom= minidom.parseString(userlist.toxml()).firstChild
+    output_dom.firstChild.appendChild(list_dom)
 
-if parameterList != None:
-    param_dom = minidom.parseString(parameterList.toxml()).firstChild
-    output_dom.firstChild.appendChild(param_dom)
+    if parameterList != None:
+        param_dom = minidom.parseString(parameterList.toxml()).firstChild
+        output_dom.firstChild.appendChild(param_dom)
 
-#Sanatize wall info. This should be in the regexp, but my regexp-fu is weak today.
-if 'C' in finalStepInfo.wall:
-    finalStepInfo.wall = finalStepInfo.wall[ :finalStepInfo.wall.index('C') ]
-if 'C' in initialStepInfo.wall:
-    initialStepInfo.wall = initialStepInfo.wall[ :initialStepInfo.wall.index('C') ]
+    #Sanatize wall info. This should be in the regexp, but my regexp-fu is weak today.
+    if 'C' in finalStepInfo.wall:
+        finalStepInfo.wall = finalStepInfo.wall[ :finalStepInfo.wall.index('C') ]
+    if 'C' in initialStepInfo.wall:
+        initialStepInfo.wall = initialStepInfo.wall[ :initialStepInfo.wall.index('C') ]
 
-if initialStepInfo.wall != None:
-    #This sure is a lot of work for one line of xml.
-    #there has to be an easier way...
-    round = int(float(initialStepInfo.wall))  #really don't care about microseconds.
+    if initialStepInfo.wall != None:
+        #This sure is a lot of work for one line of xml.
+        #there has to be an easier way...
+        round = int(float(initialStepInfo.wall))  #really don't care about microseconds.
 
-    iso_string = datetime.fromtimestamp(round).isoformat()
-    start_xml=minidom.parseString('<StartTime>'+iso_string+'</StartTime>').firstChild
-    output_dom.firstChild.appendChild( output_dom.createTextNode('\n'))
-    output_dom.firstChild.appendChild(start_xml)
+        iso_string = datetime.fromtimestamp(round).isoformat()
+        start_xml=minidom.parseString('<StartTime>'+iso_string+'</StartTime>').firstChild
+        output_dom.firstChild.appendChild( output_dom.createTextNode('\n'))
+        output_dom.firstChild.appendChild(start_xml)
 
-if finalStepInfo.wall != None:
-    round = int(float(finalStepInfo.wall))  #really don't care about microseconds.
-    iso_string = datetime.fromtimestamp(round).isoformat()
-    end_xml=minidom.parseString('<EndTime>'+iso_string+'</EndTime>').firstChild
-    output_dom.firstChild.appendChild( output_dom.createTextNode('\n'))
-    output_dom.firstChild.appendChild(end_xml)
+    if finalStepInfo.wall != None:
+        round = int(float(finalStepInfo.wall))  #really don't care about microseconds.
+        iso_string = datetime.fromtimestamp(round).isoformat()
+        end_xml=minidom.parseString('<EndTime>'+iso_string+'</EndTime>').firstChild
+        output_dom.firstChild.appendChild( output_dom.createTextNode('\n'))
+        output_dom.firstChild.appendChild(end_xml)
 
-if initialStepInfo.wall != None and finalStepInfo.wall != None:
-    difference = int( float(finalStepInfo.wall) - float(initialStepInfo.wall) )
-    hours = int( difference/3600 )
-    minutes = int( (difference - hours*3600)/60 )
-    runtime_xml = minidom.parseString('<RunTime>%d:%02d</RunTime>'%(hours,minutes)).firstChild
-    output_dom.firstChild.appendChild( output_dom.createTextNode('\n'))
-    output_dom.firstChild.appendChild(runtime_xml)
+    if initialStepInfo.wall != None and finalStepInfo.wall != None:
+        difference = int( float(finalStepInfo.wall) - float(initialStepInfo.wall) )
+        hours = int( difference/3600 )
+        minutes = int( (difference - hours*3600)/60 )
+        runtime_xml = minidom.parseString('<RunTime>%d:%02d</RunTime>'%(hours,minutes)).firstChild
+        output_dom.firstChild.appendChild( output_dom.createTextNode('\n'))
+        output_dom.firstChild.appendChild(runtime_xml)
+    sys.stdout.write( output_dom.toxml())
+    sys.stdout.write("\n")
+
+else:
+    outdict = {}
+    outdict['dti'] = initialStepInfo.dt
+    outdict['dtf'] = finalStepInfo.dt
+    outdict['timei'] = initialStepInfo.time
+    outdict['timef'] = finalStepInfo.time
+    outdict['cyclei'] = initialStepInfo.cycle
+    outdict['cyclef'] = finalStepInfo.cycle
+    print "%(dti)s %(dtf)s %(timei)s %(timef)s %(cyclei)s %(cyclef)s"%outdict
 
 
 
-sys.stdout.write( output_dom.toxml())
-sys.stdout.write("\n")
+
 #end
