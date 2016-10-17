@@ -20,6 +20,7 @@ setenv p4 "d116 d117 d118 d119 d120 d121 d122 d123 d124"
 #
 # Machine Overloads
 #
+set bw = " dcollins@h2ologin.ncsa.illinois.edu:"
 set stampede = "tg456484@stampede.tacc.utexas.edu:"
 set ranch = "tg456484@ranch.tacc.utexas.edu:"
 set tgN = "dcollins@tg-login.ncsa.teragrid.org:"
@@ -241,7 +242,7 @@ endif
 # Because I can't type
 #
 
-if(  $machine != MAC && $machine != cortezbank && $machine != Nazare ) alias make gmake
+if(  $machine != MAC && $machine != cortezbank && $machine != Nazare && $machine != picoalto ) alias make gmake
 alias moer         'more'
 alias mroe         'more'
 alias meor         'more'
