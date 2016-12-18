@@ -5,9 +5,10 @@ if( $2 == "" ) then
     echo launches an interactive job.    
 else
    
+    set nodes = 0
     set time = $1
     set total_proc = $2
-    set procs_per_node = 8
+    set procs_per_node = 32
 @ nodes = $total_proc / $procs_per_node
 if( $nodes == 0 ) then 
     set nodes  = 1
@@ -21,7 +22,8 @@ endif
 if ( $machine == lobo || $machine == conejo || $machine == mapache || $machine == mustang ) then
   echo msub -I -V -l procs="$total_proc",walltime="$time"
 else
-  echo qsub -I -V -l size="$total_proc",walltime="$time"
+  echo qsub -I -l nodes="$nodes":ppn="$procs_per_node":xe -l walltime="$time"
+  #echo qsub -I -V -l size="$total_proc",walltime="$time"
 endif
 #echo qsub -I -V -l walltime="$time",nodes="$nodes":ppn="$ppn"
 endif
