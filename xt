@@ -55,7 +55,7 @@ while( $counter <= $#argset )
         set SSH_TO =  collins@web2.physics.fsu.edu
         breaksw
     case astro12:
-        #fancy fish: arse123
+        #fancy fish
         set SSH_TO = davidc@astro12.physics.fsu.edu
         breaksw
     case ranch:
