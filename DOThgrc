@@ -1,3 +1,6 @@
+username = dcollins4096
+[hostfingerprints]
+bitbucket.org = 3f:d3:c5:17:23:3c:cd:f5:2d:17:76:06:93:7e:ee:97:42:21:14:aa
 [extensions]
 hgext.extdiff =
 
