@@ -99,8 +99,12 @@ initialStepInfo = stepInfo()
 finalStepInfo = stepInfo()
 firstTime=True
 
+last_ten_lines = []
 for line in file: 
 
+    last_ten_lines.append(line)
+    if len(last_ten_lines) == 11:
+        last_ten_lines.pop(0)
     match = initialFile_start.match(line)
     if match != None:
         initialFileString = match.group(1)
@@ -207,9 +211,12 @@ else:
     outdict['timef'] = finalStepInfo.time
     outdict['cyclei'] = initialStepInfo.cycle
     outdict['cyclef'] = finalStepInfo.cycle
+
+    for line in last_ten_lines:
+        print line[:-1]
+    print "\n\n"
+
     print "%(dti)s %(dtf)s %(timei)s %(timef)s %(cyclei)s %(cyclef)s"%outdict
-
-
 
 
 #end
