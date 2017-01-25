@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import random
 import pdb
+import sys
 
 people=['Anne','Daniel','David','Marguerite','Patrick','Maggie','Mike','Steve']
 hat=people+people
@@ -12,16 +13,20 @@ for P in people:
     WhoGotWho[P]['got']=[]
 
 #No Spouses.
+Spouse={}
+for P in people:
+    Spouse[P] = None
+Spouse['Marguerite'] = 'David'
+Spouse['David'] = 'Marguerite'
+Spouse['Maggie'] = 'Mike'
+Spouse['Mike'] = 'Maggie'
+Spouse['Daniel'] = 'Anne'
+Spouse['Anne'] = 'Daniel'
 No={}
 for P in people:
     No[P] = [P]
-No['Marguerite'] += ['David']
-No['David'] += ['Marguerite']
-No['Maggie'] += ['Mike']
-No['Mike'] += ['Maggie']
-No['Daniel'] += ['Anne']
-No['Anne'] += ['Daniel']
-
+    if Spouse[P]:
+        No[P] += [Spouse[P]]
 
 for P in people:
     print P
@@ -35,21 +40,23 @@ for P in people:
                 print "Hat failure"
                 raise
             hat.append(other_person)     #Back in the hat!
-            continue
+            #continue
             print "nope",
             if len(hat):
                 continue
             else:
                 print "Failure!"
-                break
+                sys.exit(1)
 
 
         if debug > 0:
             print "yay",
         WhoGotWho[P]['got'].append(other_person)
         No[P].append(other_person)
+        if Spouse[P]:
+            No[Spouse[P]].append(other_person)
         if debug > 0:
             print P, WhoGotWho[P]['got'], hat
 for P in people:
-    print P, WhoGotWho[P]['got']
+    print "%s has  %s and %s"%(P, WhoGotWho[P]['got'][0], WhoGotWho[P]['got'][1])
 #end
