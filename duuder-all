@@ -1,5 +1,9 @@
 #!/bin/tcsh
 set echo 
-sudo du -h -d 4 / |& tee duud-all
-echo "RENAME duud-all"
+set name = duud-all-`date +"%Y-%m-%d-%H-%M-%S"`
+if ( $1 != "" ) then
+    set name = $name"-"$1
+endif
+echo $name
+sudo du -h -d 4 / |& tee $name
 #end
