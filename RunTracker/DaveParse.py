@@ -89,13 +89,14 @@ def scrub_log_file(filename):
     oldTicker = re.compile(r'.*TopGrid\s*cycle\s*=\s*(\S+)\s*dt\s*=\s*(\S*)\s*time\s*=\s*(\S+)\s*(wall = (\S+))?')
     newTicker = re.compile(r'.*STEP_INFO\s*N\s*=\s*(\S+)\s*\s*DT\s*=\s*(\S+)\s*,?\s*T\s*=\s*(\S+)')
     weekOfCodeTicker_with_wall = re.compile(r'.*TopGrid\s*dt\s*=\s(\S+)\s*time\s*=\s*(\S+)\s*cycle\s*=\s*(\S+)\s*(wall = (\S+))?')
-    weekOfCodeTicker = re.compile(r'.*TopGrid\s*dt\s*=\s(\S+)\s*time\s*=\s*(\S+)\s*cycle\s*=\s*(\S+)')
+    #weekOfCodeTicker = re.compile(r'.*TopGrid\s*dt\s*=\s(\S+)\s*time\s*=\s*(\S+)\s*cycle\s*=\s*(\S+)')
+    weekOfCodeTicker = re.compile(r'.*TopGrid\s*dt\s*=\s(\S+)\s*time\s*=\s*(\S+)\s*cycle\s*=\s*(\S+)\s*z\s*=\s*(\S+)')
 #weekOfCodeTicker = re.compile(r'.*TopGrid\s*dt\s*=\s(\S+)\s*time\s*=\s*(\S+)\s*cycle\s*=\s*(\S+)\s*(wall = (\d*\.\d*))?C.*)?')
 #TopGrid dt = 1.690168e-06     time = 0.025478588    cycle = 10500
     old_map = {'cycle':1,'dt':2,'time':3,'wall':5}
     woc_map_wall = {'cycle':3,'dt':1,'time':2,'wall':5}
     woc_map = {'cycle':3,'dt':1,'time':2,'wall':5}
-    TickerList = [(old_map,oldTicker), (old_map,newTicker),(woc_map,weekOfCodeTicker), (woc_map_wall, weekOfCodeTicker_with_wall)]
+    TickerList = [(woc_map,weekOfCodeTicker), (old_map,oldTicker), (old_map,newTicker),(woc_map_wall, weekOfCodeTicker_with_wall)]
     initialStepInfo = stepInfo()
     finalStepInfo = stepInfo()
     firstTime=True
