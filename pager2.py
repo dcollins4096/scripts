@@ -45,10 +45,11 @@ for fname in (glob.glob('*png')):
         field = mmm.group(3)
         if frame not in framelist:
             framelist.append(frame)
-            name_dict[sim][frame]={}
         if field not in fieldlist:
             fieldlist.append(field)
-        name_dict[sim][frame][field]=fname
+        if not name_dict[sim].has_key(frame):
+            name_dict[sim][frame] = {}
+        name_dict[sim][frame][field] = fname
     else:
         files_skipped.append(fname)
 
@@ -107,12 +108,12 @@ for frame in [-1]+framelist:
             for n,run in enumerate(simlist):
                 
                 fptr.write('<td class="td_image">')
-                this_fname = this_fname_temp%(run,frame,field)
-                #this_fname = name_dict[sim][frame][field]
-                if glob.glob(this_fname) == []:
-                    fptr.write("%s<br>"%this_fname)
-                else:
+                if name_dict[run].has_key(frame) and name_dict[run][frame].has_key(field):
+                    this_fname = name_dict[run][frame].pop(field)
                     fptr.write(img_tag%(this_fname,this_fname,run, caption.get(run,"---")))
+                else:
+                    this_fname = this_fname_temp%(run,frame,field)
+                    fptr.write("%s<br>"%this_fname)
                 fptr.write("</td>")
                 if (n+1)%int(options.number_of_columns) == 0:
                     fptr.write("</tr><tr>\n")
@@ -125,6 +126,13 @@ for frame in [-1]+framelist:
 fptr.write('</table>\n')
 fptr.write('</html>\n')
 fptr.close()
+
+#Make sure we got everyting.
+for sim in name_dict.keys():
+    for frame in name_dict[sim].keys():
+        if len(name_dict[sim][frame].keys()) > 0:
+            print "PARSE ERROR: did not properly treat", name_dict[sim][frame]
+
 
 #p33_ai01_0025_2d-Profile_density_HeI_Density_cell_mass.png 
 #end
