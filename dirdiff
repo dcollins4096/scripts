@@ -15,7 +15,7 @@ if( -e $outname ) then
     echo "Output file $outname exists"
     exit
 endif
-diff -r --brief --exclude=".svn" --exclude="*.o" --exclude="singleton.mod" "$1" "$2" |& tee tmp90210
+diff -r --brief --exclude=".hg" --exclude=".svn" --exclude="*.o" --exclude="singleton.mod" "$1" "$2" |& tee tmp90210
 touch $outname
 foreach i ("^Common" "^Only" "^Files")
     #echo "=============" $i
