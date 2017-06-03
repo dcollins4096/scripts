@@ -28,6 +28,9 @@ import sys
 import glob
 import re
 import os
+import numpy as np
+nar=np.array
+blank = re.compile(r'\S')
 
 def multi_compare(list_of_pfs):
     """
@@ -41,8 +44,29 @@ def multi_compare(list_of_pfs):
            print the value
 
     """
+    full_pf_list = [ parse_file(fname) for fname in list_of_pfs]
+    unique_list = []
+    multiples = {}
+    for pf in full_pf_list:
+        for key in pf.keys():
+            if key not in unique_list:
+                n_components = len(pf[key])
+                if n_components > 1:
+                    multiples[key] = max([multiples.get(key,0),n_components])
+                unique_list.append(key)
+    
+    template = "%s\t"*(len(unique_list) + 1)
+    fptr = open("stuff.tsv","w")
+    fptr.write(template%tuple([" "]+list(nar( unique_list))))
+    for n,pf in enumerate(list_of_pfs):
+        fptr.write("%s\t"%pf)
+        for key in nar(unique_list):
+            fptr.write( "%s\t"%full_pf_list[n].get(key,""))
+        fptr.write("\n")
+    fptr.close()
 
-blank = re.compile(r'\S')
+    
+
 def parse_file(filename, dbgOut=0):
     file1ob = open(filename,"r")
     lines1 = file1ob.readlines()
@@ -110,7 +134,6 @@ def parse_file(filename, dbgOut=0):
             print "File", filename, "has multiple instances of",name
             print "       Using the last"
         ParameterList[name] = newargs
-        print name
     return ParameterList
 def compare(FileName1,FileName2):
 
@@ -196,10 +219,10 @@ def compare(FileName1,FileName2):
     return 0
 #end compare
 
-if len( sys.argv ) != 3 :
+if len( sys.argv ) < 3 :
     print """ pc.py file1 file2 """
     print """ compares two enzo parameter files."""
-else:
+elif len(sys.argv) ==3:
     run = 1
     FileName1 = sys.argv[1]
     FileName2 = sys.argv[2]
@@ -213,5 +236,8 @@ else:
         run = 0
     if run != 0:
         out = compare(FileName1,FileName2)
+else:
+    multi_compare(sys.argv[1:])
+
 
 #end
