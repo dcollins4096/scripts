@@ -3,7 +3,7 @@ import random
 import pdb
 import sys
 
-people=['Anne','Daniel','David','Marguerite','Patrick','Maggie','Mike','Steve']
+people=['Anne','David','Marguerite','Patrick','Maggie','Mike','Steve']
 hat=people+people
 debug = 0
 #The list.  Set it up. ['got'] is who you got.
@@ -21,7 +21,6 @@ Spouse['David'] = 'Marguerite'
 Spouse['Maggie'] = 'Mike'
 Spouse['Mike'] = 'Maggie'
 Spouse['Daniel'] = 'Anne'
-Spouse['Anne'] = 'Daniel'
 No={}
 for P in people:
     No[P] = [P]
