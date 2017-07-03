@@ -14,9 +14,9 @@ parser = OptionParser()
 parser.add_option("-w", "--width", dest="width",action="store",help = "width", default="300")
 parser.add_option("-t", "--title", dest="title",action="store",help = "title", default=None)
 parser.add_option("-n", "--name", dest="name",action="store",help = "fame", default="oot.html")
-parser.add_option("-f", "--fieldlist", dest="fieldlist",action="store",help = "fame", default=None)
 parser.add_option("-c", "--number_of_columns", dest="number_of_columns", help = "number of columns", default=2)
 parser.add_option("-k", "--caption_file", dest="caption_file",help="space separated list of <run><caption>", default='captions.txt')
+parser.add_option("-z", "--zoom_sequence", action='store_true', dest="zoom_sequence",help="If this is a sequence of zooms, the names are parsed differently", default=False)
 options, args = parser.parse_args()
 #title=options.title
 width = options.width
@@ -25,7 +25,10 @@ width = options.width
 #filename_template = r'([^_]*)_(\d\d\d\d)_([^_]*)_%s_(.*)_cell_mass.png'
 #filename_template = r'([^_]*)_(\d\d\d\d)_(.*).png'
 #filename_template = r'(.*)_(\d\d\d\d)_(.*).png' #pretty good version
-filename_template = r'(.*)_n{0,1}(\d\d\d\d)_(.*).png' #pretty good version
+if options.zoom_sequence:
+    filename_template = r'(.*)_n{0,1}(\d\d\d\d)_(zoom\d+){0,1}_(.*).png' #with the zoom.
+else:
+    filename_template = r'(.*)_n{0,1}(\d\d\d\d)_(.*).png' #pretty good version
 this_fname_temp = '%s_%04d_%s.png'
 framelist = []
 fieldlist = []
@@ -33,8 +36,13 @@ simlist = []
 framere = re.compile(filename_template)
 files_skipped = []
 
+max_zoom = -1
 name_dict={}
-for fname in (glob.glob('*png')):
+if len(args) > 0:
+    fnames = args
+else:
+    fnames = glob.glob("*png")
+for fname in fnames:
     mmm= framere.match(fname)
     if mmm:
         sim = mmm.group(1)
@@ -42,14 +50,35 @@ for fname in (glob.glob('*png')):
             simlist.append(sim)
             name_dict[sim]={}
         frame = int(mmm.group(2))
-        field = mmm.group(3)
+        field_or_zoom = mmm.group(3)
+        if field_or_zoom.startswith('zoom'):
+            field = mmm.group(4)
+            zoom = int(mmm.group(3)[5:])
+            max_zoom = max([max_zoom,zoom])
+        else:
+            field = mmm.group(3)
+            zoom = -1
         if frame not in framelist:
             framelist.append(frame)
         if field not in fieldlist:
             fieldlist.append(field)
+
         if not name_dict[sim].has_key(frame):
             name_dict[sim][frame] = {}
-        name_dict[sim][frame][field] = fname
+
+        if not name_dict[sim][frame].has_key(field):
+            name_dict[sim][frame][field] = {}
+
+        #if not name_dict[sim][frame].has_key(zoom):
+        #    name_dict[sim][frame][field][zoom] = {}
+
+        if name_dict[sim][frame][field].has_key(zoom):
+            print "ERROR name collision %s %s"%(
+                    name_dict[sim][frame][field][zoom],
+                    fname)
+        else:
+            name_dict[sim][frame][field][zoom] = fname
+
     else:
         files_skipped.append(fname)
 
@@ -58,11 +87,9 @@ for fname in files_skipped:
     fptr_skipped.write("%s\n"%fname)
 fptr_skipped.close()
 
-if options.fieldlist is not None:
-    fieldlist = options.fieldlist.split(" ")
 framelist = sorted(framelist)
 simlist = sorted(simlist)
-
+fieldlist = sorted(fieldlist)
 
 caption = {}
 if len(glob.glob( options.caption_file ) ):
@@ -85,6 +112,7 @@ else:
 print simlist
 print framelist
 print fieldlist
+print "zoom", max_zoom
 title = "%s"*len(simlist)%tuple(simlist)
 if options.title is not None:
     title = options.title
@@ -101,24 +129,25 @@ for frame in [-1]+framelist:
         if frame < 0:
             fptr.write("%s"%(field))
         else:
-            img_tag = '<a h<figure><a href="%s"><img src="%s" width='+width+'></a><figcaption>%s (%s)</figcaption></figure>'
-            fptr.write("%s n%04d<br>"%(field,frame))
+            for zoom in range(-1,max_zoom+1):
+                img_tag = '<a h<figure><a href="%s"><img src="%s" width='+width+'></a><figcaption>%s (%s)</figcaption></figure>'
+                fptr.write("%s n%04d<br>"%(field,frame))
 
-            fptr.write('<table border="2"><tr>\n')
-            for n,run in enumerate(simlist):
+                fptr.write('<table border="2"><tr>\n')
+                for n,run in enumerate(simlist):
+                    
+                    fptr.write('<td class="td_image">')
+                    if name_dict[run].has_key(frame) and name_dict[run][frame].has_key(field) and name_dict[run][frame][field].has_key(zoom):
+                        this_fname = name_dict[run][frame][field].pop(zoom)
+                        fptr.write(img_tag%(this_fname,this_fname,run, caption.get(run,"---")))
+                    else:
+                        this_fname = this_fname_temp%(run,frame,field)
+                        fptr.write("%s<br>"%this_fname)
+                    fptr.write("</td>")
+                    if (n+1)%int(options.number_of_columns) == 0:
+                        fptr.write("</tr><tr>\n")
                 
-                fptr.write('<td class="td_image">')
-                if name_dict[run].has_key(frame) and name_dict[run][frame].has_key(field):
-                    this_fname = name_dict[run][frame].pop(field)
-                    fptr.write(img_tag%(this_fname,this_fname,run, caption.get(run,"---")))
-                else:
-                    this_fname = this_fname_temp%(run,frame,field)
-                    fptr.write("%s<br>"%this_fname)
-                fptr.write("</td>")
-                if (n+1)%int(options.number_of_columns) == 0:
-                    fptr.write("</tr><tr>\n")
-            
-            fptr.write('</tr></table>\n')
+                fptr.write('</tr></table><br>\n')
 
         fptr.write('</td>\n')
     fptr.write('</tr>\n')
@@ -130,8 +159,9 @@ fptr.close()
 #Make sure we got everyting.
 for sim in name_dict.keys():
     for frame in name_dict[sim].keys():
-        if len(name_dict[sim][frame].keys()) > 0:
-            print "PARSE ERROR: did not properly treat", name_dict[sim][frame]
+        for field in name_dict[sim][frame].keys():
+            if len(name_dict[sim][frame][field].keys()) > 0:
+                print "PARSE ERROR: did not properly treat", name_dict[sim][frame]
 
 
 #p33_ai01_0025_2d-Profile_density_HeI_Density_cell_mass.png 
