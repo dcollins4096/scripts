@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 """Scrubs the input file for parameter filename, and [initial,final]\times[time,cycle,dt]."""
 
-
-execfile('/home1/00369/tg456484/yt3_scripts/go_lite')
+import os
+execfile('%s/yt3_scripts/go_lite'%os.environ['HOME'])
 from optparse import OptionParser
 import glob
 import sys
