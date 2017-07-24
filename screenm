@@ -8,7 +8,7 @@ if( "$1" == "-w") then
 else if ("$1" == "-y" ) then
     set args = "yt2 src lookit herp"
 else if ("$1" == "-y2" ) then
-    set args = "yt1 yt2 src lookit herp"
+    set args = "yt1 yt2 src lookit herp scratch1 scratch2"
 else if ("$1" == "-run" ) then
     set args = "yt src lookit herp ed1 ed2 run1 run2"
 else if ("$1" == "-x" ) then
@@ -16,7 +16,8 @@ else if ("$1" == "-x" ) then
 else
     set args = ($argv)
 endif
-
+touch $HOME/screen_loc
+uname -n >> $HOME/screen_loc
 set tmp_exec = '/var/tmp/screenm_tmp'
 if( -e $tmp_exec ) rm $tmp_exec
 touch $tmp_exec
