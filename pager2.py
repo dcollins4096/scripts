@@ -17,6 +17,7 @@ parser.add_option("-n", "--name", dest="name",action="store",help = "fame", defa
 parser.add_option("-c", "--number_of_columns", dest="number_of_columns", help = "number of columns", default=2)
 parser.add_option("-k", "--caption_file", dest="caption_file",help="space separated list of <run><caption>", default='captions.txt')
 parser.add_option("-z", "--zoom_sequence", action='store_true', dest="zoom_sequence",help="If this is a sequence of zooms, the names are parsed differently", default=False)
+parser.add_option("-d", "--directory_trim", action='store_true',dest='directory_trim', help="If sims are in sub directories, and there's a one-to-one directory-sim relation, remove direcory names", default=False)
 options, args = parser.parse_args()
 #title=options.title
 width = options.width
@@ -28,7 +29,7 @@ width = options.width
 if options.zoom_sequence:
     filename_template = r'(.*)_n{0,1}(\d\d\d\d)_(zoom\d+){0,1}_(.*).png' #with the zoom.
 else:
-    filename_template = r'(.*)_n{0,1}(\d\d\d\d)_(.*).png' #pretty good version
+    filename_template = r'(.*)_D{0,1}D{0,1}n{0,1}(\d\d\d\d)_(.*).png' #pretty good version
 this_fname_temp = '%s_%04d_%s.png'
 framelist = []
 fieldlist = []
@@ -46,6 +47,8 @@ for fname in fnames:
     mmm= framere.match(fname)
     if mmm:
         sim = mmm.group(1)
+        if options.directory_trim:
+            sim = sim.split("/")[-1]
         if sim not in simlist:
             simlist.append(sim)
             name_dict[sim]={}
@@ -73,7 +76,7 @@ for fname in fnames:
         #    name_dict[sim][frame][field][zoom] = {}
 
         if name_dict[sim][frame][field].has_key(zoom):
-            print "ERROR name collision %s %s"%(
+            print "ERROR name collision (keeping first) %s %s"%(
                     name_dict[sim][frame][field][zoom],
                     fname)
         else:
