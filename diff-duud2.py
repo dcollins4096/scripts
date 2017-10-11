@@ -10,6 +10,8 @@ from optparse import OptionParser
 import re
 import numpy as np
 import pdb
+import numpy as np
+nar = np.array
 
 parser = OptionParser()
 parser.add_option("-H","--Hierarchy",dest="hierarchy",action="store_true",default=False,
@@ -30,7 +32,6 @@ def tab_is_white(string):
             out += " "
     return out
 
-re_num = re.compile(r'\s*([\d\.])+([KMGBT])\s*')
 def sci_format(num, suffix=''):
     #units = ['','Ki','Mi','Gi','Ti','Pi','Ei','Zi']
     #the above is probably more accurate.  MUST be consistent with the other getnum function
@@ -42,6 +43,7 @@ def sci_format(num, suffix=''):
         num /= 1e3
     return "%.1f%s%s" % (num, 'Yi', suffix)
 
+re_num = re.compile(r'\s*([\d\.]+)([KMGBT])\s*')
 def getnum(line):
     match = re_num.match(line)
     if match is None:
@@ -71,7 +73,7 @@ class duud():
         fptr.close()
         for line in self.lines[ingest_slice]:
             self.longest_line=max([len(line), self.longest_line])
-            #print line
+            print line
             try:
                 line_start = line.index("/")
             except:
@@ -87,8 +89,8 @@ class duud():
 def report(d1, d2, n1, n2, message):
     #longest = max([d1.longest_line,d2.longest_line])
     delta = 0
-    longest = 50
-    nformat=6
+    longest = 75
+    nformat=8
     t2 = "%"+str(nformat)+"s"
     t1 = "%"+str(longest)+"s"
     if d1 is None:
@@ -149,6 +151,7 @@ def delta(d1, d2, nchecks=None):
             #d2.delta[n2] = this_delta
             if abs_delta > 0:
                 d2.changed_lines.append([this_delta,d2.files[n2]])
+                d2.delta[n2] = this_delta
             if abs_delta > 1 and verb > 2:
                 print "- ",d1.lines[n1]
                 print "+ ",d2.lines[n2]
@@ -202,8 +205,9 @@ def delta(d1, d2, nchecks=None):
 
 duud_list = []
 for filename in args:
+    print "=======", filename
     the_duud= duud(filename)
-    the_duud.ingest() #slice(30)) 
+    the_duud.ingest(slice(10)) #slice(3)) 
     #print the_duud.sizes_bytes
     duud_list.append(the_duud)
 
@@ -211,13 +215,14 @@ for n_duud, the_duud in enumerate(duud_list):
     if n_duud == 0:
         last_duud = the_duud
     else:
-        delta(last_duud, the_duud) #, nchecks=4)
+        delta(last_duud, the_duud)#, nchecks=4)
         last_duud=the_duud
 d1 = duud_list[0]
 d2 = duud_list[1]
 
 all_delta=[]
 all_files=[]
+all_levels=[]
 full_report=False
 for delta, fname in d2.changed_lines:
     if full_report: print "changed", delta, fname
@@ -231,10 +236,13 @@ for delta, fname in d2.removed_lines:
     if full_report: print "gone", delta, fname
     all_delta.append(delta)
     all_files.append(fname)
+for fname in all_files:
+    all_levels.append(fname.count("/"))
 
+#all_levels[ all_files.index('/')] = 0
 print d1.lines[-1]
 print d2.lines[-1]
-
-
-
+all_delta= nar(all_delta)
+all_files= nar(all_files)
+all_levels= nar(all_levels)
 #end
