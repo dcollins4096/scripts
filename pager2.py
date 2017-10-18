@@ -18,6 +18,7 @@ parser.add_option("-c", "--number_of_columns", dest="number_of_columns", help = 
 parser.add_option("-k", "--caption_file", dest="caption_file",help="space separated list of <run><caption>", default='captions.txt')
 parser.add_option("-z", "--zoom_sequence", action='store_true', dest="zoom_sequence",help="If this is a sequence of zooms, the names are parsed differently", default=False)
 parser.add_option("-d", "--directory_trim", action='store_true',dest='directory_trim', help="If sims are in sub directories, and there's a one-to-one directory-sim relation, remove direcory names", default=False)
+parser.add_option("-x", "--xtra", action='store_true',dest='xtra_skipped', help="Put links to extra files that dont match the ax19_0019_projectin.png format", default=True)
 options, args = parser.parse_args()
 #title=options.title
 width = options.width
@@ -121,8 +122,31 @@ if options.title is not None:
     title = options.title
 fptr = open(options.name,'w')
 fptr.write('<html>\n')
-fptr.write('<head><title>'+title+'</title><link rel="stylesheet" href="oot.css" typ="text/css" media=screen></head>\n')
+
+if options.xtra_skipped:
+    still_skipped=[]
+    fptr.write('<table boerder="1">\n')
+    fptr.write('<tr>')
+    for nf, fname in enumerate(files_skipped):
+        if fname.split('.')[-1] in ['png','jpg']:
+            img_tag = '<td><a href="%s"><img src="%s" width='+width+'></a></td>'
+            fptr.write(img_tag%(fname,fname))
+        else:
+            still_skipped.append(fname)
+    fptr.write('</tr>')
+    if len(still_skipped):
+        #haha, this does nothing because we are only reading png in the first place.
+        fptr.write('<tr>')
+        for nf, fname in enumerate(still_skipped):
+            fptr.write("<td><a href='%s'>%s</a></td>"%(fname,fname))
+
+        fptr.write('</tr>')
+
+    fptr.write('</table>\n')
         
+
+
+
 fptr.write('<table border="1">\n')
 for frame in [-1]+framelist:
     fptr.write('<tr>')
