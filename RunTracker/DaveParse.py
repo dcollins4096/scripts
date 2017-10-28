@@ -7,6 +7,8 @@ from optparse import OptionParser
 import glob
 import sys
 import re
+import numpy as np
+nar = np.array
 from datetime import *
 from xml.dom import minidom
 
@@ -53,12 +55,12 @@ def scrubParameterFile(string):
     if glob.glob(string) == []:
         return None
 
-    file = open(string, 'r')
+    fptr = open(string, 'r')
     pa = []
     re_list = []
     re_list.append(re.compile(r'\s*(TopGridDimensions)\s*=\s*(\d*)\s*(\d*)\s*(\d*)'))
 
-    for line in file:
+    for line in fptr:
         if len(re_list) == 0:
             break
         for reg in re_list:
@@ -76,11 +78,13 @@ def scrubParameterFile(string):
                 elif match.group(1) == "monkey":
                     monkey = "wtf?"
     plist = cadac.ParameterList(pa)
-    file.close
+    fptr.close()
     return plist
 
-def scrub_log_file(filename):
-    file = open(filename,'r')
+def scrub_log_file(filename, all_output=None):
+    counter_xx  = 0
+    counter_xxx = 0
+    fptr = open(filename,'r')
 
     initialFile_start = re.compile(r'.*Successfully read in parameter file\s+(\S+)\.+')
     initialFile_restart = re.compile(r'.*Successfully read ParameterFile\s+(\S+).+')
@@ -97,26 +101,50 @@ def scrub_log_file(filename):
     woc_map_wall = {'cycle':3,'dt':1,'time':2,'wall':5}
     woc_map = {'cycle':3,'dt':1,'time':2,'wall':5}
     TickerList = [(woc_map,weekOfCodeTicker), (old_map,oldTicker), (old_map,newTicker),(woc_map_wall, weekOfCodeTicker_with_wall)]
-    initialStepInfo = stepInfo()
-    finalStepInfo = stepInfo()
-    firstTime=True
-
+    if all_output is None:
+        initialStepInfo = stepInfo()
+        finalStepInfo = stepInfo()
+        firstTime=True
+        all_steps = {'cycle':[], 'dt':[], 'time':[],'output':[],'input':[]}
+    else:
+        initialStepInfo = all_stuff['initialStepInfo']
+        finalStepInfo = all_stuff['finalStepInfo']
+        firstTime=False
+        all_steps = all_stuff['all_steps']
     last_ten_lines = []
-    all_steps = {'cycle':[], 'dt':[], 'time':[]}
-    for line in file: 
+    print "call2"
+    for line in fptr: 
 
         last_ten_lines.append(line)
         if len(last_ten_lines) == 11:
             last_ten_lines.pop(0)
         match = initialFile_start.match(line)
+        initialize_line=False
         if match != None:
             initialFileString = match.group(1)
-            continue
+            initialize_line=True
         
         match = initialFile_restart.match(line)
         if match != None:
             initialFileString = match.group(1)
-            continue
+            initialize_line=True
+        if initialize_line:
+            re_input = re.compile(r'([^\d]+)(\d\d\d\d)/([^\d]*)')
+            match_restart = re_input.match(initialFileString)
+            read_directory=match_restart.group(1)
+            read_number   =int(match_restart.group(2))
+            read_fname    =match_restart.group(3)
+            this_time = -1
+            this_cycle = -1
+            if len(all_steps['cycle']) > 0:
+                this_time = all_steps['time'][-1]
+                this_cycle = all_steps['cycle'][-1]
+            input_dict={'dir':read_directory,'number':int(read_number),'fname':read_fname,
+                         'cycle':int(this_cycle),'time':float(this_time)}
+            all_steps['input'].append(input_dict)
+            print "NNNNNNNNNNN",input_dict 
+
+
         
         for reg_map,ticker in TickerList:
             match = ticker.match(line)
@@ -147,22 +175,25 @@ def scrub_log_file(filename):
                         finalStepInfo.wall = match.group(reg_map['wall'])
                     except:
                         pass
+        re_data = re.compile(r'DATA dump: ./([^\d]+)(\d\d\d\d)/([^\d]*)')
+        match_DD = re_data.match(line)
+        if match_DD is not None:
+            dump_directory=match_DD.group(1)
+            dump_number   =int(match_DD.group(2))
+            dump_fname    =match_DD.group(3)
+            this_time = -1
+            this_cycle = -1
+            if len(all_steps['cycle']) > 0:
+                this_time = all_steps['time'][-1]
+                this_cycle = all_steps['cycle'][-1]
+            output_dict={'dir':dump_directory,'number':int(dump_number),'fname':dump_fname,
+                         'cycle':int(this_cycle),'time':float(this_time)}
+            all_steps['output'].append(output_dict)
 
-    file.close()
+    counter_xxx += 1
+    fptr.close()
 
-    if 1:
-        plt.clf()
-        plt.plot(all_steps['cycle'], all_steps['dt'])
-        plt.xlabel('cycle'); plt.ylabel('dt')
-        plt.savefig(filename+'_cycle_dt.pdf')
-        plt.yscale('log')
-        plt.savefig(filename+'_cycle_dt_log.pdf')
-        plt.clf()
-        plt.plot(all_steps['time'], all_steps['dt'])
-        plt.xlabel('time'); plt.ylabel('dt')
-        plt.savefig(filename+'_time_dt.pdf')
-        plt.yscale('log')
-        plt.savefig(filename+'_time_dt_log.pdf')
+
 
     if RunTracker_on:
         ua=[]
@@ -240,7 +271,8 @@ def scrub_log_file(filename):
         print "\n\n"
 
         #print "%(dti)s %(dtf)s %(timei)s %(timef)s %(cyclei)s %(cyclef)s"%outdict
-    return {'initialStepInfo':initialStepInfo,'finalStepInfo':finalStepInfo}
+
+    return {'initialStepInfo':initialStepInfo,'finalStepInfo':finalStepInfo, 'all_steps':all_steps}
 
 
 
@@ -278,20 +310,68 @@ def parse_perf(initialStepInfo,finalStepInfo,fname='performance.out'):
             total_up += float(bits[5])
     return {'proc':ncore,'coresec':ncore*total_time,'cellup':total_up, 'cspercu':(ncore*total_time/total_up)}
 
-log_out=scrub_log_file(args[0])
+all_stuff = None
+plot_name = "PPP"
+for fname in args:
+    plot_name += "%s_"%fname
+    all_stuff=scrub_log_file(fname,all_stuff)
+if 1:
+    def add_dumps(plot_obj, full_list, in_or_out, x_type, y_value, print_number=True):
+        output_list = full_list[in_or_out]
+        all_x = nar([ output[x_type] for output in output_list])
+        all_dumpnum = [output['number'] for output in output_list]
+        plot_obj.scatter(all_x, np.zeros_like(all_x) + y_value)
+        if print_number:
+            plot_obj.text(all_x[0], y_value*1.1, "%s%d"%(output_list[0]['dir'], all_dumpnum[0]))
+            plot_obj.text(all_x[-1], y_value*1.1, "%s%d"%(output_list[-1]['dir'], all_dumpnum[-1]))
+    all_steps = all_stuff['all_steps']
+    plt.clf()
+    all_cycle  =nar(map(int, all_steps['cycle']))
+    all_dt     =nar(map(float,all_steps['dt']))
+    all_time   =nar(map(float,all_steps['time']))
+    plt.plot(all_cycle, all_dt)
+    add_dumps(plt,all_steps,'output', 'cycle', all_dt.min())
+    add_dumps(plt,all_steps,'input', 'cycle', all_dt.min())
+    plt.xlabel('cycle'); plt.ylabel('dt')
+    plt.savefig(plot_name+'cycle_dt.pdf')
+    plt.yscale('log')
+    plt.savefig(plot_name+'cycle_dt_log.pdf')
+    plt.clf()
+    plt.plot(all_time, all_dt)
+    add_dumps(plt,all_steps,'output', 'time', all_dt.min())
+    plt.xlabel('time'); plt.ylabel('dt')
+    plt.savefig(plot_name+'time_dt.pdf')
+    plt.yscale('log')
+    plt.savefig(plot_name+'time_dt_log.pdf')
+#
+#if 'all_steps' in log_out:
+#    filename = 'butts'
+#    all_steps = log_out['all_steps']
+#    plt.clf()
+#    plt.plot(all_steps['cycle'], all_steps['dt'])
+#    plt.xlabel('n'); plt.ylabel('n')
+#    plt.savefig(filename+'_cycle_dt.pdf')
+#   plt.yscale('log')
+#   plt.savefig(filename+'_cycle_dt_log.pdf')
+#   plt.clf()
+#   plt.plot(all_steps['time'], all_steps['dt'])
+#   plt.xlabel('time'); plt.ylabel('dt')
+#   plt.savefig(filename+'_time_dt.pdf')
+#   plt.yscale('log')
+#   plt.savefig(filename+'_time_dt_log.pdf')
 #dumb_Initial=stepInfo
 #dumb_Final = stepInfo
 #dumb_Initial.cycle = 0
 #dumb_Final.cycle = 5
 #perf_out=parse_perf(dumb_Initial,dumb_Final)
-perf_out = parse_perf(log_out['initialStepInfo'],log_out['finalStepInfo'])
+perf_out = parse_perf(all_stuff['initialStepInfo'],all_stuff['finalStepInfo'])
 outdict = {}
-outdict['dti'] =   log_out['initialStepInfo'].dt
-outdict['dtf'] =   log_out['finalStepInfo'].dt
-outdict['timei'] = log_out['initialStepInfo'].time
-outdict['timef'] = log_out['finalStepInfo'].time
-outdict['cyclei'] =log_out['initialStepInfo'].cycle
-outdict['cyclef'] =log_out['finalStepInfo'].cycle
+outdict['dti'] =   all_stuff['initialStepInfo'].dt
+outdict['dtf'] =   all_stuff['finalStepInfo'].dt
+outdict['timei'] = all_stuff['initialStepInfo'].time
+outdict['timef'] = all_stuff['finalStepInfo'].time
+outdict['cyclei'] =all_stuff['initialStepInfo'].cycle
+outdict['cyclef'] =all_stuff['finalStepInfo'].cycle
 outdict.update(perf_out)
 
 
