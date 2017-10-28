@@ -20,7 +20,7 @@ Spouse['Marguerite'] = 'David'
 Spouse['David'] = 'Marguerite'
 Spouse['Maggie'] = 'Mike'
 Spouse['Mike'] = 'Maggie'
-Spouse['Daniel'] = 'Anne'
+#Spouse['Daniel'] = 'Anne'
 No={}
 for P in people:
     No[P] = [P]
