@@ -7,6 +7,7 @@ from optparse import OptionParser
 import glob
 import sys
 import re
+import pdb
 import numpy as np
 nar = np.array
 from datetime import *
@@ -129,20 +130,26 @@ def scrub_log_file(filename, all_output=None):
             initialFileString = match.group(1)
             initialize_line=True
         if initialize_line:
+            print fname, initialFileString
             re_input = re.compile(r'([^\d]+)(\d\d\d\d)/([^\d]*)')
             match_restart = re_input.match(initialFileString)
-            read_directory=match_restart.group(1)
-            read_number   =int(match_restart.group(2))
-            read_fname    =match_restart.group(3)
-            this_time = -1
-            this_cycle = -1
-            if len(all_steps['cycle']) > 0:
-                this_time = all_steps['time'][-1]
-                this_cycle = all_steps['cycle'][-1]
-            input_dict={'dir':read_directory,'number':int(read_number),'fname':read_fname,
-                         'cycle':int(this_cycle),'time':float(this_time)}
-            all_steps['input'].append(input_dict)
-            print "NNNNNNNNNNN",input_dict 
+            if match_restart is not None:
+                read_directory=match_restart.group(1)
+                read_number   =int(match_restart.group(2))
+                read_fname    =match_restart.group(3)
+                this_time = -1
+                this_cycle = -1
+                if len(all_steps['cycle']) > 0:
+                    this_time = all_steps['time'][-1]
+                    this_cycle = all_steps['cycle'][-1]
+                input_dict={'dir':read_directory,'number':int(read_number),'fname':read_fname,
+                             'cycle':int(this_cycle),'time':float(this_time)}
+                all_steps['input'].append(input_dict)
+                #print "NNNNNNNNNNN",input_dict 
+            #print "WOAH", line, initialFileString, [val['number'] for val in all_steps['input']]
+            #print input_dict
+            #print "WOOOOH"
+            continue
 
 
         
@@ -278,6 +285,10 @@ def scrub_log_file(filename, all_output=None):
 
 
 def parse_perf(initialStepInfo,finalStepInfo,fname='performance.out'):
+    if len(glob.glob(fname)) == 0:
+        print "NO PERFORAMNCE"
+        return {'proc':-1,'coresec':-1,'cellup':-1, 'cspercu':-1}
+
     fptr = open(fname,'r')
     ncore_re = re.compile(r'# Starting performance log. MPI processes:\s*(\d*)')
     cycle_re = re.compile(r'Cycle_Number\s*(\d*)')
@@ -315,34 +326,52 @@ plot_name = "PPP"
 for fname in args:
     plot_name += "%s_"%fname
     all_stuff=scrub_log_file(fname,all_stuff)
+plot_name='p4'
 if 1:
-    def add_dumps(plot_obj, full_list, in_or_out, x_type, y_value, print_number=True):
+    def add_dumps(plot_obj, full_list, in_or_out, cycle_or_time, y_value=-1,min_x=-1, print_number='some'):
         output_list = full_list[in_or_out]
-        all_x = nar([ output[x_type] for output in output_list])
+        all_x = nar([ output[cycle_or_time] for output in output_list])
+        c={'output':'b','input':'r'}[in_or_out]
         all_dumpnum = [output['number'] for output in output_list]
-        plot_obj.scatter(all_x, np.zeros_like(all_x) + y_value)
-        if print_number:
-            plot_obj.text(all_x[0], y_value*1.1, "%s%d"%(output_list[0]['dir'], all_dumpnum[0]))
-            plot_obj.text(all_x[-1], y_value*1.1, "%s%d"%(output_list[-1]['dir'], all_dumpnum[-1]))
+        all_x [ all_x < min_x ] = min_x
+        plot_obj.scatter(all_x, np.zeros_like(all_x) + y_value,c=c)
+        if print_number == 'some':
+            plot_obj.text(all_x[0], y_value*1.1, "%s%04d"%(output_list[0]['dir'], all_dumpnum[0]),color=c)
+            if len(all_x) > 1:
+                plot_obj.text(all_x[-1], y_value*1.1, "%s%04d"%(output_list[-1]['dir'], all_dumpnum[-1]),color=c)
+        elif print_number == 'all':
+            for i in range(len(all_x)):
+                plot_obj.text(all_x[i], y_value*1.1, "%s%04d"%(output_list[i]['dir'], all_dumpnum[i]),color=c)
     all_steps = all_stuff['all_steps']
-    plt.clf()
     all_cycle  =nar(map(int, all_steps['cycle']))
     all_dt     =nar(map(float,all_steps['dt']))
     all_time   =nar(map(float,all_steps['time']))
-    plt.plot(all_cycle, all_dt)
-    add_dumps(plt,all_steps,'output', 'cycle', all_dt.min())
-    add_dumps(plt,all_steps,'input', 'cycle', all_dt.min())
-    plt.xlabel('cycle'); plt.ylabel('dt')
-    plt.savefig(plot_name+'cycle_dt.pdf')
-    plt.yscale('log')
-    plt.savefig(plot_name+'cycle_dt_log.pdf')
-    plt.clf()
-    plt.plot(all_time, all_dt)
-    add_dumps(plt,all_steps,'output', 'time', all_dt.min())
-    plt.xlabel('time'); plt.ylabel('dt')
-    plt.savefig(plot_name+'time_dt.pdf')
-    plt.yscale('log')
-    plt.savefig(plot_name+'time_dt_log.pdf')
+    for scale in []:# ['log','linear']:
+        plt.clf()
+        plt.plot(all_cycle, all_dt)
+        add_dumps(plt,all_steps,'output', 'cycle',min_x=all_cycle.min(), y_value=all_dt.min())
+        plt.xlabel('cycle'); plt.ylabel('dt')
+        this_outname = plot_name+'cycle_dt.pdf'
+        if scale == 'log':
+            ylim = plt.ylim()
+            plt.yscale('log')
+            add_dumps(plt,all_steps,'input', 'cycle',min_x=all_cycle.min(),y_value= all_dt.min()*1.5,print_number='all')
+            plt.ylim( ylim)
+            this_outname = plot_name+'cycle_dt_log.pdf'
+        plt.savefig(this_outname)
+    for scale in ['log','linear']:
+        plt.clf()
+        plt.plot(all_time, all_dt)
+        add_dumps(plt,all_steps,'output', 'time',min_x=all_time.min(),y_value= all_dt.min())
+        plt.xlabel('time'); plt.ylabel('dt')
+        outname = plot_name+'time_dt.pdf'
+        if scale == 'log':
+            ylim = plt.ylim()
+            add_dumps(plt,all_steps,'input', 'time',min_x=all_time.min(),y_value= all_dt.min()*2,print_number='all')
+            plt.yscale('log')
+            plt.ylim( ylim)
+            outname = plot_name+'time_dt_log.pdf'
+        plt.savefig(outname)
 #
 #if 'all_steps' in log_out:
 #    filename = 'butts'
@@ -373,7 +402,6 @@ outdict['timef'] = all_stuff['finalStepInfo'].time
 outdict['cyclei'] =all_stuff['initialStepInfo'].cycle
 outdict['cyclef'] =all_stuff['finalStepInfo'].cycle
 outdict.update(perf_out)
-
 
 print "%(dti)s %(dtf)s %(timei)s %(timef)s %(cyclei)s %(cyclef)s %(cellup)0.3e %(coresec)0.2e %(cspercu)0.3e"%outdict
 print "then also", perf_out
