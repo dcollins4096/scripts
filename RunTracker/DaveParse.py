@@ -113,7 +113,6 @@ def scrub_log_file(filename, all_output=None):
         firstTime=False
         all_steps = all_stuff['all_steps']
     last_ten_lines = []
-    print "call2"
     for line in fptr: 
 
         last_ten_lines.append(line)
@@ -322,11 +321,22 @@ def parse_perf(initialStepInfo,finalStepInfo,fname='performance.out'):
     return {'proc':ncore,'coresec':ncore*total_time,'cellup':total_up, 'cspercu':(ncore*total_time/total_up)}
 
 all_stuff = None
-plot_name = "PPP"
-for fname in args:
-    plot_name += "%s_"%fname
+plot_name = "tparse_multi"
+base_name = []
+print args
+if len(args) > 1:
+    for fname in args:
+        base1 = fname.split('.')[0]
+        if base1 not in base_name:
+            base_name.append(base1)
+            plot_name += "%s_"%base1
+        all_stuff=scrub_log_file(fname,all_stuff)
+else:
+    fname = args[0]
+    plot_name = 'tparse_'+fname
     all_stuff=scrub_log_file(fname,all_stuff)
-plot_name='p4'
+        
+
 if 1:
     def add_dumps(plot_obj, full_list, in_or_out, cycle_or_time, y_value=-1,min_x=-1, print_number='some'):
         output_list = full_list[in_or_out]
@@ -346,7 +356,7 @@ if 1:
     all_cycle  =nar(map(int, all_steps['cycle']))
     all_dt     =nar(map(float,all_steps['dt']))
     all_time   =nar(map(float,all_steps['time']))
-    for scale in []:# ['log','linear']:
+    for scale in ['log','linear']:
         plt.clf()
         plt.plot(all_cycle, all_dt)
         add_dumps(plt,all_steps,'output', 'cycle',min_x=all_cycle.min(), y_value=all_dt.min())
