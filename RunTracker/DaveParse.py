@@ -345,6 +345,8 @@ else:
             print "HARD NO"
             pdb.set_trace()
         output_list = full_list[in_or_out]
+        if len(output_list) == 0:
+            return
         all_x = nar([ output[cycle_or_time] for output in output_list])
         c={'output':'b','input':'r'}[in_or_out]
         all_dumpnum = [output['number'] for output in output_list]
