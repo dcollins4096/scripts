@@ -121,39 +121,49 @@ class duud():
         self.ch_files= nar(self.ch_files)
         self.ch_levels= nar(self.ch_levels)
 
-def report(d1, d2, n1, n2, message):
-    #longest = max([d1.longest_line,d2.longest_line])
-    delta = 0
-    longest = 75
-    nformat=8
-    t2 = "%"+str(nformat)+"s"
-    t1 = "%"+str(longest)+"s"
-    if d1 is None:
-        s1 = t1%"" + t2%" "
-        n1p = "%2s"%" "
+class reporter():
+    def __init__(self):
+        self.line_delta=[]
+    def __call__(self,d1, d2, n1, n2, message):
+        self.line_delta.append([ d1, d2, n1, n2, message])
+        self.printer( d1, d2, n1, n2, message)
 
-    else:
-        #s1 = d1.lines[n1]
-        s1 = t1%d1.files[n1] + t2%sci_format(d1.sizes_bytes[n1])
-        n1p = "%2d"%n1
-        delta -= d1.sizes_bytes[n1]
-    if d2 is None:
-        s2 = t1%""
-        n2p = "%2s"%" "
-    else:
-        #s2 = d2.lines[n2]
+
+    def printer(self,d1, d2, n1, n2, message):
+        #longest = max([d1.longest_line,d2.longest_line])
+        delta = 0
+        longest = 75
+        nformat=8
+        t2 = "%"+str(nformat)+"s"
         t1 = "%"+str(longest)+"s"
-        s2 = t2%sci_format(d2.sizes_bytes[n2]) + t1%d2.files[n2] 
-        n2p = "%2d"%n2
-        delta += d2.sizes_bytes[n2]
-    #nstring="(%s,%s)"%(n1p,n2p)
-    nstring = " "+t2%sci_format(delta)
+        if d1 is None:
+            s1 = t1%"" + t2%" "
+            n1p = "%2s"%" "
 
-    template = "%s |%s"+nstring+"|  %"+str(longest)+"s"
-    #template = "%"+str(longest)+"s |%s"+nstring+"|  %"+str(longest)+"s"
-    #template = "%"+str(longest)+"s |%s|  %"+str(longest)+"s"
-    if np.abs(delta) > 0:
-        print template%(s1,message,s2)
+        else:
+            #s1 = d1.lines[n1]
+            s1 = t1%d1.files[n1] + t2%sci_format(d1.sizes_bytes[n1])
+            n1p = "%2d"%n1
+            delta -= d1.sizes_bytes[n1]
+        if d2 is None:
+            s2 = t1%""
+            n2p = "%2s"%" "
+        else:
+            #s2 = d2.lines[n2]
+            t1 = "%"+str(longest)+"s"
+            s2 = t2%sci_format(d2.sizes_bytes[n2]) + t1%d2.files[n2] 
+            n2p = "%2d"%n2
+            delta += d2.sizes_bytes[n2]
+        #nstring="(%s,%s)"%(n1p,n2p)
+        nstring = " "+t2%sci_format(delta)
+
+        template = "%s |%s"+nstring+"|  %"+str(longest)+"s"
+        #template = "%"+str(longest)+"s |%s"+nstring+"|  %"+str(longest)+"s"
+        #template = "%"+str(longest)+"s |%s|  %"+str(longest)+"s"
+        if np.abs(delta) > 0:
+            print template%(s1,message,s2)
+
+report = reporter()
 
 def delta(d1, d2, nchecks=None, verb=0):
     """changes the *delta* value in d2 to reflect changes
