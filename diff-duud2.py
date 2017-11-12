@@ -92,7 +92,6 @@ class duud():
         self.delta=np.zeros(len(self.sizes_bytes))
 
     def final_report(self, full_report=False):
-        print "wtf"
         self.ch_delta=[]
         self.ch_files=[]
         self.ch_levels=[]
@@ -255,7 +254,11 @@ for n_duud, the_duud in enumerate(duud_list):
         the_duud.final_report()
 
 if 1:
-    d1 = duud_list[0]
-    d2 = duud_list[1]
+    for n, the_duud in enumerate(duud_list):
+        line="d%d = the_duud"%n
+        exec(line)
+        #d1 = duud_list[0]
+        #d2 = duud_list[1]
+        #d3 = duud_list[1]
 
 #end
