@@ -122,6 +122,7 @@ if options.title is not None:
     title = options.title
 fptr = open(options.name,'w')
 fptr.write('<html>\n')
+fptr.write('<title>%s</title>'%title)
 
 if options.xtra_skipped:
     still_skipped=[]
