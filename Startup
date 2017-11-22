@@ -156,6 +156,13 @@ prompt_long
 alias lsi "ls -1 |grep -i \!*"
 alias pybuild "python setup.py build_ext -i"
 
+if ( $?YT_DEST == 1 ) then 
+    alias yt_prompt_long set prompt = yt-$prompt_word":%~\"
+    alias my_activate "set path = ($YT_DEST/bin $path); set prompt = yt-$prompt_word':'%~'\>'"
+    #set prompt = yt-$prompt_word\ %~%"
+else
+    alias my_activate "cannot activate: YT_DEST not set"
+endif
 
 #
 # Aliases for directories.
