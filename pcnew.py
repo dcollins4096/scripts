@@ -29,10 +29,12 @@ import glob
 import re
 import os
 import numpy as np
+import pdb
+import types
 nar=np.array
 blank = re.compile(r'\S')
 
-def multi_compare(list_of_pfs):
+def multi_compare(input_list_of_pfs):
     """
     = get all the keys, make a unique list.
     = Look for a file that contains the prefred order of parameters.
@@ -44,6 +46,39 @@ def multi_compare(list_of_pfs):
            print the value
 
     """
+    param_order_name = 'parameter_order.txt'
+    order_list = []
+    if glob.glob(param_order_name) != []:
+        fptr=open(param_order_name,"r")
+        for line in fptr:
+            order_list.append(line[:-1])
+        fptr.close()
+    sim_order_name = 'sim_order.txt'
+    sim_order_list = []
+    if glob.glob(sim_order_name) != []:
+        fptr=open(sim_order_name,"r")
+        for line in fptr:
+            sim_order_list.append(line[:-1])
+        fptr.close()
+
+
+    list_of_pfs = []
+    missing_pfs = []
+    print "N input", len(input_list_of_pfs)
+    #print sim_order_list
+    for pf in sim_order_list:
+        if pf in input_list_of_pfs:
+            index= input_list_of_pfs.index(pf)
+            list_of_pfs.append( input_list_of_pfs.pop(index))
+        else:
+            missing_pfs.append(pf)
+
+    if len(missing_pfs) > 0:
+        print "missing pfs", missing_pfs
+
+    list_of_pfs += input_list_of_pfs
+    print "N used", len(list_of_pfs)
+
     full_pf_list = [ parse_file(fname) for fname in list_of_pfs]
     unique_list = []
     multiples = {}
@@ -55,15 +90,60 @@ def multi_compare(list_of_pfs):
                     multiples[key] = max([multiples.get(key,0),n_components])
                 unique_list.append(key)
     
-    template = "%s\t"*(len(unique_list) + 1)
-    fptr = open("stuff.tsv","w")
+    unique_list_1 = unique_list
+    print "Params Before", len(unique_list_1)
+    unique_list = []
+    print "Params After butts", len(unique_list)
+    missing_keys=[]
+    print "N input", len(input_list_of_pfs)
+    #print sim_order_list
+    for key in order_list:
+        print "xxx", key
+        if key in unique_list_1:
+            index= unique_list_1.index(key)
+            unique_list.append( unique_list_1.pop(index))
+        else:
+            missing_keys.append(key)
+
+    if len(missing_keys):
+        print 'Missing Keys', missing_keys
+    print "Params After butts", len(unique_list)
+
+    template = "<td>%s</td>"*(len(unique_list) + 1)
+    fptr = open("stuff.html","w")
+    fptr.write("<table border='2'>")
+    fptr.write("<tr>")
     fptr.write(template%tuple([" "]+list(nar( unique_list))))
+    fptr.write("</tr>")
     for n,pf in enumerate(list_of_pfs):
-        fptr.write("%s\t"%pf)
+        fptr.write("<tr>")
+        fptr.write("<th>%s</th>"%pf)
         for key in nar(unique_list):
-            fptr.write( "%s\t"%full_pf_list[n].get(key,""))
-        fptr.write("\n")
+            value = full_pf_list[n].get(key,"")
+            if isinstance(car,types.StringType):
+                pass
+            elif isinstance(car,types.ListType):
+                if len(value) == 0:
+                    value = value[0] 
+                    try:
+                        value = "%0.2e"%float(value)
+                    except:
+                        pass
+            fptr.write( "<td>%s</td>"%value)
+        fptr.write("<tr>")
+    fptr.write("</table>")
     fptr.close()
+
+
+    fptr=open('param_out.txt','w')
+    for n,pf in enumerate(unique_list):
+        fptr.write("%s\n"%pf)
+    fptr.close()
+    fptr=open('sim_out.txt','w')
+    for n,pf in enumerate(list_of_pfs):
+        fptr.write("%s\n"%pf)
+    fptr.close()
+
 
     
 
