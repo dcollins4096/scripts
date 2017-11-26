@@ -276,7 +276,6 @@ alias gt "gdsm triton \!*"
 # batch queries
 #
 
-alias dstat "qstat -u `whoami`"
 
 #
 # Experiments.
