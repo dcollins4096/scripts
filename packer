@@ -1,0 +1,33 @@
+#!/bin/tcsh
+
+set do_tar = 0
+if ( $1 == 'y' ) then
+    set do_tar = 1
+endif
+if ( ! -e Meta ) then
+    mkdir Meta
+endif
+foreach i (*)
+	if(  -f "$i" && (`basename $i .tar` == $i) ) then
+        mv -i $i Meta
+        echo "moving" $i
+	endif
+end
+echo "ok?"
+if ( $do_tar == 1 ) then
+    sleep 5
+    ls
+    echo "I'll tar up these"
+    sleep 5
+    touch packer.out
+    touch Meta/md5
+    foreach i ( `dirlist`)
+        if ( ! -e $i.tar ) then
+            tar cvf $i.tar $i
+
+            md5sum $i.tar >> Meta/md5
+        endif
+    end
+else
+    echo "No tar"
+endif
