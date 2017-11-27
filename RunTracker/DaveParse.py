@@ -113,7 +113,6 @@ def scrub_log_file(filename, all_output=None):
         firstTime=False
         all_steps = all_stuff['all_steps']
     last_ten_lines = []
-    print "call2"
     for line in fptr: 
 
         last_ten_lines.append(line)
@@ -322,14 +321,32 @@ def parse_perf(initialStepInfo,finalStepInfo,fname='performance.out'):
     return {'proc':ncore,'coresec':ncore*total_time,'cellup':total_up, 'cspercu':(ncore*total_time/total_up)}
 
 all_stuff = None
-plot_name = "PPP"
-for fname in args:
-    plot_name += "%s_"%fname
+plot_name = "tparse_multi"
+base_name = []
+print args
+if len(args) > 1:
+    for fname in args:
+        base1 = fname.split('.')[0]
+        if base1 not in base_name:
+            base_name.append(base1)
+            plot_name += "%s_"%base1
+        all_stuff=scrub_log_file(fname,all_stuff)
+else:
+    fname = args[0]
+    plot_name = 'tparse_'+fname
     all_stuff=scrub_log_file(fname,all_stuff)
-plot_name='p4'
-if 1:
+        
+
+if 0:
+    print "No plots"
+else:
     def add_dumps(plot_obj, full_list, in_or_out, cycle_or_time, y_value=-1,min_x=-1, print_number='some'):
+        if print_number == 'no':
+            print "HARD NO"
+            pdb.set_trace()
         output_list = full_list[in_or_out]
+        if len(output_list) == 0:
+            return
         all_x = nar([ output[cycle_or_time] for output in output_list])
         c={'output':'b','input':'r'}[in_or_out]
         all_dumpnum = [output['number'] for output in output_list]
@@ -346,32 +363,43 @@ if 1:
     all_cycle  =nar(map(int, all_steps['cycle']))
     all_dt     =nar(map(float,all_steps['dt']))
     all_time   =nar(map(float,all_steps['time']))
-    for scale in []:# ['log','linear']:
+    plot_format = 'png'
+    warning_check=False
+    for scale in ['log','linear']:
         plt.clf()
         plt.plot(all_cycle, all_dt)
         add_dumps(plt,all_steps,'output', 'cycle',min_x=all_cycle.min(), y_value=all_dt.min())
         plt.xlabel('cycle'); plt.ylabel('dt')
-        this_outname = plot_name+'cycle_dt.pdf'
+        this_outname = plot_name+'cycle_dt.%s'%plot_format
         if scale == 'log':
             ylim = plt.ylim()
+            if ylim[0] < 0:
+                warning_check=True
             plt.yscale('log')
             add_dumps(plt,all_steps,'input', 'cycle',min_x=all_cycle.min(),y_value= all_dt.min()*1.5,print_number='all')
             plt.ylim( ylim)
-            this_outname = plot_name+'cycle_dt_log.pdf'
+            this_outname = plot_name+'cycle_dt_log.%s'%plot_format
         plt.savefig(this_outname)
+
     for scale in ['log','linear']:
         plt.clf()
         plt.plot(all_time, all_dt)
-        add_dumps(plt,all_steps,'output', 'time',min_x=all_time.min(),y_value= all_dt.min())
+        add_dumps(plt,all_steps,'output', 'time',min_x=all_time.min(),y_value= all_dt.min(), print_number='some')
         plt.xlabel('time'); plt.ylabel('dt')
-        outname = plot_name+'time_dt.pdf'
+        this_outname = plot_name+'time_dt.%s'%plot_format
         if scale == 'log':
             ylim = plt.ylim()
+            if ylim[0] < 0:
+                warning_check=True
             add_dumps(plt,all_steps,'input', 'time',min_x=all_time.min(),y_value= all_dt.min()*2,print_number='all')
             plt.yscale('log')
             plt.ylim( ylim)
-            outname = plot_name+'time_dt_log.pdf'
-        plt.savefig(outname)
+            this_outname = plot_name+'time_dt_log.%s'%plot_format
+        plt.savefig(this_outname)
+    if warning_check:
+        if np.sum( np.isnan(all_dt) ) == 0 and all_dt.min() > 0:
+            print "IGNORE THE SCALE WARNING.  dt is not nan and not negative.  This is the limits on the linear plot."
+
 #
 #if 'all_steps' in log_out:
 #    filename = 'butts'
@@ -379,15 +407,15 @@ if 1:
 #    plt.clf()
 #    plt.plot(all_steps['cycle'], all_steps['dt'])
 #    plt.xlabel('n'); plt.ylabel('n')
-#    plt.savefig(filename+'_cycle_dt.pdf')
+#    plt.savefig(filename+'_cycle_dt.%s')
 #   plt.yscale('log')
-#   plt.savefig(filename+'_cycle_dt_log.pdf')
+#   plt.savefig(filename+'_cycle_dt_log.%s')
 #   plt.clf()
 #   plt.plot(all_steps['time'], all_steps['dt'])
 #   plt.xlabel('time'); plt.ylabel('dt')
-#   plt.savefig(filename+'_time_dt.pdf')
+#   plt.savefig(filename+'_time_dt.%s')
 #   plt.yscale('log')
-#   plt.savefig(filename+'_time_dt_log.pdf')
+#   plt.savefig(filename+'_time_dt_log.%s')
 #dumb_Initial=stepInfo
 #dumb_Final = stepInfo
 #dumb_Initial.cycle = 0

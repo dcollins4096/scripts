@@ -20,6 +20,8 @@ setenv p4 "d116 d117 d118 d119 d120 d121 d122 d123 d124"
 #
 # Machine Overloads
 #
+set picoalto = dcollins@128.186.110.154:
+set home49 = $picoalto./RESEARCH2/Paper49_EBQU/xfer
 set bw = " dcollins@h2ologin.ncsa.illinois.edu:"
 set stampede = "tg456484@stampede.tacc.utexas.edu:"
 set ranch = "tg456484@ranch.tacc.utexas.edu:"
@@ -44,6 +46,7 @@ set lobo="david_c@wtrw.lanl.gov:lo-fe1:"
 set lobosftp="david_c@turq-fta1.lanl.gov"
 set teahupoo="128.165.45.11"
 set nazare="dcollins4096@nazare.physics.fsu.edu:"
+set pig = $nazare./PigPen
 set noclobber
 
 #
@@ -153,6 +156,13 @@ prompt_long
 alias lsi "ls -1 |grep -i \!*"
 alias pybuild "python setup.py build_ext -i"
 
+if ( $?YT_DEST == 1 ) then 
+    alias yt_prompt_long set prompt = yt-$prompt_word":%~\"
+    alias my_activate "set path = ($YT_DEST/bin $path); set prompt = yt-$prompt_word':'%~'\>'"
+    #set prompt = yt-$prompt_word\ %~%"
+else
+    alias my_activate "cannot activate: YT_DEST not set"
+endif
 
 #
 # Aliases for directories.
@@ -276,7 +286,6 @@ alias gt "gdsm triton \!*"
 # batch queries
 #
 
-alias dstat "qstat -u `whoami`"
 
 #
 # Experiments.
