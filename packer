@@ -8,7 +8,7 @@ if ( ! -e Meta ) then
     mkdir Meta
 endif
 foreach i (*)
-	if(  -f "$i" && (`basename $i .tar` == $i) ) then
+	if(  -f "$i" && (`basename $i .tar` == $i) && $i != skip_tar.txt ) then
         mv -i $i Meta
         echo "moving" $i
 	endif
@@ -21,11 +21,14 @@ if ( $do_tar == 1 ) then
     sleep 5
     touch packer.out
     touch Meta/md5
+    touch skip_tar.txt
     foreach i ( `dirlist`)
-        if ( ! -e $i.tar ) then
+        if ( ! -e $i.tar && `grep $i.tar skip_tar.txt |wc -l` == 0 ) then
             tar cvf $i.tar $i
 
             md5sum $i.tar >> Meta/md5
+        else
+            echo "Skipping" $i
         endif
     end
 else
