@@ -149,6 +149,13 @@ if( `hostname | cut -f 2 -d .` == ranger) then
     set prompt_word = "RANGER"
 endif
 
+#
+# Maybe I need to keep on top of nodes...
+#
+if ( $machine == stampede || $machine == stampede2 || $machine == pleiades ) then
+    set  prompt_word = `uname -n`
+endif
+
 alias prompt_long set prompt = $prompt_word":%~\>"
 alias prompt_short set prompt = $prompt_word":%c\>"
 alias prompt_shortest set prompt = "%c\>"
