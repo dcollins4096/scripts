@@ -1,15 +1,21 @@
 #!/bin/tcsh
 
 set do_tar = 0
+if ( $?machine == 0 ) then
+    set machine = "compy286"
+endif
+set this_md5 = Meta/md5_$machine
 if ( $1 == 'y' ) then
     set do_tar = 1
 endif
 if ( ! -e Meta ) then
     mkdir Meta
 endif
+touch skip_tar.txt
+echo packer.out >> skip_tar.txt
 foreach i (*)
 	if(  -f "$i" && (`basename $i .tar` == $i) && $i != skip_tar.txt ) then
-        mv -i $i Meta
+        cp -i $i Meta
         echo "moving" $i
 	endif
 end
@@ -20,13 +26,13 @@ if ( $do_tar == 1 ) then
     echo "I'll tar up these"
     sleep 5
     touch packer.out
-    touch Meta/md5
+    touch $this_md5
     touch skip_tar.txt
     foreach i ( `dirlist`)
-        if ( ! -e $i.tar && `grep $i.tar skip_tar.txt |wc -l` == 0 ) then
-            tar cvf $i.tar $i
-
-            md5sum $i.tar >> Meta/md5
+        set tarname = $i.tar
+        if ( ! -e $tarname && `grep $tarname skip_tar.txt |wc -l` == 0 ) then
+            tar cvf $tarname $i
+            md5sum $tarname >> $this_md5
         else
             echo "Skipping" $i
         endif
