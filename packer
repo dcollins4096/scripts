@@ -1,7 +1,7 @@
 #!/bin/tcsh
 
 set do_tar = 1
-set do_scp = 0
+set do_scp = 1
 if ( $?machine == 0 ) then
     set machine = "compy286"
 endif
@@ -31,11 +31,21 @@ if ( $do_tar == 1 ) then
     touch skip_tar.txt
     foreach i ( `dirlist`)
         set tarname = $i.tar
-        if ( ! -e $tarname && `grep $tarname skip_tar.txt |wc -l` == 0 ) then
+        set do_this_tar = 1
+        if (`grep $tarname skip_tar.txt |wc -l` != 0 ) then
+            set do_this_tar = 0
+            echo "skipping: in skip_tar.txt"
+        endif
+        if ( `grep $tarname $this_md5 |wc -l` != 0 ) then
+            set do_this_tar = 0
+            echo "skipping: in " $this_md5
+        endif
+        if ( $do_this_tar == 1 ) then
+            if (  -e $tarname ) then
+                rm $tarname
+            endif
             tar cvf $tarname $i
             md5sum $tarname >> $this_md5
-        else
-            echo "Skipping" $i
         endif
     end
 else
