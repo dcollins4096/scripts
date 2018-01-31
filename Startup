@@ -64,7 +64,6 @@ set mrg_repo = "http://dcollins:se7meaor@hg.spacepope.org/mhdctmerge/"
 
 #set path=($path ~/Scripts . $src)
 #echo "warning: path not set correctly.  totalview wont' work."
-set path=($path  . )
 if( $?ScriptDir == 0 ) then
     setenv ScriptDir  $HOME/Scripts
 endif
@@ -95,6 +94,12 @@ if( $?machine == 0 ) then
     endif
 else
     set prompt_word = $machine
+endif
+
+if ( $?USE_PYTHON3 ) then
+    if ( $USE_PYTHON3 == 1 ) then
+        set prompt_word = "$prompt_word"_PY3
+    endif
 endif
 
 #teragrid sub-nodes
@@ -324,3 +329,4 @@ switch( $machine )
         breaksw
 
 endsw
+set path=(. $path )
