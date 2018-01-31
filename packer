@@ -1,15 +1,22 @@
 #!/bin/tcsh
 
-set do_tar = 0
+set do_tar = 1
+set do_scp = 1
+if ( $?machine == 0 ) then
+    set machine = "compy286"
+endif
+set this_md5 = Meta/md5_$machine
 if ( $1 == 'y' ) then
     set do_tar = 1
 endif
 if ( ! -e Meta ) then
     mkdir Meta
 endif
+touch skip_tar.txt
+echo packer.out >> skip_tar.txt
 foreach i (*)
-	if(  -f "$i" && (`basename $i .tar` == $i) ) then
-        mv -i $i Meta
+	if(  -f "$i" && (`basename $i .tar` == $i) && $i != skip_tar.txt ) then
+        cp -i $i Meta
         echo "moving" $i
 	endif
 end
@@ -20,14 +27,33 @@ if ( $do_tar == 1 ) then
     echo "I'll tar up these"
     sleep 5
     touch packer.out
-    touch Meta/md5
+    touch $this_md5
+    touch skip_tar.txt
     foreach i ( `dirlist`)
-        if ( ! -e $i.tar ) then
-            tar cvf $i.tar $i
-
-            md5sum $i.tar >> Meta/md5
+        set tarname = $i.tar
+        set do_this_tar = 1
+        if (`grep $tarname skip_tar.txt |wc -l` != 0 ) then
+            set do_this_tar = 0
+            echo "skipping: in skip_tar.txt"
+        endif
+        if ( `grep $tarname $this_md5 |wc -l` != 0 ) then
+            set do_this_tar = 0
+            echo "skipping: in " $this_md5
+        endif
+        if ( $do_this_tar == 1 ) then
+            if (  -e $tarname ) then
+                rm $tarname
+            endif
+            tar cvf $tarname $i
+            md5sum $tarname >> $this_md5
         endif
     end
 else
     echo "No tar"
+endif
+set echo 
+if ( $do_scp == 1 ) then
+    set ranch_dest = $ranch./Paper49/`basename $cwd`
+    echo SCP TO $ranch_dest
+    scp *tar $ranch_dest
 endif
