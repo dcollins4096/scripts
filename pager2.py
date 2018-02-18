@@ -67,19 +67,17 @@ for fname in fnames:
         if field not in fieldlist:
             fieldlist.append(field)
 
-        if not name_dict[sim].has_key(frame):
+        if not frame in name_dict[sim]:
             name_dict[sim][frame] = {}
 
-        if not name_dict[sim][frame].has_key(field):
+        if not field in name_dict[sim][frame]:
             name_dict[sim][frame][field] = {}
 
         #if not name_dict[sim][frame].has_key(zoom):
         #    name_dict[sim][frame][field][zoom] = {}
 
-        if name_dict[sim][frame][field].has_key(zoom):
-            print "ERROR name collision (keeping first) %s %s"%(
-                    name_dict[sim][frame][field][zoom],
-                    fname)
+        if zoom in name_dict[sim][frame][field]:
+            print( "ERROR name collision (keeping first)"%( name_dict[sim][frame][field][zoom], fname))
         else:
             name_dict[sim][frame][field][zoom] = fname
 
@@ -107,16 +105,16 @@ else:
     fptr = open(options.caption_file,'w')
     for sim in simlist:
         fptr.write("%s ---\n"%sim)
-    print "wrote a caption file", options.caption_file
+    print( "wrote a caption file", options.caption_file)
     fptr.close()
 
 
 
 
-print simlist
-print framelist
-print fieldlist
-print "zoom", max_zoom
+print( simlist)
+print(framelist)
+print(fieldlist)
+print("zoom", max_zoom)
 title = "%s"*len(simlist)%tuple(simlist)
 if options.title is not None:
     title = options.title
@@ -165,7 +163,7 @@ for frame in [-1]+framelist:
                 for n,run in enumerate(simlist):
                     
                     fptr.write('<td class="td_image">')
-                    if name_dict[run].has_key(frame) and name_dict[run][frame].has_key(field) and name_dict[run][frame][field].has_key(zoom):
+                    if frame in name_dict[run] and field in name_dict[run][frame] and zoom in  name_dict[run][frame][field]:
                         this_fname = name_dict[run][frame][field].pop(zoom)
                         fptr.write(img_tag%(this_fname,this_fname,run, caption.get(run,"---")))
                     else:
@@ -189,7 +187,7 @@ for sim in name_dict.keys():
     for frame in name_dict[sim].keys():
         for field in name_dict[sim][frame].keys():
             if len(name_dict[sim][frame][field].keys()) > 0:
-                print "PARSE ERROR: did not properly treat", name_dict[sim][frame]
+                print( "PARSE ERROR: did not properly treat", name_dict[sim][frame])
 
 
 #p33_ai01_0025_2d-Profile_density_HeI_Density_cell_mass.png 
