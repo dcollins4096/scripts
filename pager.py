@@ -1,7 +1,32 @@
 #!/usr/bin/env python
 
-#notes: annoyed by alignment, esp. with one column.
-#style sheets may help.  Made the td tags, but not further.
+help_string="""
+ usage: % pager.py [options] files
+ Makes web pages to easily view multiple (timesteps, fields, simulations) quickly.
+ Run this in a directory with a number of png files, 
+ it will produce oot.html.
+ If no *files* arguments are passed, all png files in the current working directory are used.
+
+ Expects all files to be formatted
+ simname_0004_quantity.png
+ or
+ simname_n0004_quantity.png
+ and will sort timestep (n0004, etc) into rows, "quantity" into columns, and 
+ "simname" into small squares at each time/quantity position.
+ 
+ For yt, make your save look like
+ pw.save("%s_%04d"%(sim,frame))
+ with no type suffix, and the "quantity" will be produced in a way that makes sense.
+
+ Files in the list or current working directory that don't match are stored in 
+ "skipped.txt"
+
+
+ """
+
+# >>> python pager.py -h 
+# for more options
+
 
 import sys
 import glob
@@ -10,7 +35,7 @@ import pdb
 import numpy as np
 
 from optparse import OptionParser
-parser = OptionParser()
+parser = OptionParser(help_string)
 parser.add_option("-w", "--width", dest="width",action="store",help = "width", default="300")
 parser.add_option("-t", "--title", dest="title",action="store",help = "title", default=None)
 parser.add_option("-n", "--name", dest="name",action="store",help = "fame", default="oot.html")
