@@ -1,11 +1,19 @@
 #!/bin/tcsh
-echo $argv
-if ( $#argv > 0 ) then
-  set duud = $1
-else
-  set duud = duud
-endif
-
+set duud = duud
+while( $#argv )
+    switch( $1 )
+    case "-n":
+        shift
+        set duud = $1
+        shift
+        breaksw
+    case "-d":
+        shift
+        set mydir = $1
+        shift
+        breaksw
+    endsw
+end
 if( -e $duud ) rm $duud
 if( -e $duud.sort) rm $duud.sort
 if( `uname` == Darwin ) then 
@@ -14,6 +22,10 @@ else
   du -h --max-depth=1 > $duud
 endif
 
+if ( $?mydir ) then
+    awk '{print $1 "  '$mydir'/"$2}' $duud > tmp_90210
+    mv tmp_90210 $duud
+endif
 
 SortDU $duud
 cat $duud.sort
