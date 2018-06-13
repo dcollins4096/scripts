@@ -52,7 +52,7 @@ re_num = re.compile(r'\s*([\d\.]+)([KMGBT])\s*')
 def getnum(line):
     match = re_num.match(line)
     if match is None:
-        print "No byte match.  Chunk", "'%s'"%line
+        print("No byte match.  Chunk", "'%s'"%line)
         return -1
     value= float(match.group(1))
     order = match.group(2)
@@ -79,12 +79,12 @@ class duud():
         for line in self.lines[ingest_slice]:
             self.longest_line=max([len(line), self.longest_line])
             if verb == 1:
-                print line
+                print( line)
             try:
                 line_start = line.index("/")
             except:
-                print "error with finding the directory."
-                print line[:-1]
+                print( "error with finding the directory.")
+                print( line[:-1])
                 raise
             self.files.append(line[line_start:])
             byte_chunk = line[:line_start]
@@ -97,15 +97,15 @@ class duud():
         self.ch_levels=[]
         self.full_report=full_report
         for delta, fname in self.changed_lines:
-            if full_report: print "changed", delta, fname
+            if full_report: print( "changed", delta, fname)
             self.ch_delta.append(delta)
             self.ch_files.append(fname)
         for delta, fname in self.new_lines:
-            if full_report: print "new", delta, fname
+            if full_report: print( "new", delta, fname)
             self.ch_delta.append(delta)
             self.ch_files.append(fname)
         for delta, fname in self.removed_lines:
-            if full_report: print "gone", delta, fname
+            if full_report: print( "gone", delta, fname)
             self.ch_delta.append(delta)
             self.ch_files.append(fname)
         for fname in self.ch_files:
@@ -124,10 +124,10 @@ class duud():
 class reporter():
     def __init__(self):
         self.line_delta=[]
+
     def __call__(self,d1, d2, n1, n2, message):
         self.line_delta.append([ d1, d2, n1, n2, message])
         self.printer( d1, d2, n1, n2, message)
-
 
     def printer(self,d1, d2, n1, n2, message):
         #longest = max([d1.longest_line,d2.longest_line])
@@ -161,7 +161,7 @@ class reporter():
         #template = "%"+str(longest)+"s |%s"+nstring+"|  %"+str(longest)+"s"
         #template = "%"+str(longest)+"s |%s|  %"+str(longest)+"s"
         if np.abs(delta) > 0:
-            print template%(s1,message,s2)
+            print( template%(s1,message,s2))
 
 report = reporter()
 
@@ -178,14 +178,14 @@ def delta(d1, d2, nchecks=None, verb=0):
         if n1 == len(d1.files): 
             for i in range(n2,len(d2.files)):
                 d2.new_lines.append([d2.sizes_bytes[i],d2.files[i]])
-                #print template%("","n",d2.lines[i])
+                #print( template%("","n",d2.lines[i]))
                 report(None, d2,None,i, "n")
             break
                 
         if n2 == len(d2.files): 
             for i in range(n1,len(d1.files)):
                 d2.removed_lines.append([d1.sizes_bytes[i],d1.files[i]])
-                #print template%(d1.lines[i],"n","")
+                #print( template%(d1.lines[i],"n",""))
                 report(d1,None,i,None,"n")
             break
                                     
@@ -197,15 +197,15 @@ def delta(d1, d2, nchecks=None, verb=0):
                 d2.changed_lines.append([this_delta,d2.files[n2]])
                 d2.delta[n2] = this_delta
             if abs_delta > 1 and verb > 2:
-                print "- ",d1.lines[n1]
-                print "+ ",d2.lines[n2]
+                print( "- ",d1.lines[n1])
+                print( "+ ",d2.lines[n2])
             if verb == -1:
                 if abs_delta > 0:
-                    #print template%(d1.lines[n1],'D',d2.lines[n2])
+                    #print( template%(d1.lines[n1],'D',d2.lines[n2]))
                     report(d1,d2,n1,n2,'D')
                 else:
                     report(d1,d2,n1,n2,'s')
-                    #print template%(d1.lines[n1],'s',d2.lines[n2])
+                    #print( template%(d1.lines[n1],'s',d2.lines[n2]))
             n1+=1
             n2+=1
 
@@ -217,19 +217,19 @@ def delta(d1, d2, nchecks=None, verb=0):
                 new_range = range(n2,new_d2_lines+1) #plus one to make it LessEqual in range
                 for i in new_range:
                     if verb > 2:
-                        print "+", d2.lines[i]
+                        print( "+", d2.lines[i])
                     if verb == -1:
-                        #print template%("","+",d2.lines[i])
+                        #print( template%("","+",d2.lines[i]))
                         report(None,d2,None,i,"+")
                     d2.new_lines.append([d2.sizes_bytes[i],d2.files[i]])
                 #n1+=1  Don't advance n1, you haven't eaten it yet.
                 n2=new_d2_lines+1
             else:
                 if verb > 2:
-                    print "-", d1.lines[n1]
+                    print( "-", d1.lines[n1])
                 d2.removed_lines.append([d1.sizes_bytes[n1], d1.files[n1]])
                 if verb == -1:
-                    #print template%(d1.lines[n1],"-","")
+                    #print( template%(d1.lines[n1],"-",""))
                     report(d1,None,n1,None,"-")
                 n1+=1
                 #if  d2.files[n2] not in d1.files[n1+1:]:
@@ -246,29 +246,30 @@ def delta(d1, d2, nchecks=None, verb=0):
             #        new_n2 = 
 
 
+def make_duud_list(list_of_files):
+    duud_list = []
+    for filename in list_of_files:
+        print( "=======", filename)
+        the_duud= duud(filename)
+        the_duud.ingest( slice(options.slice)) #slice(3)) 
+        #print( the_duud.sizes_bytes)
+        duud_list.append(the_duud)
 
-duud_list = []
-for filename in args:
-    print "=======", filename
-    the_duud= duud(filename)
-    the_duud.ingest( slice(options.slice)) #slice(3)) 
-    #print the_duud.sizes_bytes
-    duud_list.append(the_duud)
+    for n_duud, the_duud in enumerate(duud_list):
+        if n_duud == 0:
+            last_duud = the_duud
+        else:
+            delta(last_duud, the_duud, verb = options.verb)#, nchecks=4)
+            last_duud=the_duud
+            the_duud.final_report()
 
-for n_duud, the_duud in enumerate(duud_list):
-    if n_duud == 0:
-        last_duud = the_duud
-    else:
-        delta(last_duud, the_duud, verb = options.verb)#, nchecks=4)
-        last_duud=the_duud
-        the_duud.final_report()
-
-if 1:
-    for n, the_duud in enumerate(duud_list):
-        line="d%d = the_duud"%n
-        exec(line)
-        #d1 = duud_list[0]
-        #d2 = duud_list[1]
-        #d3 = duud_list[1]
+    if 0:
+        for n, the_duud in enumerate(duud_list):
+            line="d%d = the_duud"%n
+            exec(line)
+            #d1 = duud_list[0]
+            #d2 = duud_list[1]
+            #d3 = duud_list[1]
+    return duud_list
 
 #end
