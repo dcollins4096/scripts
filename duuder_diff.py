@@ -52,7 +52,7 @@ re_num = re.compile(r'\s*([\d\.]+)([KMGBT])\s*')
 def getnum(line):
     match = re_num.match(line)
     if match is None:
-        print("No byte match.  Chunk", "'%s'"%line)
+        print("Error parsing directory size: '%s'"%line)
         return -1
     value= float(match.group(1))
     order = match.group(2)
@@ -77,6 +77,9 @@ class duud():
             self.lines.append(tab_is_white(line[:-1]))
         fptr.close()
         for line in self.lines[ingest_slice]:
+            if line.startswith("du:"):
+                print("System directory ignored %s"%line[:-1])
+                continue
             self.longest_line=max([len(line), self.longest_line])
             if verb == 1:
                 print( line)
@@ -91,6 +94,16 @@ class duud():
             self.sizes_bytes.append(getnum(byte_chunk))
         self.delta=np.zeros(len(self.sizes_bytes))
 
+    def print_changes_on_level(self,level):
+        if not hasattr(self,'ch_levels') or len(self.ch_levels) == 0:
+            print("Please run final report first")
+            return
+        level_mask = self.ch_levels== level
+        this_delta = self.ch_delta[level_mask]
+        this_files = self.ch_files[level_mask]
+        argsort = np.argsort(this_delta)
+        for d, f in zip(this_delta[argsort], this_files[argsort]):
+            print(sci_format(d), f)
     def final_report(self, full_report=False):
         self.ch_delta=[]
         self.ch_files=[]
