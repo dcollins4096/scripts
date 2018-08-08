@@ -4,7 +4,7 @@ import sys
 import glob
 import os
 script_path  = "%s/yt3_scripts"%os.environ['HOME']
-print script_path
+print( script_path)
 
 
 from optparse import OptionParser
@@ -33,7 +33,7 @@ else:
     lines = []
     lines.append( "self.name = '%s'\n"%name  )
     lines.append( "self.directory = '%s'\n"%cwd  )
-    lines.append( "self.outnamename = '%s'\n"%name  )
+    lines.append( "self.outname = '%s'\n"%name  )
     new_var = ['name','directory','outname']
     if options.like != None:
         if glob.glob(like_this_name) != []:
@@ -47,12 +47,12 @@ else:
                 if clone:
                     lines.append(line)
         else:
-            print "No such file", like_this_name
+            print( "No such file", like_this_name)
     new_name = "%s/%s"%(taxi_stand,name)
     fptr =  open(new_name, "w+")
     for line in lines:
         fptr.write(line)
     fptr.close()
-    print "wrote", new_name
+    print( "wrote", new_name)
 
 #end
