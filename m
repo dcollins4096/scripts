@@ -248,9 +248,9 @@ if( $?machine == 0 ) then
   set machine =  `uname -a | awk '{print $2}'` 
 endif
 
-if( `uname` == Darwin ) then
-    set machine = "MAC"
-endif
+#if( `uname` == Darwin ) then
+#        set machine = "MAC"
+#endif
 
 #triton?
 if( $machine == 'login-4-0.local') then
@@ -324,6 +324,14 @@ endif
 
 echo "machine: " $machine
 switch ( $machine )
+    case generic_machine:
+    case picoalto:
+      set nProcCompile = -j16
+      set srcdir = $src
+      set exeSer = "$exec $dbg $Problem"
+      set exeMPI = "mpirun -n $nprocRun $exec $dbg $Problem"
+      breaksw
+ 
     case BW:
       set nProcCompile = -j8
       set srcdir = $src
