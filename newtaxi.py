@@ -3,15 +3,21 @@
 import sys
 import glob
 import os
-script_path  = "%s/yt3_scripts"%os.environ['HOME']
-print( script_path)
 
 
 from optparse import OptionParser
 parser = OptionParser()
 parser.add_option("-l", "--like", dest="like",action="store",help = "width", default=None)
+parser.add_option("-p", "--python", dest="python",action="store",help = "python 2 or 3. Default 2 ", default=2)
 options, args = parser.parse_args()
 using_taxi = False
+
+if options.python == 2:
+    script_path  = "%s/yt3_scripts"%os.environ['HOME']
+else:
+    script_path  = "%s/yt_33"%os.environ['HOME']
+print(script_path)
+
 if using_taxi:
     sys.path.append(script_path)
     import taxi
@@ -56,3 +62,4 @@ else:
     print( "wrote", new_name)
 
 #end
+
