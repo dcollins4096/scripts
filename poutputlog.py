@@ -5,7 +5,8 @@ if len(sys.argv) > 1:
     OutputLog = sys.argv[1]
 
 fptr = open(OutputLog,'r')
-for n, line in enumerate(fptr):
-    print n, line,
-fptr.close
+lines = fptr.readlines()
+fptr.close()
+for n, line in enumerate(lines):
+    print( n, line[:-1])
 #end
