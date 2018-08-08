@@ -45,6 +45,9 @@ set softtabstop=4
 set autoindent
 set tabstop=4
 
+autocmd BufRead *.tsv set softtabstop=0 
+autocmd BufRead *.tsv set noexpandtab
+
 autocmd BufRead *.html set shiftwidth=4
 autocmd BufRead *.html set expandtab
 autocmd BufRead *.html set softtabstop=4
@@ -69,7 +72,7 @@ match Tab ,\t,
 set laststatus=2
 set statusline=%F%m%r%h%w\ [POS=%04l,%04v][%p%%]\ [LEN=%L] 
 if &diff
-    colorscheme evening
+    colorscheme traffic_lights_diff
 endif
 
 
