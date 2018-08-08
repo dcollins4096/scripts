@@ -47,8 +47,14 @@ while( $counter <= $#argset )
 
 
     switch( $arg ) 
+    case pfe22:
+        #More simple fancy fish with all the name.
+        set SSH_TO = dccolli1@pfe22.nas.nasa.gov
+        breaksw
     case pfe:
         #More simple fancy fish with all the name.
+        #pfe "~4H2~vS~+-bc$+rf"
+        #pfe pZ[}vAgYp8AZ\7p~
         set SSH_TO = dccolli1@pfe.nas.nasa.gov
         breaksw
     case astrophysics:
@@ -75,8 +81,23 @@ while( $counter <= $#argset )
     case stampede2
       set SSH_TO = tg456484@stampede2.tacc.utexas.edu
       breaksw
+    case stampede2_l1:
+      set SSH_TO = tg456484@login1.stampede2.tacc.utexas.edu
+      breaksw
+    case stampede2_l2:
+      set SSH_TO = tg456484@login2.stampede2.tacc.utexas.edu
+      breaksw
+    case stampede2_l3:
+      set SSH_TO = tg456484@login3.stampede2.tacc.utexas.edu
+      breaksw
     case stampede:
       set SSH_TO = tg456484@stampede.tacc.utexas.edu
+      breaksw
+    case stampede1_l3:
+      set SSH_TO = tg456484@login3.stampede.tacc.utexas.edu
+      breaksw
+    case stampede1_l4:
+      set SSH_TO = tg456484@login4.stampede.tacc.utexas.edu
       breaksw
     case nazare:
       set SSH_TO = dcollins4096@nazare.physics.fsu.edu
@@ -351,6 +372,7 @@ while( $counter <= $#argset )
 
     else
         ssh $ForwardingFlag $SSH_TO
+
     endif
     end
     
