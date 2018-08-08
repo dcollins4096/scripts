@@ -48,7 +48,7 @@ import sys
 def set(Arg, default, string = 0):
 
 	ArgValue = default
-#	print sys.argv.count(Arg)
+#	print(sys.argv.count(Arg))
 	if sys.argv.count(Arg) == 1:
 		ArgIndex= sys.argv.index(Arg)
 		if string == 0:
@@ -70,7 +70,7 @@ def setK(Arg):
 #
 
 if len(sys.argv) < 2:
-	print Documentation
+	print(Documentation)
 else:
 
 	# defaults & parse command line
@@ -95,7 +95,7 @@ else:
 			Number += '0'
 		Number += str(i)
 		Number += post
-		print Number
+		print(Number)
 	if DoLast == 1:
 		LastPrinted = Number
 		nZeros = npad - len(str(nend))
@@ -104,4 +104,4 @@ else:
 			Number += '0'
 		Number += str(nend)
 		if Number != LastPrinted:
-			print Number
+			print(Number)
