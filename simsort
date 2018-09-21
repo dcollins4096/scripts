@@ -1,0 +1,10 @@
+#!/bin/tcsh
+
+foreach i ($argv)
+    echo $i
+    if ( ! -e $i ) then
+        mkdir $i
+    endif
+    mv $i* $i
+end
+#end
