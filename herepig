@@ -9,8 +9,9 @@ set n = 0
 while ( 1 )
 @ n = $n + 1
 echo $n
-scp mantra $nazare./PigPen
-rsync -avz --remove-source-files -e ssh $nazare./PigPen/"*" .
+set dest = $nazare./PigPen
+scp mantra $dest
+rsync -avz --remove-source-files -e ssh $dest"*" .
 #rsync -avz --remove-source-files -e ssh $nazare./PigPen/"*" .
 if (  $n > $total ) then
     break
