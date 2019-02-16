@@ -325,8 +325,18 @@ endif
 echo "machine: " $machine
 switch ( $machine )
     case generic_machine:
+      set nProcCompile = -j2
+      set srcdir = $src
+      set exeSer = "$exec $dbg $Problem"
+      set exeMPI = "mpirun -n $nprocRun $exec $dbg $Problem"
+      breaksw
+    case shipsterns:
+      set nProcCompile = -j4
+      set srcdir = $src
+      set exeSer = "$exec $dbg $Problem"
+      set exeMPI = "mpirun -n $nprocRun $exec $dbg $Problem"
+      breaksw
     case picoalto:
-      set nProcCompile = -j16
       set srcdir = $src
       set exeSer = "$exec $dbg $Problem"
       set exeMPI = "mpirun -n $nprocRun $exec $dbg $Problem"
