@@ -264,7 +264,7 @@ endif
 # Because I can't type
 #
 
-if(  $machine != MAC && $machine != cortezbank && $machine != Nazare && $machine != picoalto ) alias make gmake
+#if(  $machine != MAC && $machine != cortezbank && $machine != Nazare && $machine != picoalto ) alias make gmake
 alias moer         'more'
 alias mroe         'more'
 alias meor         'more'

@@ -55,6 +55,9 @@ while( $counter <= $#argset )
         #More simple fancy fish with all the name.
         #pfe "~4H2~vS~+-bc$+rf"
         #pfe pZ[}vAgYp8AZ\7p~
+        #pfe %x^?E+^M5EKM[a)=
+        #pfe 7X8-i%01y|:`91a
+        #pfe /?=[[(=:g998 Lf
         set SSH_TO = dccolli1@pfe.nas.nasa.gov
         breaksw
     case astrophysics:

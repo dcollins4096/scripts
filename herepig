@@ -1,0 +1,23 @@
+#!/bin/tcsh
+touch mantra
+echo "mantra" >> mantra
+set total = 0
+if ( $1 != "" ) then
+    set total = $1
+endif
+set n = 0
+while ( 1 )
+@ n = $n + 1
+echo $n
+set dest = $nazare./PigPen/
+scp mantra $dest
+rsync -avz --remove-source-files -e ssh $dest"*" .
+#rsync -avz --remove-source-files -e ssh $nazare./PigPen/"*" .
+if (  $n > $total ) then
+    break
+else
+
+sleep 5
+end
+if ( -e mantra ) rm mantra
+#end

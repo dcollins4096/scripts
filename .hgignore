@@ -1,2 +1,7 @@
 syntax: glob
 *pyc
+ffmpeg*
+ffprobe
+ffserver
+.DS_Store
+nget*
