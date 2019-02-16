@@ -10,7 +10,7 @@ def pdfsew(output_filename,pdflist):
         input1 = PdfFileReader(file(pdf, "rb"))
         for page in input1.pages:
             output.addPage(page)
-    print output_filename
+    print(output_filename)
     outputStream = file(output_filename, "wb")
     output.write(outputStream)
     outputStream.close()
