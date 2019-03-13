@@ -24,6 +24,11 @@ help_string="""
 
  """
 
+row_order_help = \
+"""Column/row order. 
+ 1: (row, column, inner) = frame, field, sim
+ 2: (row, column, inner) = sim, field, frame
+ """
 # >>> python pager.py -h 
 # for more options
 
@@ -39,7 +44,8 @@ parser = OptionParser(help_string)
 parser.add_option("-w", "--width", dest="width",action="store",help = "width", default="300")
 parser.add_option("-t", "--title", dest="title",action="store",help = "title", default=None)
 parser.add_option("-n", "--name", dest="name",action="store",help = "fame", default="oot.html")
-parser.add_option("-c", "--number_of_columns", dest="number_of_columns", help = "number of columns", default=2)
+parser.add_option("-c", "--number_of_columns", dest="number_of_columns", help = "number of inner columns", default=2)
+parser.add_option("-o", "--column_order", dest = "column_order", help = row_order_help, default=1)
 parser.add_option("-k", "--caption_file", dest="caption_file",help="space separated list of <run><caption>", default='captions.txt')
 parser.add_option("-z", "--zoom_sequence", action='store_true', dest="zoom_sequence",help="If this is a sequence of zooms, the names are parsed differently", default=False)
 parser.add_option("-d", "--directory_trim", action='store_true',dest='directory_trim', help="If sims are in sub directories, and there's a one-to-one directory-sim relation, remove direcory names", default=False)
@@ -172,25 +178,69 @@ if options.xtra_skipped:
 
 
 fptr.write('<table border="1">\n')
-for frame in [-1]+framelist:
+class label_tool():
+    def __init__(self,order):
+        self.order = int(order)
+        if self.order == 1:
+            self.outer_list = [-1]+framelist
+            self.second_list = fieldlist
+            self.inner_list = simlist
+            self.id={'fr':0,'fi':1,'r':2} 
+            self.inner_label_template = "n%04d %s<br>" #take outer, second value
+            self.inner_caption_template = "%s (%s)"
+        if self.order == 2:
+            self.outer_list = ['']+simlist
+            self.second_list = fieldlist
+            self.inner_list = framelist
+            self.id={'fr':2,'fi':1,'r':0} 
+            self.inner_label_template = "%s %s<br>" #take outer, second value
+            self.inner_caption_template = "%s (%s)"
+        if self.order == 3:
+            self.outer_list = ['']+simlist
+            self.second_list = framelist
+            self.inner_list = fieldlist
+            self.id={'fr':1,'fi':2,'r':0} 
+            self.inner_label_template = "%s %d<br>" #take outer, second value
+            self.inner_caption_template = "%s (%s)"
+        if self.order == 4:
+            self.outer_list = [-1]+framelist
+            self.second_list = simlist
+            self.inner_list = fieldlist
+            self.id={'fr':0,'fi':2,'r':1} 
+            self.inner_label_template = "n%04d %s<br>" #take outer, second value
+            self.inner_caption_template = "%s (%s)"
+    def set_values(self,*args):
+        self.frame=args[self.id['fr']]
+        self.field=args[self.id['fi']]
+        self.run=args[self.id['r']]
+    def inner_label(self,outer_value,second_value):
+        return self.inner_label_template%(outer_value, second_value)
+    def inner_caption(self,inner_value):
+        return self.inner_caption_template%(inner_value, caption.get(inner_value,"---"))
+LT = label_tool(options.column_order)
+
+
+for nouter,outer_value in enumerate(LT.outer_list):
     fptr.write('<tr>')
-    fptr.write('<td class="td_frame_number"> %d </td>'%frame)
-    for field in fieldlist:
+    fptr.write('<td class="td_frame_number"> %s </td>'%str(outer_value))
+    for second_value in LT.second_list:
         fptr.write('<td class="td_figure_table">')
-        if frame < 0:
-            fptr.write("%s"%(field))
+        if nouter ==0:
+            fptr.write("%s"%(second_value))
         else:
             for zoom in range(-1,max_zoom+1):
-                img_tag = '<a h<figure><a href="%s"><img src="%s" width='+width+'></a><figcaption>%s (%s)</figcaption></figure>'
-                fptr.write("%s n%04d<br>"%(field,frame))
+                img_tag = '<a h<figure><a href="%s"><img src="%s" width='+width+'></a><figcaption>%s</figcaption></figure>'
+                fptr.write(LT.inner_label(outer_value,second_value))
 
                 fptr.write('<table border="2"><tr>\n')
-                for n,run in enumerate(simlist):
+                for n,inner_value in enumerate(LT.inner_list):
+                    LT.set_values(outer_value,second_value,inner_value)
+                    run = LT.run; frame = LT.frame; field=LT.field
                     
                     fptr.write('<td class="td_image">')
                     if frame in name_dict[run] and field in name_dict[run][frame] and zoom in  name_dict[run][frame][field]:
                         this_fname = name_dict[run][frame][field].pop(zoom)
-                        fptr.write(img_tag%(this_fname,this_fname,run, caption.get(run,"---")))
+                        fptr.write(img_tag%(this_fname,this_fname,LT.inner_caption(inner_value)))
                     else:
                         this_fname = this_fname_temp%(run,frame,field)
                         fptr.write("%s<br>"%this_fname)
