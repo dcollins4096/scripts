@@ -2,10 +2,12 @@
 """Scrubs the input file for parameter filename, and [initial,final]\times[time,cycle,dt]."""
 
 import os
-execfile('%s/yt3_scripts/go_lite'%os.environ['HOME'])
+#exec(compile(open('%s/yt3_scripts/go_lite'%os.environ['HOME']).read(), '%s/yt3_scripts/go_lite'%os.environ['HOME'], 'exec'))
 from optparse import OptionParser
 import glob
 import sys
+sys.path.append( "%s/yt3_scripts"%os.environ['HOME'])
+from GL import *
 import re
 import pdb
 import numpy as np
@@ -16,7 +18,7 @@ from xml.dom import minidom
 
 try:
     import cadac
-    import RunTrackerStuff
+    from . import RunTrackerStuff
     sysInfo = RunTrackerStuff.sysInfo() #Get info about the system and user.
     sys.path.append(sysInfo.cadacInstall)
     RunTracker_on = True
@@ -52,7 +54,7 @@ def scrubParameterFile(string):
     
     if string == None:
         return None
-    print "Param File To Open: ", string
+    print("Param File To Open: ", string)
     if glob.glob(string) == []:
         return None
 
@@ -129,7 +131,7 @@ def scrub_log_file(filename, all_output=None):
             initialFileString = match.group(1)
             initialize_line=True
         if initialize_line:
-            print fname, initialFileString
+            print(fname, initialFileString)
             re_input = re.compile(r'([^\d]+)(\d\d\d\d)/([^\d]*)')
             match_restart = re_input.match(initialFileString)
             if match_restart is not None:
@@ -156,29 +158,29 @@ def scrub_log_file(filename, all_output=None):
             match = ticker.match(line)
             if match != None:
                 if firstTime == True:
-                    initialStepInfo.cycle = match.group(reg_map['cycle'])
-                    initialStepInfo.dt = match.group(reg_map['dt'])
-                    initialStepInfo.time = match.group(reg_map['time'])
+                    initialStepInfo.cycle = int(match.group(reg_map['cycle']))
+                    initialStepInfo.dt =    float(match.group(reg_map['dt']))
+                    initialStepInfo.time =  float(match.group(reg_map['time']))
                     initialStepInfo.set = True
                     firstTime = False
                     all_steps['cycle'].append(initialStepInfo.cycle)
                     all_steps['dt'].append(initialStepInfo.dt)
                     all_steps['time'].append(initialStepInfo.time)
                     try:
-                        initialStepInfo.wall = match.group(reg_map['wall'])
+                        initialStepInfo.wall = float(match.group(reg_map['wall']))
                     except:
                         pass
                     TickerList = [(reg_map,ticker)]
                 else:
-                    finalStepInfo.cycle = match.group(reg_map['cycle'])
-                    finalStepInfo.dt = match.group(reg_map['dt'])
-                    finalStepInfo.time = match.group(reg_map['time'])
+                    finalStepInfo.cycle =int( match.group(reg_map['cycle']))
+                    finalStepInfo.dt =   float( match.group(reg_map['dt']))
+                    finalStepInfo.time = float( match.group(reg_map['time']))
                     finalStepInfo.set = True
                     all_steps['cycle'].append(finalStepInfo.cycle)
                     all_steps['dt'].append(finalStepInfo.dt)
                     all_steps['time'].append(finalStepInfo.time)
                     try:
-                        finalStepInfo.wall = match.group(reg_map['wall'])
+                        finalStepInfo.wall = float(match.group(reg_map['wall']))
                     except:
                         pass
         re_data = re.compile(r'DATA dump: ./([^\d]+)(\d\d\d\d)/([^\d]*)')
@@ -273,8 +275,8 @@ def scrub_log_file(filename, all_output=None):
         outdict['cyclef'] = finalStepInfo.cycle
 
         for line in last_ten_lines:
-            print line[:-1]
-        print "\n\n"
+            print(line[:-1])
+        print("\n\n")
 
         #print "%(dti)s %(dtf)s %(timei)s %(timef)s %(cyclei)s %(cyclef)s"%outdict
 
@@ -285,7 +287,7 @@ def scrub_log_file(filename, all_output=None):
 
 def parse_perf(initialStepInfo,finalStepInfo,fname='performance.out'):
     if len(glob.glob(fname)) == 0:
-        print "NO PERFORAMNCE"
+        print("NO PERFORAMNCE")
         return {'proc':-1,'coresec':-1,'cellup':-1, 'cspercu':-1}
 
     fptr = open(fname,'r')
@@ -323,7 +325,7 @@ def parse_perf(initialStepInfo,finalStepInfo,fname='performance.out'):
 all_stuff = None
 plot_name = "tparse_multi"
 base_name = []
-print args
+print(args)
 if len(args) > 1:
     for fname in args:
         base1 = fname.split('.')[0]
@@ -338,11 +340,11 @@ else:
         
 
 if 0:
-    print "No plots"
+    print("No plots")
 else:
     def add_dumps(plot_obj, full_list, in_or_out, cycle_or_time, y_value=-1,min_x=-1, print_number='some'):
         if print_number == 'no':
-            print "HARD NO"
+            print("HARD NO")
             pdb.set_trace()
         output_list = full_list[in_or_out]
         if len(output_list) == 0:
@@ -360,9 +362,9 @@ else:
             for i in range(len(all_x)):
                 plot_obj.text(all_x[i], y_value*1.1, "%s%04d"%(output_list[i]['dir'], all_dumpnum[i]),color=c)
     all_steps = all_stuff['all_steps']
-    all_cycle  =nar(map(int, all_steps['cycle']))
-    all_dt     =nar(map(float,all_steps['dt']))
-    all_time   =nar(map(float,all_steps['time']))
+    all_cycle  =nar(list(map(int, all_steps['cycle'])))
+    all_dt     =nar(list(map(float,all_steps['dt'])))
+    all_time   =nar(list(map(float,all_steps['time'])))
     plot_format = 'png'
     warning_check=False
     for scale in ['log','linear']:
@@ -398,7 +400,7 @@ else:
         plt.savefig(this_outname)
     if warning_check:
         if np.sum( np.isnan(all_dt) ) == 0 and all_dt.min() > 0:
-            print "IGNORE THE SCALE WARNING.  dt is not nan and not negative.  This is the limits on the linear plot."
+            print("IGNORE THE SCALE WARNING.  dt is not nan and not negative.  This is the limits on the linear plot.")
 
 #
 #if 'all_steps' in log_out:
@@ -431,8 +433,8 @@ outdict['cyclei'] =all_stuff['initialStepInfo'].cycle
 outdict['cyclef'] =all_stuff['finalStepInfo'].cycle
 outdict.update(perf_out)
 
-print "%(dti)s %(dtf)s %(timei)s %(timef)s %(cyclei)s %(cyclef)s %(cellup)0.3e %(coresec)0.2e %(cspercu)0.3e"%outdict
-print "then also", perf_out
+print("%(dti)s %(dtf)s %(timei)s %(timef)s %(cyclei)s %(cyclef)s %(cellup)0.3e %(coresec)0.2e %(cspercu)0.3e"%outdict)
+print("then also", perf_out)
 
 
 #end

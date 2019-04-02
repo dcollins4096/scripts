@@ -35,10 +35,10 @@ def compare(FileName1,FileName2):
     dbgOut = 0
     for filename in [FileName1,FileName2]:
         if glob.glob(filename) == []:
-            print "No file named " , filename
+            print("No file named " , filename)
             return 1
 
-    print "Comparing", FileName1, FileName2
+    print("Comparing", FileName1, FileName2)
     #open both files
     #Make a dictionary of the parameters in file1. Match if
     # [1] != #
@@ -65,10 +65,10 @@ def compare(FileName1,FileName2):
         lines1 = file1ob.readlines()
         file1ob.close()
         if dbgOut > 0:
-            print filename
+            print(filename)
         for line in lines1:
             if dbgOut > 0:
-                print "--", line
+                print("--", line)
             if line[0] == "#":
                 continue
             if line[0:2] == "//":
@@ -93,7 +93,7 @@ def compare(FileName1,FileName2):
             FirstElement = re.findall(r"(\s*)(.)", args)[0][1]
             
             if dbgOut > 0:
-                print "---- args", args, "trailing comment", TrailingComment
+                print("---- args", args, "trailing comment", TrailingComment)
             
             arglist = args.split(" ")
             newargs = []
@@ -122,38 +122,38 @@ def compare(FileName1,FileName2):
             LastIndex = max( FirstWhiteIndex, name.find("]")+1)
             name = name[0:LastIndex]
             
-            if ParameterList[parameter_file].has_key(name):
-                print "File", filename, "has multiple instances of",name
-                print "       Using the last"
+            if name in ParameterList[parameter_file]:
+                print("File", filename, "has multiple instances of",name)
+                print("       Using the last")
             ParameterList[parameter_file][name] = newargs
 
     IvePrintedHeadder = 0
     #compare list 1 aganst list2
     #remove the missing ones from list1
-    Keyz = ParameterList[0].keys()
+    Keyz = list(ParameterList[0].keys())
     Keyz.sort()
     for key1 in Keyz:
-        if ParameterList[1].has_key(key1) == 0:
+        if (key1 in ParameterList[1]) == 0:
             if IvePrintedHeadder == 0:
-                print "Parameters missing from", FileName2
+                print("Parameters missing from", FileName2)
                 IvePrintedHeadder = 1
-            print spacer, key1,"(",ParameterList[0].pop(key1),")"
+            print(spacer, key1,"=",ParameterList[0].pop(key1),)
     IvePrintedHeadder = 0
     #compare list 1 aganst list2
     #remove them from list1
-    Keyz =ParameterList[1].keys() 
+    Keyz =list(ParameterList[1].keys()) 
     Keyz.sort()
     for key2 in Keyz:
-        if ParameterList[0].has_key(key2) == 0:
+        if (key2 in ParameterList[0]) == 0:
             if IvePrintedHeadder == 0:
-                print "Parameters missing from", FileName1
+                print("Parameters missing from", FileName1)
                 IvePrintedHeadder = 1
-            print spacer, key2, "(",ParameterList[1].pop(key2),")"
+            print(spacer, key2, "=",ParameterList[1].pop(key2),)
 
         
 #now compare the parameters
     IvePrintedHeadder = 0
-    SortedList = ParameterList[0].keys()
+    SortedList = list(ParameterList[0].keys())
     SortedList.sort()
     for key1 in SortedList:
         different=False
@@ -166,7 +166,7 @@ def compare(FileName1,FileName2):
         if different:
             if IvePrintedHeadder == 0:
                 IvePrintedHeadder = 1
-                print "Parameters that are different: ", FileName1, FileName2
+                print("Parameters that are different: ", FileName1, FileName2)
             print1 = ParameterList[0][key1]
             print2 = ParameterList[1][key1]
             #The string cast is to avoid quering the type, which I don't know
@@ -175,24 +175,24 @@ def compare(FileName1,FileName2):
                 print1 =  print1[0:-1]
             if str(print2)[-1] == "\n":
                 print2 =  print2[0:-1]
-            print spacer, key1, "(", print1, ",", print2,")"
+            print(spacer, key1, "=", print1, "=", print2)
     return 0
 #end compare
 
 if len( sys.argv ) != 3 :
-    print """ pc.py file1 file2 """
-    print """ compares two enzo parameter files."""
+    print(""" pc.py file1 file2 """)
+    print(""" compares two enzo parameter files.""")
 else:
     run = 1
     FileName1 = sys.argv[1]
     FileName2 = sys.argv[2]
     if glob.glob(FileName1) == []:
-        print FileName1,"doesn't exist."
+        print(FileName1,"doesn't exist.")
         run = 0
     if os.path.isdir(FileName2) == 1:
         FileName2 = FileName2 + "/" + FileName1
     if glob.glob(FileName2) == []:
-        print FileName2,"doesn't exist."        
+        print(FileName2,"doesn't exist.")        
         run = 0
     if run != 0:
         out = compare(FileName1,FileName2)
