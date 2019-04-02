@@ -61,7 +61,7 @@ width = options.width
 if options.zoom_sequence:
     filename_template = r'(.*)_n{0,1}(\d\d\d\d)_(zoom\d+){0,1}_(.*).png' #with the zoom.
 else:
-    filename_template = r'(.*)_D{0,1}D{0,1}n{0,1}(\d\d\d\d)_(.*).png' #pretty good version
+    filename_template = r'(.*)_[TD]{0,1}D{0,1}n{0,1}(\d\d\d\d)_(.*).png' #pretty good version
 this_fname_temp = '%s_%04d_%s.png'
 framelist = []
 fieldlist = []
@@ -209,6 +209,13 @@ class label_tool():
             self.id={'fr':0,'fi':2,'r':1} 
             self.inner_label_template = "n%04d %s<br>" #take outer, second value
             self.inner_caption_template = "%s (%s)"
+        if self.order == 5:
+            self.outer_list = ['']+fieldlist
+            self.second_list = simlist
+            self.inner_list = framelist
+            self.id={'fr':2,'fi':0,'r':1} 
+            self.inner_label_template = "%s %s<br>" #take outer, second value
+            self.inner_caption_template = "%d (%s)"
     def set_values(self,*args):
         self.frame=args[self.id['fr']]
         self.field=args[self.id['fi']]
