@@ -13,7 +13,7 @@ options, args = parser.parse_args()
 using_taxi = False
 
 if options.python == 2:
-    script_path  = "%s/yt3_scripts"%os.environ['HOME']
+    script_path  = "%s/ytscripts"%os.environ['HOME']
 else:
     script_path  = "%s/yt_33"%os.environ['HOME']
 print(script_path)
