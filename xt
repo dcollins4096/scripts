@@ -58,6 +58,13 @@ while( $counter <= $#argset )
         #pfe %x^?E+^M5EKM[a)=
         #pfe 7X8-i%01y|:`91a
         #pfe /?=[[(=:g998 Lf
+        #pfe -(F)0U^%/\8ik8v
+        #ABC123$nasa$
+        #="~w:.F6?9~(7No
+        #8,T)^I.:&.,}:|g
+        #  9/10/19
+        # SHIT where did I write the temporary password down?
+
         set SSH_TO = dccolli1@pfe.nas.nasa.gov
         breaksw
     case astrophysics:
@@ -68,7 +75,7 @@ while( $counter <= $#argset )
         set SSH_TO = dcollins@h2ologin.ncsa.illinois.edu
         breaksw
     case web2:
-        #fancy fish ++
+        # thesearen'tthedroidsyou'relookingfor
         set SSH_TO =  collins@web2.physics.fsu.edu
         breaksw
     case astro12:
