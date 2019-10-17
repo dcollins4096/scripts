@@ -13,6 +13,8 @@ else if ("$1" == "-run" ) then
     set args = "yt src lookit herp ed1 ed2 run1 run2"
 else if ("$1" == "-x" ) then
     set args = "other hw1 hw2 hwOld eqn1 eqn2 plt1 plt2 python"
+else if ("$1" == "-9" ) then
+    set args = "R1 e1 l1 R2 e2 l2 R3 e3 l3"
 else
     set args = ($argv)
 endif
