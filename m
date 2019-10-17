@@ -330,6 +330,7 @@ switch ( $machine )
       set exeSer = "$exec $dbg $Problem"
       set exeMPI = "mpirun -n $nprocRun $exec $dbg $Problem"
       breaksw
+    case mullaghmore:
     case shipsterns:
       set nProcCompile = -j4
       set srcdir = $src
