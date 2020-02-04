@@ -1,0 +1,10 @@
+#setenv YT  /Users/dcollins/yt-conda
+setenv YT /Users/dcollins/local-yt-2019-11-15/yt-conda
+set path = ("$YT"/bin "$HOME/local/bin" $path)
+if ( ! $?LD_LIBRARY_PATH ) then
+    setenv LD_LIBRARY_PATH
+endif
+setenv LD_LIBRARY_PATH $LD_LIBRARY_PATH":"$YT/lib
+setenv LD_LIBRARY_PATH $LD_LIBRARY_PATH":"$HOME/local/lib
+setenv machine mullaghmore
+source $HOME/Scripts/Startup
