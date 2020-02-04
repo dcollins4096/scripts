@@ -6,7 +6,7 @@ import os
 from optparse import OptionParser
 import glob
 import sys
-sys.path.append( "%s/yt3_scripts"%os.environ['HOME'])
+sys.path.append( "%s/ytscripts"%os.environ['HOME'])
 from GL import *
 import re
 import pdb
