@@ -47,6 +47,10 @@ while( $counter <= $#argset )
 
 
     switch( $arg ) 
+    case rcc:
+        set SSH_TO = dcollins@hpc-login.rcc.fsu.edu
+        breaksw
+
     case pfe22:
         #More simple fancy fish with all the name.
         set SSH_TO = dccolli1@pfe22.nas.nasa.gov
@@ -64,6 +68,9 @@ while( $counter <= $#argset )
         #8,T)^I.:&.,}:|g
         #  9/10/19
         # SHIT where did I write the temporary password down?
+        # QeM5FfcNyht8:5I october
+        #987$xyz$NASA feb
+        #tw31X01G`M86/\q feb launchpad
 
         set SSH_TO = dccolli1@pfe.nas.nasa.gov
         breaksw
@@ -78,9 +85,17 @@ while( $counter <= $#argset )
         # thesearen'tthedroidsyou'relookingfor
         set SSH_TO =  collins@web2.physics.fsu.edu
         breaksw
+    case astro4:
+        #fancy fish
+        set SSH_TO = davidc@astro4.physics.fsu.edu
+        breaksw
     case astro12:
         #fancy fish
         set SSH_TO = davidc@astro12.physics.fsu.edu
+        breaksw
+    case astro30:
+        #simple fancy fish
+        set SSH_TO = davidc@astro30.physics.fsu.edu
         breaksw
     case ranch:
       set SSH_TO = tg456484@ranch.tacc.utexas.edu
@@ -88,7 +103,8 @@ while( $counter <= $#argset )
     case maverick:
       set SSH_TO = tg456484@maverick.tacc.utexas.edu
       breaksw
-    case stampede2
+    case stampede2:
+    case stampede:
       set SSH_TO = tg456484@stampede2.tacc.utexas.edu
       breaksw
     case stampede2_l1:
@@ -100,9 +116,9 @@ while( $counter <= $#argset )
     case stampede2_l3:
       set SSH_TO = tg456484@login3.stampede2.tacc.utexas.edu
       breaksw
-    case stampede:
-      set SSH_TO = tg456484@stampede.tacc.utexas.edu
-      breaksw
+  #case stampede:
+  #    set SSH_TO = tg456484@stampede.tacc.utexas.edu
+  #    breaksw
     case stampede1_l3:
       set SSH_TO = tg456484@login3.stampede.tacc.utexas.edu
       breaksw
