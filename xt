@@ -71,6 +71,7 @@ while( $counter <= $#argset )
         # QeM5FfcNyht8:5I october
         #987$xyz$NASA feb
         #tw31X01G`M86/\q feb launchpad
+        #u]3z!R8W%Fk>&pYa june
 
         set SSH_TO = dccolli1@pfe.nas.nasa.gov
         breaksw
