@@ -127,6 +127,9 @@ while( $counter <= $#argset )
     case stampede1_l4:
       set SSH_TO = tg456484@login4.stampede.tacc.utexas.edu
       breaksw
+    case cloudbreak:
+        set SSH_TO = dccollins@cloudbreak.physics.fsu.edu
+        breaksw
     case nazare:
       set SSH_TO = dcollins4096@nazare.physics.fsu.edu
       #128.186.110.203
