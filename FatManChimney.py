@@ -3,7 +3,7 @@ import random
 import pdb
 import sys
 
-people=['Anne','David','Marguerite','Patrick','Maggie','Mike','Steve']
+people=['Marguerite','David','Anne','Amanda','Patrick','Maggie','Mike','Steve']
 hat=people+people
 debug = 0
 #The list.  Set it up. ['got'] is who you got.
@@ -20,6 +20,8 @@ Spouse['Marguerite'] = 'David'
 Spouse['David'] = 'Marguerite'
 Spouse['Maggie'] = 'Mike'
 Spouse['Mike'] = 'Maggie'
+Spouse['Amanda'] = 'Steve'
+Spouse['Steve'] = 'Amanda'
 #Spouse['Daniel'] = 'Anne'
 No={}
 for P in people:
@@ -27,35 +29,46 @@ for P in people:
     if Spouse[P]:
         No[P] += [Spouse[P]]
 
+if 0:
+    #debug
+    for P in No:
+        print("%s:"%P,)
+        for O in No[P]:
+            print(O,)
+    sys.exit(0)
+
+#hat.append(hat.pop(0))
+#hat.append(hat.pop(0))
+put_back=[]
 for P in people:
-    print P
+    print("===",P)
     while len(WhoGotWho[P]['got']) < 2:  #Two and only two.
-        NUM = random.choice(range(len(hat)))
+        if len(hat) == 0:
+            print("ERROR Hat failure")
+            raise
+        
+        NUM = random.choice(list(range(len(hat))))
         other_person = hat.pop(NUM)      #Pull from the hat.
         if debug > 0:
-            print "   ", other_person,
+            print("   ", other_person, end=' ')
+
         if other_person in No[P]:
-            if len(hat) == 0:
-                print "Hat failure"
-                raise
-            hat.append(other_person)     #Back in the hat!
-            #continue
-            print "nope",
-            if len(hat):
-                continue
-            else:
-                print "Failure!"
-                sys.exit(1)
-
-
-        if debug > 0:
-            print "yay",
+            #hat.append(other_person)     #Back in the hat!
+            put_back.append(other_person)
+            #random.shuffle(hat)
+            continue
+            print("nope (%s) "%other_person, end=' ')
+        print(" y (%s)"%other_person)
         WhoGotWho[P]['got'].append(other_person)
+        #Can't get the person again, 
+        #neither can the spouse
         No[P].append(other_person)
         if Spouse[P]:
             No[Spouse[P]].append(other_person)
         if debug > 0:
-            print P, WhoGotWho[P]['got'], hat
+            print(P, WhoGotWho[P]['got'], hat)
+    hat+= put_back
+    put_back=[]
 for P in people:
-    print "%s has  %s and %s"%(P, WhoGotWho[P]['got'][0], WhoGotWho[P]['got'][1])
+    print("%s has  %s and %s"%(P, WhoGotWho[P]['got'][0], WhoGotWho[P]['got'][1]))
 #end
