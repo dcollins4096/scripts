@@ -55,6 +55,8 @@ else:
         else:
             print( "No such file", like_this_name)
     new_name = "%s/%s"%(taxi_stand,name)
+    lines.append("self.frames = 'last'\n")
+    lines.append("self.fields = ['density']\n")
     fptr =  open(new_name, "w+")
     for line in lines:
         fptr.write(line)
