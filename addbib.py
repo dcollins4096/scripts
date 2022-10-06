@@ -129,6 +129,8 @@ class bibitem():
                 this_line += lines[line+1]
                 line += 1
             pair = this_line.split('=')
+            if len(pair) != 2:
+                continue
             if debug > 0:
                 print('pair:',line,pair)
             key = pair[0].strip()
@@ -195,7 +197,7 @@ if __name__ == '__main__':
     
 #
     default_input_file = "%s/Downloads/export-bibtex.bib"%os.environ['HOME']
-    parser = OptionParser("addbib.py -u <url> -f <file=newbib.bib>; url given prescedence.")
+    parser = OptionParser("addbib.py -o <output=ms.bib> -i <input=~/Downloads/export-bibtex.bib>; url given prescedence.")
     parser.add_option("-u", "--url", dest="url", action = "store", default = None)
     #parser.add_option("-o", "--outfile", dest="outfile", action = "store", default = "ms_new.bib")
     parser.add_option("-o", "--outfile", dest="outfile", action = "store", default = "ms.bib")
@@ -217,11 +219,15 @@ if __name__ == '__main__':
         newbib, newauthors = scrubfile(options.infile,new_item=True)
         if not os.path.exists("old_bibs"):
             os.mkdir("old_bibs")
+
         if cleanup_input:
             n_bibs = len(glob.glob("old_bibs/*"))
             to_this = "old_bibs/export-bibtex.bib.%d"%n_bibs
             shutil.move(options.infile,to_this)
             print("Move file to %s"%to_this)
+        else:
+            pass
+            #print("KLUDGE not cleaning up.")
 
     if not options.test:
         oldbib, authors = scrubfile(options.outfile,new_item=False)
