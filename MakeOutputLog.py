@@ -22,7 +22,7 @@ parser.add_option("-o","--output",dest="output",action="store",default="OutputLo
 OutputLog = options.output
 
 if glob.glob(OutputLog) != [] and not options.backup:
-    print "OutputLog written.  Please remove existing file before running."
+    print("OutputLog written.  Please remove existing file before running.")
     sys.exit(0)
 if glob.glob(OutputLog) != [] and options.backup:
     n_backup = len(glob.glob('*%s*'%(OutputLog)))
@@ -35,7 +35,7 @@ if 1:
     if len(args) == 0:
         for root, dirnames, filenames in os.walk('.'):
           for filename in fnmatch.filter(filenames, '*.hierarchy'):
-              print "filename",filename
+              print("filename",filename)
               matches.append(os.path.join(root, filename.split('.')[0]))
 
 
@@ -43,7 +43,7 @@ if 1:
         if options.hierarchy:
             for hierarchy in args:
                 matches.append(hierarchy.split('.')[0])
-                print hierarchy.split('.')
+                print(hierarchy.split('.'))
     for PF in matches:
         inptr = open(PF,'r')
         nSuccess = 0
@@ -60,7 +60,7 @@ if 1:
                 break
         inptr.close()
         if nSuccess != 2:
-            print "Error parsing", PF
+            print("Error parsing", PF)
 
     #write output sorted by sim time
     fptr= open(OutputLog,'w')
