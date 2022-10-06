@@ -47,6 +47,9 @@ while( $counter <= $#argset )
 
 
     switch( $arg ) 
+    case dogbeach:
+	    set SSH_TO = dcollins@dogbeach.physics.fsu.edu
+	    breaksw
     case rcc:
         set SSH_TO = dcollins@hpc-login.rcc.fsu.edu
         breaksw
@@ -74,11 +77,14 @@ while( $counter <= $#argset )
         #u]3z!R8W%Fk>&pYa june
         #x,?(25B\2sP4q?Y* aug 31
         #dFysq)n?E)3Ms}8Q oct
+        #Bb3N968{h^DR'J>h Feb
 
         set SSH_TO = dccolli1@pfe.nas.nasa.gov
+        echo "YO DAWG" $SSH_TO
         breaksw
     case astrophysics:
         #More simple fancy fish with all the name.
+	#Doh3au>f
         set SSH_TO = dcollins@astrophysics.physics.fsu.edu
         breaksw
     case bw:
