@@ -12,13 +12,15 @@ shift 2
 files="$@"
 count=0
 suffix=`echo $1 | cut -f2 -d.`
-width=`identify -format "%w" $1`
-height=`identify -format "%h" $1`
+#width=`identify -format "%w" $1`
+#height=`identify -format "%h" $1`
+width=1084
+height=918
 # Make sure that the width is even (yuv420p format for QT)
 width=`expr $width \/ 2 \* 2`
 cwd=`pwd`
 for f in $files; do
-    fn=`echo $count $suffix | gawk '{printf "img%06d.%s", $1, $2}'`
+    fn=`echo $count $suffix | awk '{printf "img%06d.%s", $1, $2}'`
     ln -s $cwd/$f ${tmpdir}/${fn}
     count=`expr $count + 1`
 done
