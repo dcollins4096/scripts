@@ -200,7 +200,8 @@ if __name__ == '__main__':
     parser = OptionParser("addbib.py -o <output=ms.bib> -i <input=~/Downloads/export-bibtex.bib>; url given prescedence.")
     parser.add_option("-u", "--url", dest="url", action = "store", default = None)
     #parser.add_option("-o", "--outfile", dest="outfile", action = "store", default = "ms_new.bib")
-    parser.add_option("-o", "--outfile", dest="outfile", action = "store", default = "ms.bib")
+    parser.add_option("-f", "--file", dest="file",action="store",default="ms.bib")
+    parser.add_option("-o", "--outfile", dest="outfile", action = "store", default = None)
     parser.add_option("-i", "--infile", dest="infile", action = "store", default = default_input_file)
     parser.add_option("-t", "--test", dest="test", action = "store_true", default = False)
     parser.add_option("-l", "--lookup", dest="lookup", action = "store", default = None)
@@ -209,9 +210,10 @@ if __name__ == '__main__':
     (options, args) = parser.parse_args()
 
     if options.lookup == None:
+        #not doing a look up, much and parse.
         cleanup_input = False
         if os.path.exists(options.infile) == False:
-            print("Please provide a filename with -f.")
+            print("Please provide a filename with -i.")
             print("We default to looking for %s"%options.infile)
             sys.exit(1)
         else:
