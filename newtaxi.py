@@ -24,7 +24,9 @@ if using_taxi:
 #title=options.title
 taxi_stand = "%s/taxi_stand/"%(script_path)
 cwd=os.getcwd()
-name = sys.argv[1]
+name = args[0]
+print(name)
+print(args)
 like_this_name  = None
 if options.like != None:
     like_this_name = "%s/%s"%(taxi_stand,options.like)
@@ -55,6 +57,8 @@ else:
         else:
             print( "No such file", like_this_name)
     new_name = "%s/%s"%(taxi_stand,name)
+    lines.append("self.frames = 'last'\n")
+    lines.append("self.fields = ['density']\n")
     fptr =  open(new_name, "w+")
     for line in lines:
         fptr.write(line)

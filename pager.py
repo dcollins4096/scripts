@@ -25,9 +25,12 @@ help_string="""
  """
 
 row_order_help = \
-"""Column/row order. 
+"""Column/row order. \n
  1: (row, column, inner) = frame, field, sim
  2: (row, column, inner) = sim, field, frame
+ 3: (row, column, inner) = sim, frame, field
+ 4: (row, column, inner) = frame, sim, field
+ 3: (row, column, inner) = field, sim, frame
  """
 # >>> python pager.py -h 
 # for more options
