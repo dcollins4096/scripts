@@ -54,7 +54,7 @@ def ag(filename="data0001.hierarchy"):
 #       The GravityBoundaryType needs to go after NumberOfParticles.
         if line.find("NumberOfParticles") != -1:
             if ThisIsASubGrid == 0:        
-                NewLines.append("GravityBoundaryType = 0\n")
+                NewLines.append("GravityBoundaryType = 1\n")
             else:
                 NewLines.append("GravityBoundaryType = 2\n")
 
@@ -67,12 +67,12 @@ def ag(filename="data0001.hierarchy"):
 
 #   write new file
     file = open(NewFilename, "w")
-    print " "
-    print "writing ", NewFilename, ", saving the old as", OldFileName
-    print "Also: change MaximumGravityRefinementLevel to reflect the new change in gravity"
-    print "      It should be at least the same as MaximumRefinementLevel"
-    print "Also Also: turn on SelfGravity and set GravitationalConstant to something meaningful."
-    print " "
+    print(" ")
+    print("writing ", NewFilename, ", saving the old as", OldFileName)
+    print("Also: change MaximumGravityRefinementLevel to reflect the new change in gravity")
+    print("      It should be at least the same as MaximumRefinementLevel")
+    print("Also Also: turn on SelfGravity and set GravitationalConstant to something meaningful.")
+    print(" ")
     for newline in NewLines:
         file.write(newline)    
     file.close()
@@ -92,9 +92,9 @@ import sys
 
 
 if len(sys.argv) == 1:
-    print "Add's the Gravity Boundary to the Hierarchy File."
-    print "%> AddGravity <HierarchyName>"
-    print "   Returns HierarchyName with the gravity added, saves the old one as HierarchyName.OLD"
+    print("Add's the Gravity Boundary to the Hierarchy File.")
+    print("%> AddGravity <HierarchyName>")
+    print("   Returns HierarchyName with the gravity added, saves the old one as HierarchyName.OLD")
 else:
     for Filename in sys.argv[1:]:
         ag(Filename)
