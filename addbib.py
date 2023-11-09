@@ -72,6 +72,7 @@ def scrubnew(lines, new_item):
 
 import re
 author_year = re.compile(r'(.*{)([^\d]*)(\d\d)(.*),')
+no_year     = re.compile(r'(.*{)([^\d]*),')
 author_year_shortcut = re.compile(r'([^\d]*)(\d\d)(.*)')
 generic_short = re.compile(r'(.*){(.*),')
 def fullyear(twoyear):
@@ -109,7 +110,11 @@ class bibitem():
                 if debug > 0:
                     print(self.Shortcut)
             else:
-                print("match error on shortcut.")
+                no_year_shortcut = no_year.match(lines[0])
+                #print(no_year_shortcut.groups())
+                #pdb.set_trace()
+                self.Shortcut = no_year_shortcut.group(1)
+
 
 
         self.lines = lines
@@ -187,7 +192,10 @@ def InsertFourDigitYear(bib):
         Shortcut_Multiple = ''
         if len(match.groups()) > 2:
             Shortcut_Multiple = match.group(3)
-    return Shortcut_FirstAuthor+Shortcut_NameYear+Shortcut_Multiple
+        output= Shortcut_FirstAuthor+Shortcut_NameYear+Shortcut_Multiple
+    else:
+        output=bib.Shortcut
+    return output
 
 
 import urllib.request, urllib.error, urllib.parse
@@ -209,6 +217,7 @@ if __name__ == '__main__':
 
     (options, args) = parser.parse_args()
 
+
     if options.lookup == None:
         #not doing a look up, much and parse.
         cleanup_input = False
@@ -222,6 +231,8 @@ if __name__ == '__main__':
         if not os.path.exists("old_bibs"):
             os.mkdir("old_bibs")
 
+        print("KLUDGE: not cleaning up")
+        cleanup_input=False
         if cleanup_input:
             n_bibs = len(glob.glob("old_bibs/*"))
             to_this = "old_bibs/export-bibtex.bib.%d"%n_bibs
