@@ -231,8 +231,6 @@ if __name__ == '__main__':
         if not os.path.exists("old_bibs"):
             os.mkdir("old_bibs")
 
-        print("KLUDGE: not cleaning up")
-        cleanup_input=False
         if cleanup_input:
             n_bibs = len(glob.glob("old_bibs/*"))
             to_this = "old_bibs/export-bibtex.bib.%d"%n_bibs
