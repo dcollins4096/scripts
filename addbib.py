@@ -133,9 +133,11 @@ class bibitem():
                     print(line, lines[line][:-1])
                 this_line += lines[line+1]
                 line += 1
-            pair = this_line.split('=')
-            if len(pair) != 2:
-                continue
+            #pair = this_line.split('=')
+            #if len(pair) != 2:
+            #    continue
+            index = this_line.index('=')
+            pair = this_line[:index], this_line[index+1:]
             if debug > 0:
                 print('pair:',line,pair)
             key = pair[0].strip()
