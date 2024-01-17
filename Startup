@@ -45,7 +45,7 @@ set nautilus="collins@login.nautilus.nics.teragrid.org:"
 set lobo="david_c@wtrw.lanl.gov:lo-fe1:"
 set lobosftp="david_c@turq-fta1.lanl.gov"
 set teahupoo="128.165.45.11"
-set nazare="dcollins4096@nazare.physics.fsu.edu:"
+set nazare="dcollins@nazare.physics.fsu.edu:"
 set cloudbreak="dccollins@cloudbreak.physics.fsu.edu:"
 set pig = $nazare./PigPen
 set noclobber
