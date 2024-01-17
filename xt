@@ -1,4 +1,8 @@
 #! /bin/tcsh -f
+
+echo "GO DIRECTLY WITH SSH"
+exit -1
+
 set title = "monkey"
 set SSH_TO = ""
 set ForwardingFlag = "-X"
