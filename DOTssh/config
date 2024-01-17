@@ -1,4 +1,43 @@
 #Updated 20161027
+Host astro4     
+        User davidc
+        HostName astro4.physics.fsu.edu
+Host astro12    
+        User davidc
+        HostName astro12.physics.fsu.edu
+Host astro30    
+        User davidc
+        HostName astro30.physics.fsu.edu
+Host frontera   
+        User tg456484
+        HostName frontera.tacc.utexas.edu
+Host stampede
+        User tg456484
+        HostName stampede2.tacc.utexas.edu
+Host cloudbreak 
+        User dccollins
+        HostName cloudbreak.physics.fsu.edu
+Host nazare     
+        User dcollins
+        HostName nazare.physics.fsu.edu
+
+Host anvil
+	HostName anvil.rcac.purdue.edu
+	User x-ux454321
+Host ranch
+	HostName ranch.tacc.utexas.edu
+	User tg456484
+Host dogbeach
+	User dcollins
+	HostName dogbeach.physics.fsu.edu
+Host astrophysics
+	HostName astrophysics.physics.fsu.edu
+	User dcollins
+Host web2
+	# thesearen'tthedroidsyou'relookingfor
+	HostName web2.physics.fsu.edu
+	User collins
+
 
 Host sfe
         # Replace sfe3 with sfe1 or sfe2 if sfe3 is unavailable, and 
