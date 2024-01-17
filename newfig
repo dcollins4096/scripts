@@ -33,7 +33,7 @@ foreach i ($argv)
         echo "\includegraphics[width=\hw\textwidth]{$fig}"
     endif
 end
-echo "\caption[ ]{ }"
+echo "\caption{ }"
 echo "\label{} \end{center} \end{figure}"
 
 #end
