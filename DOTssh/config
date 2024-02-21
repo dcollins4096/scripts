@@ -30,6 +30,9 @@ Host ranch
 Host dogbeach
 	User dcollins
 	HostName dogbeach.physics.fsu.edu
+Host teahupoo
+	User dcollins
+	HostName teahupoo.physics.fsu.edu
 Host astrophysics
 	HostName astrophysics.physics.fsu.edu
 	User dcollins
