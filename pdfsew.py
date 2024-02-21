@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import sys
-from pyPdf import PdfFileWriter, PdfFileReader
+from pdf import PdfFileWriter, PdfFileReader
 import sys
 
 def pdfsew(output_filename,pdflist):
