@@ -330,6 +330,7 @@ switch ( $machine )
       set exeSer = "$exec $dbg $Problem"
       set exeMPI = "mpirun -n $nprocRun $exec $dbg $Problem"
       breaksw
+    case anvil:
     case mullaghmore:
     case cloudbreak:
     case shipsterns:
