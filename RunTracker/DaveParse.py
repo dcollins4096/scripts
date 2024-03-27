@@ -7,7 +7,7 @@ from optparse import OptionParser
 import glob
 import sys
 sys.path.append( "%s/ytscripts"%os.environ['HOME'])
-from GL import *
+from dtools.starter1 import *
 import re
 import pdb
 import numpy as np
