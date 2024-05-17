@@ -324,6 +324,13 @@ endif
 
 echo "machine: " $machine
 switch ( $machine )
+    case frontera:
+        setenv exec ibrun
+      set nProcCompile = -j8
+      set srcdir = $src
+      set exeSer = "$exec $dbg $Problem"
+      set exeMPI = "mpirun -n $nprocRun $exec $dbg $Problem"
+      breaksw
     case generic_machine:
       set nProcCompile = -j2
       set srcdir = $src
