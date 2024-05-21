@@ -14,6 +14,9 @@ Host frontera
 Host stampede
         User tg456484
         HostName stampede2.tacc.utexas.edu
+Host ghosttree 
+        User dcollins
+        HostName ghosttree.physics.fsu.edu
 Host cloudbreak 
         User dccollins
         HostName cloudbreak.physics.fsu.edu
