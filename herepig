@@ -8,14 +8,16 @@ set this_machine = $1
 touch mantra
 echo "mantra" >> mantra
 set total = 0
+set directory = plots
 if ( $2 != "" ) then
-    set total = $2
+    set directory = $2
 endif
 set n = 0
 while ( 1 )
 @ n = $n + 1
 echo $n
-set dest = "$this_machine":./PigPen/
+#set dest = "$this_machine":./PigPen/
+set dest = "$this_machine":./$directory/
 scp mantra $dest
 rsync -avz --remove-source-files -e ssh $dest"*" .
 #rsync -avz --remove-source-files -e ssh $nazare./PigPen/"*" .
