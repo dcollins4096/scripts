@@ -143,7 +143,7 @@ if __name__ == '__main__':
     parser.add_option("-i", "--infile", dest="infile", action = "store", default = default_input_file)
     parser.add_option("-t", "--test", dest="test", action = "store_true", default = False)
     parser.add_option("-l", "--lookup", dest="lookup", action = "store", default = None)
-    parser.add_option("-c", "--clean", dest="clean", action="store_true", default=False)
+    parser.add_option("-c", "--clean", dest="clean", action="store_true", default=True)
 
     (options, args) = parser.parse_args()
     print(options)
