@@ -1,0 +1,18 @@
+#!/bin/tcsh
+
+set fname = $1
+
+echo $fname
+
+grep "Check it out, remove NOGO" $fname
+grep "Successfully read ParameterFile" $fname
+grep "TopGrid" $fname |head -1
+grep "TopGrid" $fname |tail -1
+grep "FEa05.o6577489" $fname |head -1
+grep "FEa05.o6577489" $fname |tail -1
+grep "WriteAllData: writing group file" $fname |head -1
+grep "WriteAllData: writing group file" $fname |tail -1
+
+set jobid = `echo $fname | sed -e 's/\(.*\).o\([0-9]\+\)/\2/'`
+seff $jobid |tail -3
+#end
