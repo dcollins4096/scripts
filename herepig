@@ -17,7 +17,7 @@ while ( 1 )
 @ n = $n + 1
 echo $n
 #set dest = "$this_machine":./PigPen/
-set dest = "$this_machine":./$directory/
+set dest = "$this_machine":$directory/
 scp mantra $dest
 rsync -avz --remove-source-files -e ssh $dest"*" .
 #rsync -avz --remove-source-files -e ssh $nazare./PigPen/"*" .
