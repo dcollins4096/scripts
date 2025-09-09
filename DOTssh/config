@@ -1,4 +1,7 @@
 #Updated 20161027
+Host thebes
+	User dcollins
+	HostName thebes.physics.fsu.edu
 Host astro4     
         User davidc
         HostName astro4.physics.fsu.edu
