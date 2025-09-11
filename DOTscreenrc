@@ -324,7 +324,6 @@ bindkey -d "^?" stuff "^h"
 # defgr [on|off]
 # defhstatus [<status>]
 # defkanji [jis|sjis|euc]
-deflogin on
 # defmode <mode>
 # defmonitor [on|off]
 # defobuflimit <limit>
